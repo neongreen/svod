@@ -1,0 +1,27 @@
+sudo: false
+
+langauge: c
+
+addons:
+  apt:
+    packages:
+    - libgmp-dev
+    - libtagc0-dev
+    - libsndfile1-dev
+
+env:
+- ARGS=""
+- ARGS="--resolver nightly"
+
+before_install:
+- mkdir -p ~/.local/bin
+- export PATH=$HOME/.local/bin:$PATH
+- travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
+
+script:
+ - stack $ARGS --no-terminal --install-ghc build c2hs
+ # - stack $ARGS --no-terminal test --test-arguments=--threads=2
+ - stack $ARGS --no-terminal sdist
+
+notifications:
+  email: false

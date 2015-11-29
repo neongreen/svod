@@ -1,0 +1,134 @@
+-- -*- Mode: Haskell-Cabal; -*-
+--
+-- Cabal configuration for ‘svod’ package.
+--
+-- Copyright © 2015 Mark Karpov
+--
+-- This file is part of Svod (Свод) project.
+--
+-- Svod (Свод) is free software: you can redistribute it and/or modify it
+-- under the terms of the GNU General Public License as published by the
+-- Free Software Foundation, either version 3 of the License, or (at your
+-- option) any later version.
+--
+-- Svod (Свод) is distributed in the hope that it will be useful, but
+-- WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+-- Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License along
+-- with this program. If not, see <http://www.gnu.org/licenses/>.
+
+name:                 svod
+version:              0.1.0
+cabal-version:        >= 1.10
+license:              GPL-3
+license-file:         LICENSE.md
+author:               Mark Karpov <markkarpov@opmbx.org>
+maintainer:           Mark Karpov <markkarpov@opmbx.org>
+homepage:             https://github.com/svod-music/svod
+bug-reports:          https://github.com/svod-music/svod/issues
+category:             Audio, Web, Database
+synopsis:             Web interface of Svod application
+build-type:           Simple
+description:          Web interface of Svod application
+extra-source-files:   AUTHORS.md
+                    , CHANGELOG.md
+                    , README.md
+
+flag dev
+  description:        Turn on development settings.
+  default:            False
+
+flag library-only
+  description:        Build for use with ‘yesod devel’.
+  default:            False
+
+library
+  hs-source-dirs:     .
+                    , app
+  build-depends:      aeson                  >= 0.8
+                    , base                   >= 4.8 && < 5
+                    , bytestring             >= 0.9
+                    , classy-prelude         >= 0.10.2
+                    , classy-prelude-conduit >= 0.10.2
+                    , classy-prelude-yesod   >= 0.10.2
+                    , conduit                >= 1.0 && < 2.0
+                    , containers
+                    , data-default
+                    , directory              >= 1.2
+                    , fast-logger            >= 2.2
+                    , file-embed
+                    , hjsmin                 >= 0.1
+                    , http-conduit           >= 2.1
+                    , monad-control          >= 1.0
+                    , monad-logger           >= 0.3
+                    , path                   >= 0.5.3
+                    , persistent             >= 2.2
+                    , persistent-postgresql  >= 2.2
+                    , persistent-template    >= 2.1
+                    , safe
+                    , shakespeare            >= 2.0
+                    , svod-core              >= 0.1.0
+                    , template-haskell       >= 2.0
+                    , text                   >= 1.2
+                    , time
+                    , unordered-containers
+                    , vector                 >= 0.10
+                    , wai-extra              >= 3.0
+                    , wai-logger             >= 2.2
+                    , warp                   >= 3.0
+                    , yaml                   >= 0.8
+                    , yesod                  >= 1.4.2
+                    , yesod-auth             >= 1.4.8
+                    , yesod-core             >= 1.4.6
+                    , yesod-form             >= 1.4.5
+                    , yesod-static           >= 1.5.0
+  exposed-modules:    Application
+                    , Foundation
+                    , Handler.Common
+                    , Handler.Home
+                    , Import
+                    , Import.NoFoundation
+                    , Settings
+                    , Settings.StaticFiles
+
+  if flag(dev) || flag(library-only)
+    cpp-options:      -DDEVELOPMENT
+    ghc-options:      -Wall -O0
+  else
+    ghc-options:      -Wall -O2
+
+  default-language:   Haskell2010
+
+executable            svod
+  if flag(library-only)
+    buildable:        False
+
+  main-is:            Main.hs
+  hs-source-dirs:     app
+  build-depends:      base, svod
+  ghc-options:        -threaded -O2 -rtsopts -with-rtsopts=-N
+  default-language:   Haskell2010
+
+test-suite test
+  type:              exitcode-stdio-1.0
+  main-is:           Spec.hs
+  hs-source-dirs:    test
+  ghc-options:       -Wall
+  build-depends:      base
+                    , classy-prelude
+                    , classy-prelude-yesod
+                    , hspec                  >= 2.0.0
+                    , monad-logger
+                    , persistent
+                    , persistent-postgresql
+                    , resourcet
+                    , shakespeare
+                    , svod
+                    , svod-core              >= 0.1.0
+                    , transformers
+                    , yesod
+                    , yesod-core
+                    , yesod-test             >= 1.4.3
+  default-language:   Haskell2010
