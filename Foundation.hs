@@ -13,7 +13,6 @@
 
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeFamilies          #-}
 
@@ -154,9 +153,17 @@ instance YesodAuthPersist App
 instance YesodAuthEmail App where
   type AuthEmailId App = UserId
 
-  afterPasswordRoute = const HomeR
-
-  -- addUnverified email
+  afterPasswordRoute         = const HomeR
+  addUnverified email verkey = runDB (S.addUnverified email email verkey)
+  sendVerifyEmail            = undefined
+  getVerifyKey               = runDB . S.getVerifyKey
+  setVerifyKey uid verkey    = runDB (S.setVerifyKey uid verkey)
+  verifyAccount              = undefined
+  getPassword                = runDB . S.getPassword
+  setPassword uid password   = runDB (S.setPassword uid password)
+  getEmailCreds              = undefined
+  getEmail                   = runDB . S.getEmail
+  -- checkPasswordSecurity
 
 instance RenderMessage App FormMessage where
     renderMessage _ _ = defaultFormMessage

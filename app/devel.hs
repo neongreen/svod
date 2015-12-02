@@ -9,10 +9,12 @@
 --
 -- Development version of main module.
 
+{-# LANGUAGE PackageImports #-}
+
 module Main (main) where
 
-import Application (develMain)
-import Prelude     (IO)
+import "svod" Application (develMain)
+import Prelude (IO)
 
 main :: IO ()
 main = develMain

@@ -10,8 +10,6 @@
 -- Second half of business started in "Foundation".
 
 {-# LANGUAGE NoImplicitPrelude    #-}
-{-# LANGUAGE OverloadedStrings    #-}
-{-# LANGUAGE RecordWildCards      #-}
 {-# LANGUAGE TemplateHaskell      #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
@@ -21,6 +19,7 @@ module Application
   , appMain
   , develMain
   , makeFoundation
+  , makeLogWare
   -- * Functions for use in development with GHCi
   , handler
   , db )
@@ -34,6 +33,7 @@ import Database.Persist.Postgresql
   , runSqlPool )
 import Import
 import Language.Haskell.TH.Syntax (qLocation)
+import Network.Wai (Middleware)
 import Network.Wai.Handler.Warp
   ( Settings
   , defaultSettings
@@ -101,7 +101,14 @@ makeFoundation appSettings = do
 
 makeApplication :: App -> IO Application
 makeApplication foundation = do
-  logWare <- mkRequestLogger def
+  logWare <- makeLogWare foundation
+  -- Create the WAI application and apply middlewares
+  appPlain <- toWaiAppPlain foundation
+  return $ logWare $ defaultMiddlewaresNoLogging appPlain
+
+makeLogWare :: App -> IO Middleware
+makeLogWare foundation =
+  mkRequestLogger def
     { outputFormat =
         if appDetailedRequestLogging (appSettings foundation)
         then Detailed True
@@ -111,10 +118,6 @@ makeApplication foundation = do
           else FromSocket
     , destination = Logger . loggerSet . appLogger $ foundation
     }
-
-  -- Create the WAI application and apply middlewares
-  appPlain <- toWaiAppPlain foundation
-  return $ logWare $ defaultMiddlewaresNoLogging appPlain
 
 -- | Warp settings for the given foundation value.
 

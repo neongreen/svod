@@ -9,8 +9,6 @@
 --
 -- Tests for common handlers.
 
-{-# LANGUAGE NoImplicitPrelude #-}
-
 module Handler.CommonSpec (spec) where
 
 import TestImport

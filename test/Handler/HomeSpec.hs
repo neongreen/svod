@@ -10,7 +10,6 @@
 -- Tests for home page.
 
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
 
 module Handler.HomeSpec (spec) where
 
