@@ -11,6 +11,7 @@
 
 {-# LANGUAGE NoImplicitPrelude    #-}
 {-# LANGUAGE TemplateHaskell      #-}
+{-# LANGUAGE ViewPatterns         #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Application
@@ -55,8 +56,27 @@ import System.Log.FastLogger
   , newStdoutLoggerSet
   , toLogStr )
 
+import Handler.Approve
+import Handler.BanUser
+import Handler.ChangePassword
 import Handler.Common
+import Handler.DeleteRelease
+import Handler.DeleteUser
+import Handler.EditRelease
+import Handler.FollowUser
 import Handler.Home
+import Handler.Login
+import Handler.Logout
+import Handler.Profile
+import Handler.Register
+import Handler.Reject
+import Handler.Release
+import Handler.Releases
+import Handler.StarRelease
+import Handler.Submit
+import Handler.User
+import Handler.Users
+import Handler.Verify
 
 mkYesodDispatch "App" resourcesApp
 
@@ -123,17 +143,17 @@ makeLogWare foundation =
 
 warpSettings :: App -> Settings
 warpSettings foundation =
-      setPort (appPort $ appSettings foundation)
-    $ setHost (appHost $ appSettings foundation)
-    $ setOnException (\_req e ->
-        when (defaultShouldDisplayException e) $ messageLoggerSource
-            foundation
-            (appLogger foundation)
-            $(qLocation >>= liftLoc)
-            "yesod"
-            LevelError
-            (toLogStr $ "Exception from Warp: " ++ show e))
-      defaultSettings
+    setPort (appPort $ appSettings foundation)
+  $ setHost (appHost $ appSettings foundation)
+  $ setOnException (\_req e ->
+      when (defaultShouldDisplayException e) $ messageLoggerSource
+          foundation
+          (appLogger foundation)
+          $(qLocation >>= liftLoc)
+          "yesod"
+          LevelError
+          (toLogStr $ "Exception from Warp: " ++ show e))
+    defaultSettings
 
 -- | For Yesod devel, return the Warp settings and WAI Application.
 

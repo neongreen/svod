@@ -89,8 +89,27 @@ library
                     , RecordWildCards
   exposed-modules:    Application
                     , Foundation
+                    , Handler.Approve
+                    , Handler.BanUser
+                    , Handler.ChangePassword
                     , Handler.Common
+                    , Handler.DeleteRelease
+                    , Handler.DeleteUser
+                    , Handler.EditRelease
+                    , Handler.FollowUser
                     , Handler.Home
+                    , Handler.Login
+                    , Handler.Logout
+                    , Handler.Profile
+                    , Handler.Register
+                    , Handler.Reject
+                    , Handler.Release
+                    , Handler.Releases
+                    , Handler.StarRelease
+                    , Handler.Submit
+                    , Handler.User
+                    , Handler.Users
+                    , Handler.Verify
                     , Import
                     , Import.NoFoundation
                     , Settings

@@ -1,7 +1,44 @@
-/ HomeR GET
+-- General stuff
 
-/static StaticR Static appStatic
-/auth   AuthR   Auth   getAuth
+/                   HomeR           GET
 
-/favicon.ico FaviconR GET
-/robots.txt  RobotsR  GET
+/favicon.ico        FaviconR GET
+/robots.txt         RobotsR  GET
+/static             StaticR Static appStatic
+
+-- Registration, authentication, and profile management
+
+/вход               LoginR          GET POST
+/выход              LogoutR         POST
+/сменить-пароль     ChangePasswordR GET POST
+/регистрация        RegisterR       GET POST
+/подтверждение      VerifyR         POST
+/профиль            ProfileR        GET POST
+
+-- Administrative actions on users
+
+/забанить/пользователя BanUserR     POST
+/удалить/пользователя  DeleteUserR  POST
+
+-- Public information about users (also in JSON)
+
+/пользователи       UsersR          GET
+/пользователь/#Text UserR           GET
+
+-- Actions on releases
+
+/опубликовать       SubmitR         GET POST
+/редактировать/публикацию/#Text EditReleaseR GET POST
+/одобрить           ApproveR        POST
+/отвергнуть         RejectR         POST
+/удалить/публикацию DeleteReleaseR  POST
+
+-- Public information about releases (also in JSON)
+
+/публикации         ReleasesR       GET
+/публикация/#Text   ReleaseR        GET
+
+-- Social features
+
+/отметить/публикацию   StarReleaseR POST
+/отметить/пользователя FollowUserR  POST
