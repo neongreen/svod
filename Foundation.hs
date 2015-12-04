@@ -111,16 +111,19 @@ type Form x = Html -> MForm (HandlerT App IO) (FormResult x, Widget)
 
 instance Yesod App where
   -- Specify application root.
+
   approot = ApprootMaster (appRoot . appSettings)
 
   -- Store session data on the client in encrypted cookies, default session
   -- idle timeout is 120 minutes.
+
   makeSessionBackend _ =
     Just <$> defaultClientSessionBackend 120 "config/client_session_key.aes"
 
   defaultLayout widget = do
+    muser  <- fmap entityVal <$> maybeAuth
     master <- getYesod
-    mmsg <- getMessage
+    mmsg   <- getMessage
 
     -- We break up the default layout into two components: default-layout is
     -- the contents of the body tag, and default-layout-wrapper is the
@@ -129,9 +132,11 @@ instance Yesod App where
     -- default-layout.
 
     pc <- widgetToPageContent $ do
-      addStylesheet $ StaticR css_bootstrap_min_css
-      $(widgetFile "default-layout")
-    withUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
+      addScriptRemote "https://code.jquery.com/jquery-latest.min.js"
+      $(combineStylesheets 'StaticR [css_bootstrap_min_css, css_svod_css])
+      $(combineScripts     'StaticR [js_bootstrap_min_js,   js_svod_js])
+      widget
+    withUrlRenderer $(hamletFile "templates/default-layout.hamlet")
 
   -- The page to be redirected to when authentication is required.
   authRoute = const . Just $ LoginR

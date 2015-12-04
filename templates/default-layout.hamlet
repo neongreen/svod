@@ -1,3 +1,66 @@
-$maybe msg <- mmsg
-  <div #message>#{msg}
-^{widget}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="@{FaviconR}">
+    <title>#{pageTitle pc}
+    ^{pageHead pc}
+  <body>
+    <div class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="@{HomeR}">
+            СВОД
+        <ul class="nav navbar-nav navbar-right">
+          $maybe user <- muser
+            <li>
+              <a href="" id="dropdownProfile" data-toggle="dropdown"
+                 class="navbar-item"
+                 title="Вы вошли как #{S.userUsername user}">
+                #{S.userUsername user}
+              <ul class="dropdown-menu" area-labelledby="dropdownProfile">
+                <li>
+                  <a href="@{UserR $ getSlug $ S.userSlug user}">
+                    Ваш профиль
+                <li>
+                  <a href="@{ChangePasswordR}">
+                    Сменить пароль
+                <li>
+                  <a href="@{LogoutR}">
+                    Выйти
+          $nothing
+            <li>
+              <a href="@{LoginR}">
+                <span class="glyphicon glyphicon-off" title="Войти">
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="col-sm-9 col-sm-offset-1 col-md-8 col-md-offset-2 main">
+
+          $maybe msg <- mmsg
+            <div class="alert alert-info alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert"
+                      aria-label="Убрать">
+                <span aria-hidden="true">&times;
+              #{msg}
+
+          <div class="page-header">
+            <h1>#{pageTitle pc}
+          <div class="content">
+            ^{pageBody pc}
+    <footer>
+      <div class="panel-footer">
+        <p class="text-center">
+          <a href="@{InfoAboutR}">О проекте
+          &middot;
+          <a href="@{InfoEulaR}">Пользовательское соглашение
+          &middot;
+          <a href="@{InfoContactR}">Контактная информация
+          &middot;
+          <a href="@{InfoSupportSvodR}">Поддержать «Свод»
+        <p class="text-center">
+          #{appCopyright $ appSettings master}

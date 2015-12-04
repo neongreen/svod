@@ -1,0 +1,42 @@
+.content {
+    font-size: 18px;
+    text-align: justify;
+    word-wrap: break-word;
+    letter-spacing: 1px;
+}
+
+.content p {
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
+
+.navbar-default {
+    background-color: #0f80ef;
+    border-radius: 0;
+    border-color: #0069ff;
+}
+
+.navbar-default .navbar-brand:link {
+    color: #fff;
+}
+
+.navbar-default .navbar-brand:visited {
+    color: #fff;
+}
+
+.navbar-default .navbar-brand:hover {
+    color: #fff;
+    background-color: #0069ff;
+}
+
+.navbar-default .navbar-brand:active {
+    color: #fff;
+}
+
+.nav.navbar-nav.navbar-right a:hover {
+    background-color: #0069ff;
+}
+
+.navbar-default .glyphicon {
+    color: #fff;
+}
