@@ -2,6 +2,7 @@
 # See https://github.com/yesodweb/yesod/wiki/Configuration#overriding-configuration-values-with-environment-variables
 
 static-dir:     "_env:STATIC_DIR:static/"
+info-dir:       "_env:ARTICLE_DIR:info/"
 staging-dir:    "_env:STAGING_DIR:user-content/staging/"
 release-dir:    "_env:RELEASE_DIR:user-content/release/"
 

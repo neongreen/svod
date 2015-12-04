@@ -19,5 +19,8 @@ import Import
 
 -- | Get public information about particular release in HTML or as JSON.
 
-getReleaseR :: Text -> Handler TypedContent
+getReleaseR
+  :: Text              -- ^ User slug
+  -> Text              -- ^ Release slug
+  -> Handler TypedContent
 getReleaseR = undefined

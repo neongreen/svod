@@ -20,10 +20,16 @@ import Import
 
 -- | Render form for release editing.
 
-getEditReleaseR :: Text -> Handler Html
+getEditReleaseR
+  :: Text              -- ^ User slug
+  -> Text              -- ^ Release slug
+  -> Handler Html
 getEditReleaseR = undefined
 
 -- | Process release editing request.
 
-postEditReleaseR :: Text -> Handler Html
+postEditReleaseR
+  :: Text              -- ^ User slug
+  -> Text              -- ^ Release slug
+  -> Handler Html
 postEditReleaseR = undefined

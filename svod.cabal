@@ -61,6 +61,7 @@ library
                     , file-embed
                     , hjsmin                 >= 0.1
                     , http-conduit           >= 2.1
+                    , markdown               >= 0.1
                     , monad-control          >= 1.0
                     , monad-logger           >= 0.3
                     , path                   >= 0.5.3
@@ -98,6 +99,7 @@ library
                     , Handler.EditRelease
                     , Handler.FollowUser
                     , Handler.Home
+                    , Handler.Info
                     , Handler.Login
                     , Handler.Logout
                     , Handler.Profile

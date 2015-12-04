@@ -57,20 +57,20 @@ authMap
   :: Route App         -- ^ Route
   -> Bool              -- ^ Is it a write request?
   -> Handler AuthResult -- ^ Verdict
-authMap LogoutR          _ = onlyUsers
-authMap ChangePasswordR  _ = onlyUsers
-authMap VerifyR          _ = onlyUsers
-authMap ProfileR         _ = onlyUsers
-authMap BanUserR         _ = onlyStaff
-authMap DeleteUserR      _ = onlyAdmins
-authMap SubmitR          _ = onlyVerified
-authMap (EditReleaseR _) _ = onlyVerified
-authMap ApproveR         _ = onlyAdmins
-authMap RejectR          _ = onlyStaff
-authMap DeleteReleaseR   _ = onlyAdmins
-authMap StarReleaseR     _ = onlyVerified
-authMap FollowUserR      _ = onlyVerified
-authMap _                _ = return Authorized
+authMap LogoutR            _ = onlyUsers
+authMap ChangePasswordR    _ = onlyUsers
+authMap VerifyR            _ = onlyUsers
+authMap ProfileR           _ = onlyUsers
+authMap BanUserR           _ = onlyStaff
+authMap DeleteUserR        _ = onlyAdmins
+authMap SubmitR            _ = onlyVerified
+authMap (EditReleaseR _ _) _ = onlyVerified
+authMap ApproveR           _ = onlyAdmins
+authMap RejectR            _ = onlyStaff
+authMap DeleteReleaseR     _ = onlyAdmins
+authMap StarReleaseR       _ = onlyVerified
+authMap FollowUserR        _ = onlyVerified
+authMap _                  _ = return Authorized
 
 -- | Allow access only for logged in users (possibly with unverified
 -- emails).

@@ -65,6 +65,7 @@ import Handler.DeleteUser
 import Handler.EditRelease
 import Handler.FollowUser
 import Handler.Home
+import Handler.Info
 import Handler.Login
 import Handler.Logout
 import Handler.Profile

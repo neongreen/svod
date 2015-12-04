@@ -13,7 +13,7 @@ module Import.NoFoundation
   ( module I )
 where
 
-import ClassyPrelude.Yesod   as I
+import ClassyPrelude.Yesod   as I hiding ((</>))
 import Settings              as I
 import Settings.StaticFiles  as I
 import Svod.Model            as I

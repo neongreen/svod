@@ -38,6 +38,8 @@ import Yesod.Default.Util
 data AppSettings = AppSettings
   { appStaticDir :: Path Rel Dir
     -- ^ Directory from which to serve static files
+  , appInfoDir :: Path Rel Dir
+    -- ^ Directory that contains info articles.
   , appStagingDir :: Path Rel Dir
     -- ^ Where to keep staging releases
   , appReleaseDir :: Path Rel Dir
@@ -76,6 +78,7 @@ instance FromJSON AppSettings where
           False
 #endif
     appStaticDir              <- o .: "static-dir"  >>= ξ
+    appInfoDir                <- o .: "info-dir"    >>= ξ
     appStagingDir             <- o .: "staging-dir" >>= ξ
     appReleaseDir             <- o .: "release-dir" >>= ξ
     appDatabaseConf           <- o .: "database"

@@ -12,6 +12,7 @@ cabal-dev/
 cabal.sandbox.config/
 config/client_session_key.aes
 dist/
+info/
 static/combined/
 static/tmp/
 user-content/
