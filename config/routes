@@ -45,7 +45,6 @@
 
 -- Info articles
 
-/инфо/бизнес-логика               InfoBusinessLogicR GET
 /инфо/контактная-информация       InfoContactR       GET
 /инфо/краткий-тур                 InfoTourR          GET
 /инфо/о-проекте                   InfoAboutR         GET

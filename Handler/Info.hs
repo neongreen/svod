@@ -17,8 +17,7 @@
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.Info
-  ( getInfoBusinessLogicR
-  , getInfoContactR
+  ( getInfoContactR
   , getInfoTourR
   , getInfoAboutR
   , getInfoSupportSvodR
@@ -31,11 +30,6 @@ import Path
 import qualified Data.Text.Lazy    as T
 import qualified Data.Text.Lazy.IO as T
 import qualified Text.Markdown     as MD
-
--- | Business logic.
-
-getInfoBusinessLogicR :: Handler Html
-getInfoBusinessLogicR = renderInfo $(mkRelFile "бизнес-логика.md")
 
 -- | Contact information.
 
