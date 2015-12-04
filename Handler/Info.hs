@@ -25,8 +25,10 @@ module Handler.Info
   , getInfoContentR )
 where
 
+import Data.Char (isSpace)
 import Import
 import Path
+import Text.Blaze (toMarkup)
 import qualified Data.Text.Lazy    as T
 import qualified Data.Text.Lazy.IO as T
 import qualified Text.Markdown     as MD
@@ -61,8 +63,22 @@ getInfoEulaR = renderInfo $(mkRelFile "пользовательское-согл
 getInfoContentR :: Handler Html
 getInfoContentR = renderInfo $(mkRelFile "содержимое.md")
 
+-- | Render info article given relative path to markdown file.
+
 renderInfo :: Path Rel File -> Handler Html
 renderInfo file = do
   articleDir <- appInfoDir . appSettings <$> getYesod
   article    <- liftIO . T.readFile . fromRelFile $ articleDir </> file
-  return (MD.markdown MD.def article)
+  let (title', body) = T.break (== '\n') (T.strip article) -- HACK
+      title          = toMarkup (T.dropAround badChar title')
+      badChar x      = x == '#' || isSpace x
+  let html = MD.markdown MD.def
+               { MD.msBlockFilter  = processBlocks
+               , MD.msAddHeadingId = True }
+               body
+  defaultLayout (setTitle title >> toWidget html)
+
+-- | Special processing for document block. This resolved internal site
+-- links and adds anchors to section headers.
+
+processBlocks = id -- TODO
