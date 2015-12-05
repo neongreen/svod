@@ -25,13 +25,15 @@ module Handler.Info
   , getInfoContentR )
 where
 
-import Data.Char (isSpace)
 import Import
 import Path
-import Text.Blaze (toMarkup)
-import qualified Data.Text.Lazy    as T
-import qualified Data.Text.Lazy.IO as T
-import qualified Text.Markdown     as MD
+import Text.Read (readMaybe)
+import qualified Data.Text            as T
+import qualified Data.Text.Lazy       as TL
+import qualified Data.Text.Lazy.IO    as TL
+import qualified Text.Markdown        as MD
+import qualified Text.Markdown.Block  as MD
+import qualified Text.Markdown.Inline as MD
 
 -- | Contact information.
 
@@ -68,17 +70,40 @@ getInfoContentR = renderInfo $(mkRelFile "содержимое.md")
 renderInfo :: Path Rel File -> Handler Html
 renderInfo file = do
   articleDir <- appInfoDir . appSettings <$> getYesod
-  article    <- liftIO . T.readFile . fromRelFile $ articleDir </> file
-  let (title', body) = T.break (== '\n') (T.strip article) -- HACK
-      title          = toMarkup (T.dropAround badChar title')
-      badChar x      = x == '#' || isSpace x
-  let html = MD.markdown MD.def
-               { MD.msBlockFilter  = processBlocks
-               , MD.msAddHeadingId = True }
-               body
-  defaultLayout (setTitle title >> toWidget html)
+  article    <- liftIO . TL.readFile . fromRelFile $ articleDir </> file
+  render     <- getUrlRender
+  let (title', body) = TL.breakOn "\n\n" (TL.strip article)
+      -- ↑ HACK we regard first paragraph as title no matter what.
+      title          = MD.markdown strippingHeaders title'
+      html           = MD.markdown (resolvingLinks render) body
+  defaultLayout $ do
+    setTitle title
+    $(combineScripts 'StaticR [js_anchor_js, js_put_anchors_js])
+    toWidget html
 
--- | Special processing for document block. This resolved internal site
--- links and adds anchors to section headers.
+-- | Markdown rendering settings that drop headers. We use this to strip
+-- possible header markdown and get title for page as plain text.
 
-processBlocks = id -- TODO
+strippingHeaders :: MD.MarkdownSettings
+strippingHeaders = MD.def { MD.msBlockFilter = (>>= stripHeaders) }
+  where stripHeaders (MD.BlockHeading _ stuff) = [MD.BlockPlainText stuff]
+        stripHeaders block = pure block
+
+-- | Markdown rendering settings that resolve internal site links. Here we
+-- try to preserve orthogonality, so changes in @config/route@ don't make us
+-- change all the links in articles or anywhere else. Current solution is to
+-- use names of route constructors in articles and then construct routes at
+-- run-time using those names, then use Yesod's native URL rendering
+-- facilities to resolve those links.
+
+resolvingLinks
+  :: (Route App -> Text) -- ^ Transform type-safe route into URL
+  -> MD.MarkdownSettings -- ^ Markdown settings
+resolvingLinks render = MD.def { MD.msBlockFilter = (>>= processBlock) }
+  where processBlock (MD.BlockPara stuff) = [MD.BlockPara (f <$> stuff)]
+        processBlock block = pure block
+        f (MD.InlineLink url title content) =
+          case readMaybe (T.unpack url) :: Maybe (Route App) of
+            Nothing    -> MD.InlineLink url title content
+            Just route -> MD.InlineLink (render route) title content
+        f inline = inline

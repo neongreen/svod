@@ -40,3 +40,12 @@
 .navbar-default .glyphicon {
     color: #fff;
 }
+
+a.anchor:link, a.anchor:visited {
+    color: #ccc;
+}
+
+a.anchor:hover, a.anchor:active {
+    text-decoration: none;
+    color: #337ab7;
+}
