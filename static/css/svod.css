@@ -7,34 +7,37 @@
 
 .content p {
     margin-top: 15px;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 .navbar-default {
     background-color: #0f80ef;
     border-radius: 0;
-    border-color: #0069ff;
+    border-color: #0f59ef;
 }
 
-.navbar-default .navbar-brand:link {
+.navbar-default .navbar-brand {
     color: #fff;
-}
-
-.navbar-default .navbar-brand:visited {
-    color: #fff;
-}
-
-.navbar-default .navbar-brand:hover {
-    color: #fff;
-    background-color: #0069ff;
+    -webkit-transition: background-color 0.3s;
+    transition: background-color 0.3s;
 }
 
 .navbar-default .navbar-brand:active {
     color: #fff;
 }
 
+.navbar-default .navbar-brand:hover {
+    color: #fff;
+    background-color: #0f59ef;
+}
+
+.nav.navbar-nav.navbar-right a {
+    -webkit-transition: background-color 0.3s;
+    transition: background-color 0.3s;
+}
+
 .nav.navbar-nav.navbar-right a:hover {
-    background-color: #0069ff;
+    background-color: #0f59ef;
 }
 
 .navbar-default .glyphicon {
