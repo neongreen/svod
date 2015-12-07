@@ -8,12 +8,12 @@
 
 -- Registration, authentication, and profile management
 
-/вход           LoginR          GET POST
-/выход          LogoutR         POST
-/сменить-пароль ChangePasswordR GET POST
-/регистрация    RegisterR       GET POST
-/подтверждение  VerifyR         POST
-/профиль        ProfileR        GET POST
+/вход                LoginR          GET POST
+/выход               LogoutR         GET
+/сменить-пароль      ChangePasswordR GET POST
+/регистрация         RegisterR       GET POST
+/подтверждение/#Text VerifyR         GET
+/профиль             ProfileR        GET POST
 
 -- Administrative actions on users
 

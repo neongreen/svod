@@ -12,12 +12,24 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Handler.Verify
-  ( postVerifyR )
+  ( getVerifyR )
 where
 
+import Data.Maybe (fromJust)
 import Import
+import qualified Svod as S
 
--- | Email verification.
+-- | Email verification. Note that this code relies on the fact that
+-- authorization system won't let non-logged in users here. See "Foundation"
+-- module.
 
-postVerifyR :: Handler Html
-postVerifyR = undefined
+getVerifyR
+  :: Text              -- ^ Verification key
+  -> Handler Html
+getVerifyR verkey = do
+  uid <- fromJust <$> maybeAuthId
+  key <- fromJust <$> runDB (S.getVerifyKey uid)
+  when (verkey == key) $ do
+    runDB (S.setVerified uid)
+    setMessage "Регистрация подтверждена!"
+  redirect HomeR

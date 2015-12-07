@@ -9,7 +9,9 @@
 --
 -- The procedure of password changing.
 
+{-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.ChangePassword
   ( getChangePasswordR
@@ -17,6 +19,16 @@ module Handler.ChangePassword
 where
 
 import Import
+import Yesod.Form.Bootstrap3
+import qualified Svod as S
+
+-- | Information user need to provide in order to change his\/her password.
+
+data ChangePasswordForm = ChangePasswordForm
+  { cpOldPass  :: Text -- ^ Old password
+  , cpNewPass0 :: Text -- ^ New password
+  , cpNewPass1 :: Text -- ^ New password repeated
+  }
 
 -- | Serve page with form allowing to change user' password.
 

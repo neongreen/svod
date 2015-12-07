@@ -12,12 +12,12 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Handler.Logout
-  ( postLogoutR )
+  ( getLogoutR )
 where
 
 import Import
 
 -- | Logout user.
 
-postLogoutR :: Handler Html
-postLogoutR = undefined
+getLogoutR :: Handler TypedContent
+getLogoutR = toTypedContent <$> clearCreds True

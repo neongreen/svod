@@ -64,6 +64,7 @@ library
                     , markdown               >= 0.1
                     , monad-control          >= 1.0
                     , monad-logger           >= 0.3
+                    , nonce                  >= 1.0
                     , path                   >= 0.5.3
                     , persistent             >= 2.2
                     , persistent-postgresql  >= 2.2

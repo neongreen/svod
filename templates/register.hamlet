@@ -1,0 +1,7 @@
+<form method="post" role="form" action="@{RegisterR}" enctype="#{enctype}">
+  ^{form}
+  <button class="btn btn-primary" type="submit">
+    Готово
+  <em>Нажимая эту кнопку вы принимаете условия #
+    <a href="@{InfoEulaR}">пользовательского соглашения
+    \.
