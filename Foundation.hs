@@ -28,6 +28,7 @@ import Text.Jasmine (minifym)
 import Yesod.Auth.Message (AuthMessage (InvalidLogin))
 import Yesod.Core.Types (Logger)
 import Yesod.Default.Util (addStaticContentExternal)
+import Yesod.Form.I18n.Russian (russianFormMessage)
 import qualified Svod              as S
 import qualified Yesod.Core.Unsafe as Unsafe
 
@@ -59,7 +60,7 @@ authMap
   -> Handler AuthResult -- ^ Verdict
 authMap LogoutR            _ = onlyUsers
 authMap ChangePasswordR    _ = onlyUsers
-authMap VerifyR            _ = onlyUsers
+authMap (VerifyR _)        _ = onlyUsers
 authMap ProfileR           _ = onlyUsers
 authMap BanUserR           _ = onlyStaff
 authMap DeleteUserR        _ = onlyAdmins
@@ -81,17 +82,17 @@ onlyUsers = checkWho (const $ return True) "Да ну!"
 -- | Allow access only for logged in users with verified emails.
 
 onlyVerified :: Handler AuthResult
-onlyVerified = checkWho S.isVerified "Сперва нужно адрес почты подтвердить!"
+onlyVerified = checkWho S.isVerified "Сначала нужно подтвердить адрес почты!"
 
 -- | Allow access only for staff members (always includes admins).
 
 onlyStaff :: Handler AuthResult
-onlyStaff = checkWho S.isStaff "Только персонал Свода может это сделать"
+onlyStaff = checkWho S.isStaff "Только персонал Свода может это сделать."
 
 -- | Allow access only for admins.
 
 onlyAdmins :: Handler AuthResult
-onlyAdmins = checkWho S.isAdmin "Только администратор может сделать это"
+onlyAdmins = checkWho S.isAdmin "Только администратор может сделать это."
 
 -- | Generalized check of user identity.
 
@@ -110,6 +111,7 @@ checkWho f msg = do
 type Form x = Html -> MForm (HandlerT App IO) (FormResult x, Widget)
 
 instance Yesod App where
+
   -- Specify application root.
 
   approot = ApprootMaster (appRoot . appSettings)
@@ -186,6 +188,8 @@ instance YesodAuth App where
   loginDest         = const HomeR
   logoutDest        = const HomeR
   redirectToReferer = const True
+  onLogin           = return ()
+  onLogout          = return ()
 
   authenticate creds = runDB $ do
     user <- S.getUserBySlug . mkSlug . credsIdent $ creds
@@ -199,7 +203,10 @@ instance YesodAuth App where
 instance YesodAuthPersist App
 
 instance RenderMessage App FormMessage where
-    renderMessage _ _ = defaultFormMessage
+  renderMessage _ _ = russianFormMessage
+
+instance RenderMessage App AuthMessage where
+  renderMessage _ _ = const "Boo!"
 
 unsafeHandler :: App -> Handler a -> IO a
 unsafeHandler = Unsafe.fakeHandlerGetLogger appLogger
