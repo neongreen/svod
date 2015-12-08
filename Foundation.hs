@@ -21,7 +21,7 @@ module Foundation where
 
 import Data.Bool (bool)
 import Database.Persist.Sql (ConnectionPool, runSqlPool)
-import Import.Message
+import Handler.Error (svodErrorHandler)
 import Import.NoFoundation
 import Path (fromRelDir)
 import Text.Hamlet (hamletFile)
@@ -117,6 +117,10 @@ instance Yesod App where
   -- Specify application root.
 
   approot = ApprootMaster (appRoot . appSettings)
+
+  -- Customized error pages, see "Handler.Error".
+
+  errorHandler = svodErrorHandler
 
   -- Store session data on the client in encrypted cookies, default session
   -- idle timeout is 120 minutes.

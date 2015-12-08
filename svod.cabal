@@ -100,6 +100,7 @@ library
                     , Handler.DeleteRelease
                     , Handler.DeleteUser
                     , Handler.EditRelease
+                    , Handler.Error
                     , Handler.FollowUser
                     , Handler.Home
                     , Handler.Info
