@@ -98,11 +98,13 @@ postRegisterR = do
           User {..} = entityVal user
 #if DEVELOPMENT
       runDB (S.setVerified uid)
-      setMessage "Профиль автоматически активирован."
+      setMsg MsgSuccess "Профиль автоматически активирован."
 #else
       urlRender <- getUrlRender
       sendEmail userName userEmail (urlRender $ VerifyR userVerkey)
-      setMessage "Мы выслали вам ссылку для подтверждения регистрации."
+      setMsg MsgInfo $
+        "Мы выслали вам ссылку для подтверждения регистрации на `" <>
+        userEmail <> "`."
 #endif
       when (userSlug == mkSlug "Свод") $ runDB $ do
         S.setVerified uid
@@ -158,4 +160,4 @@ sendEmail
   -> Text              -- ^ Email address
   -> Text              -- ^ Verification URL
   -> Handler ()
-sendEmail = undefined
+sendEmail _ _ _ = return ()

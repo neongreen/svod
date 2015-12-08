@@ -1,0 +1,9 @@
+<div .alert .alert-dismissible
+     :isSuccess:.alert-success
+     :isInfo:.alert-info
+     :isWarning:.alert-warning
+     :isDanger:.alert-danger
+     role="alert">
+  <button type="button" .close data-dismiss="alert" aria-label="Убрать">
+    <span aria-hidden="true">&times;
+  #{message}

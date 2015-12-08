@@ -13,5 +13,6 @@ module Import
   ( module I )
 where
 
-import Foundation            as I
-import Import.NoFoundation   as I
+import Foundation          as I
+import Import.Message      as I
+import Import.NoFoundation as I

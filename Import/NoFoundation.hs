@@ -7,13 +7,14 @@
 -- Stability   :  experimental
 -- Portability :  portable
 --
--- Single import file including all basic things, kind of custom "Prelude".
+-- Single import file including all basic things, kind of custom
+-- "Prelude".
 
 module Import.NoFoundation
   ( module I )
 where
 
-import ClassyPrelude.Yesod   as I hiding ((</>))
+import ClassyPrelude.Yesod   as I hiding ((</>), setMessage)
 import Settings              as I
 import Settings.StaticFiles  as I
 import Svod.Model            as I

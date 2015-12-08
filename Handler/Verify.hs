@@ -31,5 +31,5 @@ getVerifyR verkey = do
   key <- fromJust <$> runDB (S.getVerifyKey uid)
   when (verkey == key) $ do
     runDB (S.setVerified uid)
-    setMessage "Регистрация подтверждена!"
+    setMsg MsgSuccess "Регистрация подтверждена!"
   redirect HomeR

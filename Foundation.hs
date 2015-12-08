@@ -21,6 +21,7 @@ module Foundation where
 
 import Data.Bool (bool)
 import Database.Persist.Sql (ConnectionPool, runSqlPool)
+import Import.Message
 import Import.NoFoundation
 import Path (fromRelDir)
 import Text.Hamlet (hamletFile)

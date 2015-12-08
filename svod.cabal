@@ -114,6 +114,7 @@ library
                     , Handler.Users
                     , Handler.Verify
                     , Import
+                    , Import.Message
                     , Import.NoFoundation
                     , Settings
                     , Settings.StaticFiles
