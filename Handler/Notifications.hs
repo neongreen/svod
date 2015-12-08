@@ -1,5 +1,5 @@
 -- |
--- Module      :  Handler.User
+-- Module      :  Handler.Notifications
 -- Copyright   :  © 2015 Mark Karpov
 -- License     :  GPL-3
 --
@@ -7,17 +7,17 @@
 -- Stability   :  experimental
 -- Portability :  portable
 --
--- Get information about particular user, in HTML or JSON.
+-- Page with notifications.
 
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Handler.User
-  ( getUserR )
+module Handler.Notifications
+  ( getNotificationsR )
 where
 
 import Import
 
--- | Get information about particular user in HTML or JSON.
+-- | Serve page with notifications for currently logged-in user.
 
-getUserR :: Text -> Handler TypedContent
-getUserR = undefined
+getNotificationsR :: Handler Html
+getNotificationsR = undefined

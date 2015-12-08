@@ -10,51 +10,63 @@
     <title>#{pageTitle pc}
     ^{pageHead pc}
   <body>
-    <div class="navbar navbar-default" role="navigation">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="@{HomeR}">
+    <div .navbar .navbar-default role="navigation">
+      <div .container-fluid>
+        <div .navbar-header>
+          <a .navbar-brand href="@{HomeR}" title="Свод">
             СВОД
-        <ul class="nav navbar-nav navbar-right">
+        <ul .nav .navbar-nav .navbar-right>
           $maybe user <- muser
             <li>
-              <a href="" id="dropdownProfile" data-toggle="dropdown"
-                 class="navbar-item"
-                 title="Вы вошли как #{S.userUsername user}">
-                #{S.userUsername user}
-              <ul class="dropdown-menu" area-labelledby="dropdownProfile">
+              <a .menu-item :releases:.menu-mark href="@{ReleasesR}"
+                 title="Публикации">
+                Публикации
+            <li>
+              <a .menu-item :artists:.menu-mark href="@{ArtistsR}"
+                 title="Артисты">
+                Артисты
+            <li>
+              <a .menu-item :notis:.menu-mark href="@{NotificationsR}"
+                 title="Сообщения">
+                <span .glyphicon .glyphicon-bell aria-hidden="true">
+            <li>
+              <a href="" id="dropdown-profile" data-toggle="dropdown"
+                 .menu-item
+                 title="Вы вошли как #{S.userName user}">
+                <span .glyphicon .glyphicon-user aria-hidden="true">
+              <ul .dropdown-menu area-labelledby="dropdown-profile">
                 <li>
-                  <a href="@{UserR $ getSlug $ S.userSlug user}">
+                  <a href="@{ProfileR}">
                     Ваш профиль
                 <li>
                   <a href="@{ChangePasswordR}">
                     Сменить пароль
+                <li .divider role="separator">
                 <li>
                   <a href="@{LogoutR}">
                     Выйти
           $nothing
             <li>
-              <a href="@{LoginR}">
-                <span class="glyphicon glyphicon-off" title="Войти">
+              <a .menu-item :register:.menu-mark href="@{RegisterR}">
+                Загеристрироваться
+            <li>
+              <a .menu-item :login:.menu-mark href="@{LoginR}">
+                Войти
 
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="col-sm-9 col-sm-offset-1 col-md-8 col-md-offset-2 main">
+    <div .container-fluid>
+      <div .row-fluid>
+        <div .col-sm-9 .col-sm-offset-1 .col-md-8 .col-md-offset-2 .main>
 
           $maybe msg <- mmsg
-            <div class="alert alert-info alert-dismissible" role="alert">
-              <button type="button" class="close" data-dismiss="alert"
-                      aria-label="Убрать">
-                <span aria-hidden="true">&times;
-              #{msg}
+            #{msg}
 
-          <div class="page-header">
+          <div .page-header>
             <h1>#{pageTitle pc}
-          <div class="content">
+          <div .content>
             ^{pageBody pc}
     <footer>
-      <div class="panel-footer">
-        <p class="text-center">
+      <div .panel-footer>
+        <p .text-center>
           <a href="@{InfoAboutR}">О проекте
           &middot;
           <a href="@{InfoEulaR}">Пользовательское соглашение
@@ -62,5 +74,5 @@
           <a href="@{InfoContactR}">Контактная информация
           &middot;
           <a href="@{InfoSupportSvodR}">Поддержать «Свод»
-        <p class="text-center">
+        <p .text-center>
           #{appCopyright $ appSettings master}

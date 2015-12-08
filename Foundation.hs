@@ -62,6 +62,7 @@ authMap
 authMap LogoutR            _ = onlyUsers
 authMap ChangePasswordR    _ = onlyUsers
 authMap (VerifyR _)        _ = onlyUsers
+authMap NotificationsR     _ = onlyUsers
 authMap ProfileR           _ = onlyUsers
 authMap BanUserR           _ = onlyStaff
 authMap DeleteUserR        _ = onlyAdmins
@@ -126,6 +127,12 @@ instance Yesod App where
   defaultLayout widget = do
     muser  <- fmap entityVal <$> maybeAuth
     master <- getYesod
+    route  <- getCurrentRoute
+    let register = route == Just RegisterR
+        login    = route == Just LoginR
+        releases = route == Just ReleasesR
+        artists  = route == Just ArtistsR
+        notis    = route == Just NotificationsR
     mmsg   <- getMessage
 
     -- We break up the default layout into two components: default-layout is

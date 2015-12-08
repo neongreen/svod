@@ -13,6 +13,8 @@
 /сменить-пароль      ChangePasswordR GET POST
 /регистрация         RegisterR       GET POST
 /подтверждение/#Text VerifyR         GET
+
+/сообщения           NotificationsR  GET
 /профиль             ProfileR        GET POST
 
 -- Administrative actions on users
@@ -20,10 +22,10 @@
 /забанить/пользователя BanUserR    POST
 /удалить/пользователя  DeleteUserR POST
 
--- Public information about users (also in JSON)
+-- Public information about users-artists (also in JSON)
 
-/пользователи       UsersR GET
-/пользователь/#Text UserR  GET
+/артисты       ArtistsR GET
+/артисты/#Text ArtistR  GET
 
 -- Actions on releases
 

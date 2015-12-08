@@ -1,19 +1,24 @@
+/* General styling */
+
 .content {
     font-size: 18px;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
     text-align: justify;
     word-wrap: break-word;
-    letter-spacing: 1px;
 }
 
 .content p {
-    margin-top: 15px;
     margin-bottom: 15px;
+    margin-top: 15px;
 }
+
+/* Navbar brand */
 
 .navbar-default {
     background-color: #0f80ef;
-    border-radius: 0;
-    border-color: #0f59ef;
+    border-style: none;
+    border-radius: 0px;
 }
 
 .navbar-default .navbar-brand {
@@ -22,7 +27,8 @@
     transition: background-color 0.3s;
 }
 
-.navbar-default .navbar-brand:active {
+.navbar-default .navbar-brand:active,
+.navbar-default .navbar-brand:visited {
     color: #fff;
 }
 
@@ -31,18 +37,35 @@
     background-color: #0f59ef;
 }
 
-.nav.navbar-nav.navbar-right a {
+/* Navbar menu item */
+
+.nav.navbar-nav .menu-item {
     -webkit-transition: background-color 0.3s;
+    color: #fff;
+    font-size: 16px;
     transition: background-color 0.3s;
 }
 
-.nav.navbar-nav.navbar-right a:hover {
+.nav.navbar-nav .menu-item:active,
+.nav.navbar-nav .menu-item:visited {
+    color: #fff;
+}
+
+.nav.navbar-nav .menu-item:hover {
+    color: #fff;
     background-color: #0f59ef;
 }
 
-.navbar-default .glyphicon {
-    color: #fff;
+.nav.navbar-nav .menu-item.menu-mark {
+    color: #0f80ef;
+    background-color: #fff;
 }
+
+.nav.navbar-nav .menu-item.menu-mark:hover {
+    color: #0f59ef;
+}
+
+/* Anchors in articles */
 
 a.anchor:link, a.anchor:visited {
     color: #ccc;
@@ -51,4 +74,15 @@ a.anchor:link, a.anchor:visited {
 a.anchor:hover, a.anchor:active {
     text-decoration: none;
     color: #337ab7;
+}
+
+/* Other */
+
+label {
+    font-weight: normal;
+}
+
+li.open #dropdown-profile.menu-item {
+    color: #fff;
+    background-color: #0f59ef;
 }
