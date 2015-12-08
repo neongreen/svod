@@ -19,13 +19,16 @@ module Handler.Register
   , postRegisterR )
 where
 
-import Data.Char (isLower, isUpper, isDigit)
+import Helper.Auth
+  ( checkUserName
+  , checkUserEmail
+  , checkPassStrength
+  , checkPassConfirm )
 import Import
 import System.IO.Unsafe (unsafePerformIO)
 import Yesod.Auth.Email (saltPass)
 import Yesod.Form.Bootstrap3
 import qualified Crypto.Nonce as Nonce
-import qualified Data.Text as T
 import qualified Svod as S
 
 -- | When user wants to register on our site, here is what he\/she has to
@@ -44,43 +47,19 @@ registrationForm :: Form RegistrationForm
 registrationForm = renderBootstrap3 BootstrapBasicForm $ RegistrationForm
   <$> areq nameField (withAutofocus $ bfs ("Имя" :: Text)) Nothing
   <*> areq emailField' (bfs ("Почта" :: Text)) Nothing
-  <*> areq passwdField (bfs ("Пароль" :: Text)) Nothing
-  <*> areq passwdField' (bfs ("Повторите пароль" :: Text)) Nothing
-  where nameField = checkM checkName textField
-        checkName :: Text -> Handler (Either Text Text)
-        checkName name = do
-          -- TODO We must check user names so they are appropriate.
-          muser <- runDB . S.getUserBySlug . mkSlug $ name
-          return $ case muser of
-            Nothing -> Right name
-            Just  _ -> Left  "Кто-то такой уже есть…"
-
-        emailField' = checkM checkEmail emailField
-        checkEmail :: Text -> Handler (Either Text Text)
-        checkEmail email = do
-          muser <- runDB (S.getUserByEmail email)
-          return $ case muser of
-            Nothing -> Right email
-            Just  _ -> Left "Этот адрес уже привязан к другому профилю."
-
-        passwdField = check checkPasswordStrength passwordField
-
-        passwdField' = check theSame passwordField
-        theSame :: Text -> Either Text Text
-        theSame = Right
-          -- do
-          -- result <- fst . fst <$> runFormPost registrationForm
-          -- return $ case result of
-          --   FormSuccess RegistrationForm {..} ->
-          --     if password /= rfPass0
-          --     then Left "Пароли не совпадают."
-          --     else Right password
-          --   _ -> Right password
+  <*> areq passField (bfs ("Пароль" :: Text)) Nothing
+  <*> areq passField' (bfs ("Повторите пароль" :: Text)) Nothing
+  where nameField   = checkM (checkUserName False) textField
+        emailField' = checkM checkUserEmail emailField
+        passField   = checkM checkPassStrength passwordField
+        passField'  = checkM checkPassConfirm passwordField
 
 -- | Serve registration page as visited for the first time.
 
 getRegisterR :: Handler Html
 getRegisterR = do
+  already <- isJust <$> maybeAuthId
+  when already (redirect HomeR)
   (form, enctype) <- generateFormPost registrationForm
   serveRegistration form enctype
 
@@ -138,20 +117,6 @@ defaultNonceGen :: Nonce.Generator
 defaultNonceGen = unsafePerformIO Nonce.new
 {-# NOINLINE defaultNonceGen #-}
 
--- | Too weak passwords are simply not allowed. A bit radical, but…
-
-checkPasswordStrength :: Text -> Either Text Text
-checkPasswordStrength password
-  | T.length password < 10 =
-    Left "Этот пароль слишком короткий, нужно минимум 10 символов."
-  | isNothing (T.find isLower password) =
-    Left "Нужно чтобы была хотя бы одна строчная буква."
-  | isNothing (T.find isUpper password) =
-    Left "Нужно чтобы была хотя бы одна заглавная буква."
-  | isNothing (T.find isDigit password) =
-    Left "Нужно чтобы была хотя бы одна цифра в пароле."
-  | otherwise = Right password
-
 -- | Send email with link that user has to click in order to verify
 -- (activate) his\/her account.
 
@@ -160,4 +125,4 @@ sendEmail
   -> Text              -- ^ Email address
   -> Text              -- ^ Verification URL
   -> Handler ()
-sendEmail _ _ _ = return ()
+sendEmail _ _ _ = return () -- TODO Send real emails

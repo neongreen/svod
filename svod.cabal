@@ -115,6 +115,7 @@ library
                     , Handler.StarRelease
                     , Handler.Submit
                     , Handler.Verify
+                    , Helper.Auth
                     , Import
                     , Import.Message
                     , Import.NoFoundation

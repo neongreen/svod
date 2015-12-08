@@ -18,9 +18,8 @@ module Handler.Login
   , postLoginR )
 where
 
-import Data.Maybe (fromJust)
+import Helper.Auth (checkUserName, checkPassCorrect)
 import Import
-import Yesod.Auth.Email (isValidPass)
 import Yesod.Form.Bootstrap3
 import qualified Svod as S
 
@@ -36,20 +35,16 @@ data LoginForm = LoginForm
 loginForm :: Form LoginForm
 loginForm = renderBootstrap3 BootstrapBasicForm $ LoginForm
   <$> areq nameField (withAutofocus $ bfs ("Имя" :: Text)) Nothing
-  <*> areq passwdField (bfs ("Пароль" :: Text)) Nothing
-  where nameField = checkM checkName textField
-        checkName :: Text -> Handler (Either Text Text)
-        checkName name = do
-          muser <- runDB $ S.getUserBySlug (mkSlug name)
-          case muser of
-            Nothing -> return (Left "Нет такого пользователя.")
-            Just  _ -> setPocket name >> return (Right name)
-        passwdField = checkM passwordMatches passwordField
+  <*> areq passField (bfs ("Пароль" :: Text)) Nothing
+  where nameField = checkM (checkUserName True) textField
+        passField = checkM passwordMatch' passwordField
 
 -- | Serve a page with login form.
 
 getLoginR :: Handler Html
 getLoginR = do
+  already <- isJust <$> maybeAuthId
+  when already (redirect HomeR)
   (form, enctype) <- generateFormPost loginForm
   serveLogin form enctype
 
@@ -76,28 +71,18 @@ serveLogin :: ToWidget App a
   => a                 -- ^ Login form
   -> Enctype           -- ^ Encoding type required by the form
   -> Handler Html      -- ^ Handler
-serveLogin form enctype = do
-  already <- isJust <$> maybeAuthId
-  when already (redirect HomeR)
-  defaultLayout $ do
-    -- TODO User must fill out CAPTCHA on every attempt.
-    setTitle "Вход"
-    $(widgetFile "login")
+serveLogin form enctype = defaultLayout $ do
+  -- TODO User must fill out CAPTCHA on every attempt.
+  setTitle "Вход"
+  $(widgetFile "login")
 
 -- | Check if given password is correct.
 
-passwordMatches :: Text -> Handler (Either Text Text)
-passwordMatches given = do
-  let msg = Left "Этот пароль не подходит."
+passwordMatch' :: Text -> Handler (Either Text Text)
+passwordMatch' given = do
   mname <- getPocket
   case mname of
-    Nothing -> return msg
+    Nothing -> return (Left "")
     Just name -> do
-      muid <- runDB $ S.getUserBySlug (mkSlug name)
-      case entityKey <$> muid of
-        Nothing -> return msg
-        Just uid -> do
-          salted <- fromJust <$> runDB (S.getPassword uid)
-          return $ if isValidPass given salted
-            then Right given
-            else msg
+      muid <- runDB . S.getUserBySlug . mkSlug $ name
+      checkPassCorrect (entityKey <$> muid) given

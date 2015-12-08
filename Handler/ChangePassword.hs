@@ -18,7 +18,10 @@ module Handler.ChangePassword
   , postChangePasswordR )
 where
 
+import Data.Maybe (fromJust)
+import Helper.Auth (checkPassCorrect, checkPassStrength, checkPassConfirm)
 import Import
+import Yesod.Auth.Email (saltPass)
 import Yesod.Form.Bootstrap3
 import qualified Svod as S
 
@@ -30,12 +33,51 @@ data ChangePasswordForm = ChangePasswordForm
   , cpNewPass1 :: Text -- ^ New password repeated
   }
 
+-- | Form for password changing.
+
+changePasswordForm :: Form ChangePasswordForm
+changePasswordForm = renderBootstrap3 BootstrapBasicForm $ ChangePasswordForm
+  <$> areq oldPassField (withAutofocus $ bfs ("Текущий пароль" :: Text)) Nothing
+  <*> areq newPassField (bfs ("Новый пароль" :: Text)) Nothing
+  <*> areq newPassField' (bfs ("Повторите новый пароль" :: Text)) Nothing
+  where oldPassField  = checkM passwordMatch' passwordField
+        newPassField  = checkM checkPassStrength passwordField
+        newPassField' = checkM checkPassConfirm passwordField
+
 -- | Serve page with form allowing to change user' password.
 
 getChangePasswordR :: Handler Html
-getChangePasswordR = undefined
+getChangePasswordR = do
+  (form, enctype) <- generateFormPost changePasswordForm
+  serveChangePassword form enctype
 
 -- | Process results of password change form.
 
 postChangePasswordR :: Handler Html
-postChangePasswordR = undefined
+postChangePasswordR = do
+  ((result, form), enctype) <- runFormPost changePasswordForm
+  case result of
+    FormSuccess ChangePasswordForm {..} -> do
+      uid      <- fromJust <$> maybeAuthId
+      password <- liftIO (saltPass cpNewPass0)
+      runDB (S.setPassword uid password)
+      setMsg MsgSuccess "Пароль изменен успешно."
+    _ -> return ()
+  serveChangePassword form enctype
+
+-- | Serve page with “change password” form.
+
+serveChangePassword :: ToWidget App a
+  => a                 -- ^ “Change password” form
+  -> Enctype           -- ^ Encoding type required by the form
+  -> Handler Html      -- ^ Handler
+serveChangePassword form enctype = defaultLayout $ do
+  setTitle "Изменение пароля"
+  $(widgetFile "change-password")
+
+-- | Check if given password is correct.
+
+passwordMatch' :: Text -> Handler (Either Text Text)
+passwordMatch' given = do
+  muid <- maybeAuthId
+  checkPassCorrect muid given
