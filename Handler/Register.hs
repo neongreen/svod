@@ -50,7 +50,7 @@ registrationForm = renderBootstrap3 BootstrapBasicForm $ RegistrationForm
         checkName :: Text -> Handler (Either Text Text)
         checkName name = do
           -- TODO We must check user names so they are appropriate.
-          muser <- runDB $ S.getUserBySlug (S.mkSlug name)
+          muser <- runDB . S.getUserBySlug . mkSlug $ name
           return $ case muser of
             Nothing -> Right name
             Just  _ -> Left  "Кто-то такой уже есть…"
@@ -58,7 +58,7 @@ registrationForm = renderBootstrap3 BootstrapBasicForm $ RegistrationForm
         emailField' = checkM checkEmail emailField
         checkEmail :: Text -> Handler (Either Text Text)
         checkEmail email = do
-          muser <- runDB $ S.getUserByEmail email
+          muser <- runDB (S.getUserByEmail email)
           return $ case muser of
             Nothing -> Right email
             Just  _ -> Left "Этот адрес уже привязан к другому профилю."
@@ -142,7 +142,7 @@ defaultNonceGen = unsafePerformIO Nonce.new
 
 checkPasswordStrength :: Text -> Either Text Text
 checkPasswordStrength password
-  | T.length password < 12 =
+  | T.length password < 10 =
     Left "Этот пароль слишком короткий, нужно минимум 10 символов."
   | isNothing (T.find isLower password) =
     Left "Нужно чтобы была хотя бы одна строчная буква."

@@ -11,15 +11,17 @@
 -- the second half. We split the whole thing because of Template Haskell
 -- limitations.
 
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude     #-}
-{-# LANGUAGE TemplateHaskell       #-}
-{-# LANGUAGE TypeFamilies          #-}
-{-# LANGUAGE ViewPatterns          #-}
+{-# LANGUAGE ExistentialQuantification #-}
+{-# LANGUAGE MultiParamTypeClasses     #-}
+{-# LANGUAGE NoImplicitPrelude         #-}
+{-# LANGUAGE TemplateHaskell           #-}
+{-# LANGUAGE TypeFamilies              #-}
+{-# LANGUAGE ViewPatterns              #-}
 
 module Foundation where
 
 import Data.Bool (bool)
+import Data.Typeable (cast)
 import Database.Persist.Sql (ConnectionPool, runSqlPool)
 import Handler.Error (svodErrorHandler)
 import Import.NoFoundation
@@ -44,11 +46,43 @@ data App = App
   , appConnPool    :: ConnectionPool -- ^ Database connection pool
   , appHttpManager :: Manager        -- ^ HTTP manager
   , appLogger      :: Logger         -- ^ Logger settings
+  , appPocket      :: TVar Pocket
+    -- ^ HACK This is needed for decent form validation when validation of
+    -- one field depends on other fields.
+    --
+    -- Yesod authors and maintainers think that we should do such checks
+    -- after form submission and then set message in case of trouble. I
+    -- think it introduces inconsistency in UI. In other words, if user
+    -- enters incorrect password, it shouldn't validate and clear message
+    -- /under the password/ should appear telling the user that the password
+    -- is incorrect. The same with password confirmation.
   }
 
-instance HasHttpManager App where
-  getHttpManager = appHttpManager
+----------------------------------------------------------------------------
+-- Pocket implementation
 
+-- | Existentially quantified wrapper around typeable instance.
+
+data Pocket = forall a. Typeable a => Pocket a
+
+-- | Set pocket value.
+
+setPocket :: Typeable a
+  => a                 -- ^ Value to save
+  -> HandlerT App IO ()
+setPocket val = do
+  ref <- getsYesod appPocket
+  void . liftIO . atomically . swapTVar ref $ Pocket val
+
+-- | Get value from the pocket. Pocket is automatically cleared then.
+
+getPocket :: Typeable a => HandlerT App IO (Maybe a)
+getPocket = do
+  ref <- getsYesod appPocket
+  (Pocket val) <- liftIO (readTVarIO ref)
+  return (cast val)
+
+----------------------------------------------------------------------------
 -- Define routes, see also 'mkYesodDispatch' in "Application".
 
 mkYesodData "App" $(parseRoutesFile "config/routes")
@@ -108,9 +142,15 @@ checkWho f msg = do
     Nothing -> return AuthenticationRequired
     Just u  -> runDB $ bool (Unauthorized msg) Authorized <$> f u
 
+----------------------------------------------------------------------------
+-- Some instances
+
 -- | A convenient synonym for creating forms.
 
 type Form x = Html -> MForm (HandlerT App IO) (FormResult x, Widget)
+
+instance HasHttpManager App where
+  getHttpManager = appHttpManager
 
 instance Yesod App where
 
@@ -217,9 +257,6 @@ instance YesodAuthPersist App
 
 instance RenderMessage App FormMessage where
   renderMessage _ _ = russianFormMessage
-
-instance RenderMessage App AuthMessage where
-  renderMessage _ _ = const "Boo!"
 
 unsafeHandler :: App -> Handler a -> IO a
 unsafeHandler = Unsafe.fakeHandlerGetLogger appLogger

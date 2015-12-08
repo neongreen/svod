@@ -18,7 +18,9 @@ module Handler.Login
   , postLoginR )
 where
 
+import Data.Maybe (fromJust)
 import Import
+import Yesod.Auth.Email (isValidPass)
 import Yesod.Form.Bootstrap3
 import qualified Svod as S
 
@@ -38,10 +40,10 @@ loginForm = renderBootstrap3 BootstrapBasicForm $ LoginForm
   where nameField = checkM checkName textField
         checkName :: Text -> Handler (Either Text Text)
         checkName name = do
-          muser <- runDB $ S.getUserBySlug (S.mkSlug name)
-          return $ case muser of
-            Nothing -> Left "Нет такого пользователя."
-            Just  _ -> Right name
+          muser <- runDB $ S.getUserBySlug (mkSlug name)
+          case muser of
+            Nothing -> return (Left "Нет такого пользователя.")
+            Just  _ -> setPocket name >> return (Right name)
         passwdField = checkM passwordMatches passwordField
 
 -- | Serve a page with login form.
@@ -58,9 +60,10 @@ postLoginR = do
   ((result, form), enctype) <- runFormPost loginForm
   case result of
     FormSuccess LoginForm {..} -> do
-      muser <- runDB $ S.getUserBySlug (mkSlug lfName)
+      muser <- runDB . S.getUserBySlug . mkSlug $ lfName
       case muser of
-        Nothing -> undefined -- FIXME deal with incorrect login
+        Nothing -> toTypedContent <$>
+          setMsg MsgDanger "Нет такого пользователя."
         Just user -> toTypedContent <$> setCredsRedirect Creds
           { credsPlugin = "custom"
           , credsIdent  = getSlug . userSlug . entityVal $ user
@@ -84,4 +87,17 @@ serveLogin form enctype = do
 -- | Check if given password is correct.
 
 passwordMatches :: Text -> Handler (Either Text Text)
-passwordMatches = return . Right -- TODO
+passwordMatches given = do
+  let msg = Left "Этот пароль не подходит."
+  mname <- getPocket
+  case mname of
+    Nothing -> return msg
+    Just name -> do
+      muid <- runDB $ S.getUserBySlug (mkSlug name)
+      case entityKey <$> muid of
+        Nothing -> return msg
+        Just uid -> do
+          salted <- fromJust <$> runDB (S.getPassword uid)
+          return $ if isValidPass given salted
+            then Right given
+            else msg
