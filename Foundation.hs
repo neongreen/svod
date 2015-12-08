@@ -133,6 +133,7 @@ instance Yesod App where
         releases = route == Just ReleasesR
         artists  = route == Just ArtistsR
         notis    = route == Just NotificationsR
+        profile  = route == Just ProfileR || route == Just ChangePasswordR
     mmsg   <- getMessage
 
     -- We break up the default layout into two components: default-layout is

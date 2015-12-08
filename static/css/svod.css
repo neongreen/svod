@@ -17,8 +17,9 @@
 
 .navbar-default {
     background-color: #0f80ef;
-    border-style: none;
     border-radius: 0px;
+    border-style: none;
+    box-shadow: 0px 10px 10px #ccc;
 }
 
 .navbar-default .navbar-brand {
@@ -85,4 +86,9 @@ label {
 li.open #dropdown-profile.menu-item {
     color: #fff;
     background-color: #0f59ef;
+}
+
+li.open #dropdown-profile.menu-item.menu-mark {
+    color: #0f80ef;
+    background-color: #fff;
 }
