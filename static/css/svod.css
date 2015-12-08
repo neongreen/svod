@@ -24,8 +24,8 @@
 
 .navbar-default .navbar-brand {
     color: #fff;
-    -webkit-transition: background-color 0.3s;
-    transition: background-color 0.3s;
+    -webkit-transition: text-shadow 0.3s;
+    transition: text-shadow 0.3s;
 }
 
 .navbar-default .navbar-brand:active,
@@ -35,16 +35,16 @@
 
 .navbar-default .navbar-brand:hover {
     color: #fff;
-    background-color: #0f59ef;
+    text-shadow: 0px 0px 4px #fff;
 }
 
 /* Navbar menu item */
 
 .nav.navbar-nav .menu-item {
-    -webkit-transition: background-color 0.3s;
     color: #fff;
     font-size: 16px;
-    transition: background-color 0.3s;
+    -webkit-transition: text-shadow 0.3s;
+    transition: text-shadow 0.3s;
 }
 
 .nav.navbar-nav .menu-item:active,
@@ -54,16 +54,11 @@
 
 .nav.navbar-nav .menu-item:hover {
     color: #fff;
-    background-color: #0f59ef;
+    text-shadow: 0px 0px 4px #fff;
 }
 
 .nav.navbar-nav .menu-item.menu-mark {
-    color: #0f80ef;
-    background-color: #fff;
-}
-
-.nav.navbar-nav .menu-item.menu-mark:hover {
-    color: #0f59ef;
+    background-color: #0f59ef;
 }
 
 /* Anchors in articles */
@@ -86,9 +81,4 @@ label {
 li.open #dropdown-profile.menu-item {
     color: #fff;
     background-color: #0f59ef;
-}
-
-li.open #dropdown-profile.menu-item.menu-mark {
-    color: #0f80ef;
-    background-color: #fff;
 }
