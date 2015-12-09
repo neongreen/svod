@@ -117,6 +117,7 @@ library
                     , Handler.User
                     , Handler.Users
                     , Handler.Verify
+                    , Helper.Access
                     , Helper.Auth
                     , Import
                     , Import.Message

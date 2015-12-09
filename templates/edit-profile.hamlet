@@ -1,0 +1,5 @@
+<form method="post" role="form" action="@{EditProfileR (getSlug slug)}"
+      enctype="#{enctype}">
+  ^{form}
+  <button .btn .btn-primary type="submit">
+    Готово

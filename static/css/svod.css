@@ -86,3 +86,23 @@ li.open #dropdown-profile.menu-item {
 li.open ul.dropdown-menu a:hover {
     background-color: #ccc;
 }
+
+.alert a {
+  font-weight: bold;
+}
+
+.alert-success a {
+  color: #2b542c;
+}
+
+.alert-info a {
+  color: #245269;
+}
+
+.alert-warning a {
+  color: #66512c;
+}
+
+.alert-danger a {
+  color: #843534;
+}

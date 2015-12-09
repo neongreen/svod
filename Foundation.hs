@@ -93,54 +93,63 @@ authMap
   :: Route App         -- ^ Route
   -> Bool              -- ^ Is it a write request?
   -> Handler AuthResult -- ^ Verdict
-authMap LogoutR            _ = isUser
-authMap ChangePasswordR    _ = isUser
-authMap (VerifyR _)        _ = isUser
-authMap NotificationsR     _ = isUser
-authMap (EditProfileR _)   _ = isUser
-authMap BanUserR           _ = isStaff
-authMap DeleteUserR        _ = isAdmin
-authMap SubmitR            _ = isVerified
-authMap (EditReleaseR _ _) _ = isVerified
-authMap ApproveR           _ = isAdmin
-authMap RejectR            _ = isStaff
-authMap DeleteReleaseR     _ = isAdmin
-authMap StarReleaseR       _ = isVerified
-authMap FollowUserR        _ = isVerified
-authMap _                  _ = return Authorized
+authMap LogoutR             _ = isUser
+authMap ChangePasswordR     _ = isUser
+authMap (VerifyR _)         _ = isUser
+authMap NotificationsR      _ = isUser
+authMap (EditProfileR slug) _ = isAdminOrSelf slug
+authMap BanUserR            _ = isStaff
+authMap DeleteUserR         _ = isAdmin
+authMap SubmitR             _ = isVerified
+authMap (EditReleaseR _ _)  _ = isVerified
+authMap ApproveR            _ = isAdmin
+authMap RejectR             _ = isStaff
+authMap DeleteReleaseR      _ = isAdmin
+authMap StarReleaseR        _ = isVerified
+authMap FollowUserR         _ = isVerified
+authMap _                   _ = return Authorized
 
 -- | Select logged-in users (possibly with unverified emails).
 
 isUser :: Handler AuthResult
-isUser = checkWho (const $ return True) "Да ну!"
+isUser = checkWho "Да ну!" (const $ return True)
 
 -- | Select only logged-in users with verified emails.
 
 isVerified :: Handler AuthResult
-isVerified = checkWho S.isVerified "Сначала нужно подтвердить адрес почты!"
+isVerified = checkWho "Сначала нужно подтвердить адрес почты!" S.isVerified
 
 -- | Select banned users.
 
 isBanned :: Handler AuthResult
-isBanned = checkWho S.isBanned "Необходимо быть забанненным пользователем."
+isBanned = checkWho "Необходимо быть забанненным пользователем." S.isBanned
 
 -- | Select staff members (always includes admins).
 
 isStaff :: Handler AuthResult
-isStaff = checkWho S.isStaff "Только персонал Свода может это сделать."
+isStaff = checkWho "Только персонал Свода может это сделать." S.isStaff
 
 -- | Select only admins.
 
 isAdmin :: Handler AuthResult
-isAdmin = checkWho S.isAdmin "Только администратор может сделать это."
+isAdmin = checkWho "Только администратор может сделать это." S.isAdmin
+
+-- | Finally some pages can be accessed only by their owners or admins.
+
+isAdminOrSelf :: Text -> Handler AuthResult
+isAdminOrSelf slug =
+  checkWho "Вы не имеете доступа к этой странице." $ \uid -> do
+    admin <- S.isAdmin uid
+    self  <- S.getUserBySlug (mkSlug slug)
+    return $ admin || (entityKey <$> self) == Just uid
 
 -- | Generalized check of user identity.
 
 checkWho
-  :: (UserId -> YesodDB App Bool) -- ^ Predicate
-  -> Text              -- ^ Message if user doesn't satisfy the predicate
+  :: Text              -- ^ Message if user doesn't satisfy the predicate
+  -> (UserId -> YesodDB App Bool) -- ^ Predicate
   -> Handler AuthResult -- ^ Verdict
-checkWho f msg = do
+checkWho msg f = do
   muid <- maybeAuthId
   case muid of
     Nothing -> return AuthenticationRequired
