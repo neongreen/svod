@@ -25,11 +25,17 @@ import Helper.Auth
   , checkPassStrength
   , checkPassConfirm )
 import Import
+import Network.Mail.Mime hiding (htmlPart)
 import System.IO.Unsafe (unsafePerformIO)
+import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
+import Text.Hamlet (shamletFile)
+import Text.Shakespeare.Text (textFile)
 import Yesod.Auth.Email (saltPass)
 import Yesod.Form.Bootstrap3
-import qualified Crypto.Nonce as Nonce
-import qualified Svod as S
+import qualified Crypto.Nonce            as Nonce
+import qualified Data.Text.Lazy.Builder  as T
+import qualified Data.Text.Lazy.Encoding as T
+import qualified Svod                    as S
 
 -- | When user wants to register on our site, here is what he\/she has to
 -- submit.
@@ -119,10 +125,32 @@ defaultNonceGen = unsafePerformIO Nonce.new
 
 -- | Send email with link that user has to click in order to verify
 -- (activate) his\/her account.
+--
+-- This uses standard system utility @sendmail@. It's good enough for now.
 
 sendEmail
   :: Text              -- ^ User name
   -> Text              -- ^ Email address
   -> Text              -- ^ Verification URL
   -> Handler ()
-sendEmail _ _ _ = return () -- TODO Send real emails
+sendEmail name email url = do
+  render <- getUrlRender
+  let textPart = Part
+        { partType     = "text/plain; charset=utf-8"
+        , partEncoding = None
+        , partFilename = Nothing
+        , partContent  = T.encodeUtf8 . T.toLazyText $
+           $(textFile "templates/verification-email.txt") render
+        , partHeaders  = [] }
+      htmlPart = Part
+        { partType     = "text/html; charset=utf-8"
+        , partEncoding = None
+        , partFilename = Nothing
+        , partContent  = renderHtml
+           $(shamletFile "templates/verification-email.hamlet")
+        , partHeaders  = [] }
+  liftIO $ renderSendMail
+    (emptyMail $ Address (Just "Проект «Свод»") "noreply")
+    { mailTo      = [Address Nothing email]
+    , mailHeaders = [("Subject", "Подтверждение регистрации")]
+    , mailParts   = [[textPart, htmlPart]] }
