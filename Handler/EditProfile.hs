@@ -1,5 +1,5 @@
 -- |
--- Module      :  Handler.Profile
+-- Module      :  Handler.EditProfile
 -- Copyright   :  © 2015 Mark Karpov
 -- License     :  GPL-3
 --
@@ -7,23 +7,23 @@
 -- Stability   :  experimental
 -- Portability :  portable
 --
--- View and edit user profile.
+-- Edit user profile.
 
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Handler.Profile
-  ( getProfileR
-  , postProfileR )
+module Handler.EditProfile
+  ( getEditProfileR
+  , postEditProfileR )
 where
 
 import Import
 
 -- | Serve page containing form that allows to edit user profile.
 
-getProfileR :: Handler Html
-getProfileR = undefined
+getEditProfileR :: Text -> Handler Html
+getEditProfileR slug = undefined
 
 -- | Process submitted form and refresh user's profile.
 
-postProfileR :: Handler Html
-postProfileR = undefined
+postEditProfileR :: Text -> Handler Html
+postEditProfileR slug = undefined

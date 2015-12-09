@@ -22,7 +22,7 @@
                  title="Публикации">
                 Публикации
             <li>
-              <a .menu-item :artists:.menu-mark href="@{ArtistsR}"
+              <a .menu-item :artists:.menu-mark href="@{UsersR}"
                  title="Авторы">
                 Авторы
             <li>
@@ -30,10 +30,11 @@
                  title="Сообщения">
                 <span .glyphicon .glyphicon-bell aria-hidden="true">
             <li>
-              <a href="@{ProfileR}" id="dropdown-profile"
+              <a href="@{UserR $ getSlug $ userSlug $ user}"
+                 id="dropdown-profile"
                  data-toggle="dropdown"
                  .menu-item :profile:.menu-mark
-                 title="Вы вошли как #{S.userName user}">
+                 title="Вы вошли как #{userName user}">
                 <span .glyphicon .glyphicon-user aria-hidden="true">
                 <span .caret>
               <ul .dropdown-menu area-labelledby="dropdown-profile">

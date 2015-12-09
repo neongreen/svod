@@ -93,42 +93,46 @@ authMap
   :: Route App         -- ^ Route
   -> Bool              -- ^ Is it a write request?
   -> Handler AuthResult -- ^ Verdict
-authMap LogoutR            _ = onlyUsers
-authMap ChangePasswordR    _ = onlyUsers
-authMap (VerifyR _)        _ = onlyUsers
-authMap NotificationsR     _ = onlyUsers
-authMap ProfileR           _ = onlyUsers
-authMap BanUserR           _ = onlyStaff
-authMap DeleteUserR        _ = onlyAdmins
-authMap SubmitR            _ = onlyVerified
-authMap (EditReleaseR _ _) _ = onlyVerified
-authMap ApproveR           _ = onlyAdmins
-authMap RejectR            _ = onlyStaff
-authMap DeleteReleaseR     _ = onlyAdmins
-authMap StarReleaseR       _ = onlyVerified
-authMap FollowUserR        _ = onlyVerified
+authMap LogoutR            _ = isUser
+authMap ChangePasswordR    _ = isUser
+authMap (VerifyR _)        _ = isUser
+authMap NotificationsR     _ = isUser
+authMap (EditProfileR _)   _ = isUser
+authMap BanUserR           _ = isStaff
+authMap DeleteUserR        _ = isAdmin
+authMap SubmitR            _ = isVerified
+authMap (EditReleaseR _ _) _ = isVerified
+authMap ApproveR           _ = isAdmin
+authMap RejectR            _ = isStaff
+authMap DeleteReleaseR     _ = isAdmin
+authMap StarReleaseR       _ = isVerified
+authMap FollowUserR        _ = isVerified
 authMap _                  _ = return Authorized
 
--- | Allow access only for logged in users (possibly with unverified
--- emails).
+-- | Select logged-in users (possibly with unverified emails).
 
-onlyUsers :: Handler AuthResult
-onlyUsers = checkWho (const $ return True) "Да ну!"
+isUser :: Handler AuthResult
+isUser = checkWho (const $ return True) "Да ну!"
 
--- | Allow access only for logged in users with verified emails.
+-- | Select only logged-in users with verified emails.
 
-onlyVerified :: Handler AuthResult
-onlyVerified = checkWho S.isVerified "Сначала нужно подтвердить адрес почты!"
+isVerified :: Handler AuthResult
+isVerified = checkWho S.isVerified "Сначала нужно подтвердить адрес почты!"
 
--- | Allow access only for staff members (always includes admins).
+-- | Select banned users.
 
-onlyStaff :: Handler AuthResult
-onlyStaff = checkWho S.isStaff "Только персонал Свода может это сделать."
+isBanned :: Handler AuthResult
+isBanned = checkWho S.isBanned "Необходимо быть забанненным пользователем."
 
--- | Allow access only for admins.
+-- | Select staff members (always includes admins).
 
-onlyAdmins :: Handler AuthResult
-onlyAdmins = checkWho S.isAdmin "Только администратор может сделать это."
+isStaff :: Handler AuthResult
+isStaff = checkWho S.isStaff "Только персонал Свода может это сделать."
+
+-- | Select only admins.
+
+isAdmin :: Handler AuthResult
+isAdmin = checkWho S.isAdmin "Только администратор может сделать это."
 
 -- | Generalized check of user identity.
 
@@ -141,6 +145,12 @@ checkWho f msg = do
   case muid of
     Nothing -> return AuthenticationRequired
     Just u  -> runDB $ bool (Unauthorized msg) Authorized <$> f u
+
+-- | Build “yes or no” variation of the functions above.
+
+ynAuth :: AuthResult -> Bool
+ynAuth Authorized = True
+ynAuth _          = False
 
 ----------------------------------------------------------------------------
 -- Some instances
@@ -175,9 +185,12 @@ instance Yesod App where
     let register = route == Just RegisterR
         login    = route == Just LoginR
         releases = route == Just ReleasesR
-        artists  = route == Just ArtistsR
+        artists  = route == Just UsersR -- FIXME
         notis    = route == Just NotificationsR
-        profile  = route == Just ProfileR || route == Just ChangePasswordR
+        profile  = route `elem`
+          [ UserR . getSlug . userSlug <$> muser
+          , EditProfileR . getSlug . userSlug <$> muser
+          , Just ChangePasswordR ]
     mmsg   <- getMessage
 
     -- We break up the default layout into two components: default-layout is

@@ -14,8 +14,8 @@
 /регистрация         RegisterR       GET POST
 /подтверждение/#Text VerifyR         GET
 
-/сообщения           NotificationsR  GET
-/профиль             ProfileR        GET POST
+/сообщения                   NotificationsR  GET
+/редактировать/профиль/#Text EditProfileR    GET POST
 
 -- Administrative actions on users
 
@@ -24,7 +24,7 @@
 
 -- Public information about users-artists (also in JSON)
 
-/авторы             ArtistsR GET
+/пользователи       UsersR   GET
 /пользователь/#Text UserR    GET
 
 -- Actions on releases

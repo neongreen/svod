@@ -57,12 +57,12 @@ import System.Log.FastLogger
   , toLogStr )
 
 import Handler.Approve
-import Handler.Artists
 import Handler.BanUser
 import Handler.ChangePassword
 import Handler.Common
 import Handler.DeleteRelease
 import Handler.DeleteUser
+import Handler.EditProfile
 import Handler.EditRelease
 import Handler.FollowUser
 import Handler.Home
@@ -70,7 +70,6 @@ import Handler.Info
 import Handler.Login
 import Handler.Logout
 import Handler.Notifications
-import Handler.Profile
 import Handler.Register
 import Handler.Reject
 import Handler.Release
@@ -78,6 +77,7 @@ import Handler.Releases
 import Handler.StarRelease
 import Handler.Submit
 import Handler.User
+import Handler.Users
 import Handler.Verify
 
 mkYesodDispatch "App" resourcesApp
