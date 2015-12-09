@@ -57,7 +57,6 @@ import System.Log.FastLogger
   , toLogStr )
 
 import Handler.Approve
-import Handler.Artist
 import Handler.Artists
 import Handler.BanUser
 import Handler.ChangePassword
@@ -78,6 +77,7 @@ import Handler.Release
 import Handler.Releases
 import Handler.StarRelease
 import Handler.Submit
+import Handler.User
 import Handler.Verify
 
 mkYesodDispatch "App" resourcesApp

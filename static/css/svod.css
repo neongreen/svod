@@ -82,3 +82,7 @@ li.open #dropdown-profile.menu-item {
     color: #fff;
     background-color: #0f59ef;
 }
+
+li.open ul.dropdown-menu a:hover {
+    background-color: #ccc;
+}

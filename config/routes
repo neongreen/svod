@@ -24,8 +24,8 @@
 
 -- Public information about users-artists (also in JSON)
 
-/артисты       ArtistsR GET
-/артисты/#Text ArtistR  GET
+/авторы             ArtistsR GET
+/пользователь/#Text UserR    GET
 
 -- Actions on releases
 

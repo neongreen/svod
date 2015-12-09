@@ -92,7 +92,6 @@ library
   exposed-modules:    Application
                     , Foundation
                     , Handler.Approve
-                    , Handler.Artist
                     , Handler.Artists
                     , Handler.BanUser
                     , Handler.ChangePassword
@@ -114,6 +113,7 @@ library
                     , Handler.Releases
                     , Handler.StarRelease
                     , Handler.Submit
+                    , Handler.User
                     , Handler.Verify
                     , Helper.Auth
                     , Import

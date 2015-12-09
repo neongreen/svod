@@ -23,8 +23,8 @@
                 Публикации
             <li>
               <a .menu-item :artists:.menu-mark href="@{ArtistsR}"
-                 title="Артисты">
-                Артисты
+                 title="Авторы">
+                Авторы
             <li>
               <a .menu-item :notis:.menu-mark href="@{NotificationsR}"
                  title="Сообщения">
@@ -38,7 +38,7 @@
                 <span .caret>
               <ul .dropdown-menu area-labelledby="dropdown-profile">
                 <li>
-                  <a href="@{ProfileR}">
+                  <a href="@{UserR $ getSlug $ userSlug $ user}">
                     Ваш профиль
                 <li>
                   <a href="@{ChangePasswordR}">

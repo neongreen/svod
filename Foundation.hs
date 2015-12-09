@@ -74,7 +74,7 @@ setPocket val = do
   ref <- getsYesod appPocket
   void . liftIO . atomically . swapTVar ref $ Pocket val
 
--- | Get value from the pocket. Pocket is automatically cleared then.
+-- | Get value from the pocket.
 
 getPocket :: Typeable a => HandlerT App IO (Maybe a)
 getPocket = do
