@@ -22,7 +22,8 @@ module Handler.Info
   , getInfoAboutR
   , getInfoSupportSvodR
   , getInfoEulaR
-  , getInfoContentR )
+  , getInfoContentR
+  , getInfoMarkdownR )
 where
 
 import Import
@@ -64,6 +65,11 @@ getInfoEulaR = renderInfo $(mkRelFile "пользовательское-согл
 
 getInfoContentR :: Handler Html
 getInfoContentR = renderInfo $(mkRelFile "содержимое.md")
+
+-- | An article explaining how to use Markdown.
+
+getInfoMarkdownR :: Handler Html
+getInfoMarkdownR = renderInfo $(mkRelFile "язык-разметки.md")
 
 -- | Render info article given relative path to markdown file.
 

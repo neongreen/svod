@@ -1,5 +1,10 @@
 <form method="post" role="form" action="@{EditProfileR (getSlug slug)}"
       enctype="#{enctype}">
   ^{form}
+  <p>
+    <span .glyphicon .glyphicon-arrow-up aria-hidden="true">
+    В этом поле можно использовать #
+    <a href="@{InfoMarkdownR}">специальный язык разметки
+    \.
   <button .btn .btn-primary type="submit">
     Готово
