@@ -49,6 +49,7 @@ library
                     , app
   build-depends:      aeson                  >= 0.8
                     , base                   >= 4.8 && < 5
+                    , blaze-html             >= 0.8
                     , bytestring             >= 0.9
                     , classy-prelude         >= 0.10.2
                     , classy-prelude-conduit >= 0.10.2
@@ -62,6 +63,7 @@ library
                     , hjsmin                 >= 0.1
                     , http-conduit           >= 2.1
                     , markdown               >= 0.1
+                    , mime-mail              >= 0.4
                     , monad-control          >= 1.0
                     , monad-logger           >= 0.3
                     , nonce                  >= 1.0
