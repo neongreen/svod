@@ -20,7 +20,6 @@ import Data.Text.Encoding (decodeUtf8With)
 import Data.Text.Encoding.Error (lenientDecode)
 import Import.NoFoundation
 import Network.Wai (rawPathInfo)
-import Yesod.Core (defaultErrorHandler)
 
 -- | Collection of customized error pages. It's possible that we will
 -- override more of these things in the future.
