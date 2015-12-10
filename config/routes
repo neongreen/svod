@@ -8,8 +8,8 @@
 
 -- Registration, authentication, and profile management
 
-/регистрация         RegisterR       GET POST
-/вход                LoginR          GET POST
+/регистрация RegisterR GET POST
+/вход        LoginR    GET POST
 
 /выход                       LogoutR         GET
 /подтверждение/#Text         VerifyR         GET
