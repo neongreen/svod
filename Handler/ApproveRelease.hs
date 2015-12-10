@@ -1,5 +1,5 @@
 -- |
--- Module      :  Handler.Approve
+-- Module      :  Handler.ApproveRelease
 -- Copyright   :  © 2015 Mark Karpov
 -- License     :  GPL-3
 --
@@ -11,13 +11,13 @@
 
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Handler.Approve
-  ( postApproveR )
+module Handler.ApproveRelease
+  ( postApproveReleaseR )
 where
 
 import Import
 
 -- | Approve submitted release. Only admins can do that.
 
-postApproveR :: Handler Html
-postApproveR = undefined
+postApproveReleaseR :: Handler Html
+postApproveReleaseR = undefined

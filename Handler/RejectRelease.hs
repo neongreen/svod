@@ -1,5 +1,5 @@
 -- |
--- Module      :  Handler.Reject
+-- Module      :  Handler.RejectRelease
 -- Copyright   :  © 2015 Mark Karpov
 -- License     :  GPL-3
 --
@@ -11,13 +11,13 @@
 
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Handler.Reject
-  ( postRejectR )
+module Handler.RejectRelease
+  ( postRejectReleaseR )
 where
 
 import Import
 
 -- | Reject submitted release. Only admins and staff can do that.
 
-postRejectR :: Handler Html
-postRejectR = undefined
+postRejectReleaseR :: Handler Html
+postRejectReleaseR = undefined

@@ -87,27 +87,75 @@ getPocket = do
 
 mkYesodData "App" $(parseRoutesFile "config/routes")
 
--- | Authorization map. We keep it here for readability.
+-- | Authorization map. We keep it here for readability. The alternative
+-- with route attributes is not type-safe and would require some additional
+-- pains to get it truly right. We don't use “catch-all” pattern at the end
+-- of this list to force us explicitly select authorization policy for every
+-- route, most importantly we don't want to make new routes accessible by
+-- default.
+--
+-- See also: file @config/routes@.
 
-authMap
-  :: Route App         -- ^ Route
-  -> Bool              -- ^ Is it a write request?
-  -> Handler AuthResult -- ^ Verdict
-authMap LogoutR             _ = isUser
-authMap ChangePasswordR     _ = isUser
-authMap (VerifyR _)         _ = isUser
-authMap NotificationsR      _ = isUser
-authMap (EditProfileR slug) _ = isAdminOrSelf slug
-authMap BanUserR            _ = isStaff
-authMap DeleteUserR         _ = isAdmin
-authMap SubmitR             _ = isVerified
-authMap (EditReleaseR _ _)  _ = isVerified
-authMap ApproveR            _ = isAdmin
-authMap RejectR             _ = isStaff
-authMap DeleteReleaseR      _ = isAdmin
-authMap StarReleaseR        _ = isVerified
-authMap FollowUserR         _ = isVerified
-authMap _                   _ = return Authorized
+authm :: Route App -> Handler AuthResult
+
+-- General stuff
+
+authm HomeR       = return Authorized
+authm FaviconR    = return Authorized
+authm RobotsR     = return Authorized
+authm (StaticR _) = return Authorized
+
+-- Registration, authentication, and profile management
+
+authm RegisterR = return Authorized
+authm LoginR    = return Authorized
+
+authm LogoutR             = isUser
+authm (VerifyR _)         = isUser
+authm NotificationsR      = isUser
+authm (EditProfileR slug) = isAdminOrSelf slug
+authm ChangePasswordR     = isUser
+
+-- Administrative actions on users
+
+authm VerifyUserR = isStaff
+authm BanUserR    = isStaff
+authm DeleteUserR = isAdmin
+authm MakeStaffR  = isAdmin
+authm MakeAdminR  = isAdmin
+
+-- Public information about users (also in JSON)
+
+authm UsersR    = return Authorized
+authm (UserR _) = return Authorized
+
+-- Actions on releases
+
+authm SubmitReleaseR        = isVerified
+authm (EditReleaseR slug _) = isAdminOrSelf slug
+authm ApproveReleaseR       = isAdmin
+authm RejectReleaseR        = isStaff
+authm DeleteReleaseR        = isAdmin
+
+-- Public information about releases (also in JSON)
+
+authm ReleasesR      = return Authorized
+authm (ReleaseR _ _) = return Authorized
+
+-- Social features
+
+authm StarReleaseR = isVerified
+authm FollowUserR  = isVerified
+
+-- Info articles
+
+authm InfoContactR     = return Authorized
+authm InfoTourR        = return Authorized
+authm InfoAboutR       = return Authorized
+authm InfoSupportSvodR = return Authorized
+authm InfoEulaR        = return Authorized
+authm InfoContentR     = return Authorized
+authm InfoMarkdownR    = return Authorized
 
 -- | Select logged-in users (possibly with unverified emails).
 
@@ -218,7 +266,7 @@ instance Yesod App where
   -- The page to be redirected to when authentication is required.
   authRoute = const . Just $ LoginR
 
-  isAuthorized = authMap
+  isAuthorized route _ = authm route
 
   -- This function creates static content files in the static folder and
   -- names them based on a hash of their content. This allows expiration

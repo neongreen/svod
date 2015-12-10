@@ -93,12 +93,11 @@ library
                     , RecordWildCards
   exposed-modules:    Application
                     , Foundation
-                    , Handler.Approve
-                    , Handler.BanUser
+                    , Handler.Administrative
+                    , Handler.ApproveRelease
                     , Handler.ChangePassword
                     , Handler.Common
                     , Handler.DeleteRelease
-                    , Handler.DeleteUser
                     , Handler.EditProfile
                     , Handler.EditRelease
                     , Handler.Error
@@ -109,11 +108,11 @@ library
                     , Handler.Logout
                     , Handler.Notifications
                     , Handler.Register
-                    , Handler.Reject
+                    , Handler.RejectRelease
                     , Handler.Release
                     , Handler.Releases
                     , Handler.StarRelease
-                    , Handler.Submit
+                    , Handler.SubmitRelease
                     , Handler.User
                     , Handler.Users
                     , Handler.Verify

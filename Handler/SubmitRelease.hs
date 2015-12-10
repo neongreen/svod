@@ -1,5 +1,5 @@
 -- |
--- Module      :  Handler.Submit
+-- Module      :  Handler.SubmitRelease
 -- Copyright   :  © 2015 Mark Karpov
 -- License     :  GPL-3
 --
@@ -11,19 +11,19 @@
 
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Handler.Submit
-  ( getSubmitR
-  , postSubmitR )
+module Handler.SubmitRelease
+  ( getSubmitReleaseR
+  , postSubmitReleaseR )
 where
 
 import Import
 
 -- | Serve page with “submit release” form.
 
-getSubmitR :: Handler Html
-getSubmitR = undefined
+getSubmitReleaseR :: Handler Html
+getSubmitReleaseR = undefined
 
 -- | Process submission.
 
-postSubmitR :: Handler Html
-postSubmitR = undefined
+postSubmitReleaseR :: Handler Html
+postSubmitReleaseR = undefined
