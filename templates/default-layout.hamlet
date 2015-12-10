@@ -34,10 +34,15 @@
                  id="dropdown-profile"
                  data-toggle="dropdown"
                  .menu-item :profile:.menu-mark
-                 title="Вы вошли как #{userName user}">
+                 title="Профиль">
                 <span .glyphicon .glyphicon-user aria-hidden="true">
                 <span .caret>
               <ul .dropdown-menu area-labelledby="dropdown-profile">
+                <li .dropdown-header>
+                  Вы вошли как #
+                  <strong>
+                    #{userName user}
+                <li .divider role="separator">
                 <li>
                   <a href="@{UserR $ getSlug $ userSlug $ user}">
                     Ваш профиль

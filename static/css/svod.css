@@ -19,7 +19,7 @@
     background-color: #0f80ef;
     border-radius: 0px;
     border-style: none;
-    box-shadow: 0px 10px 10px #ccc;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, .2);
 }
 
 .navbar-default .navbar-brand {
@@ -72,11 +72,7 @@ a.anchor:hover, a.anchor:active {
     color: #337ab7;
 }
 
-/* Other */
-
-label {
-    font-weight: normal;
-}
+/* Dropdown menu */
 
 li.open #dropdown-profile.menu-item {
     color: #fff;
@@ -84,7 +80,18 @@ li.open #dropdown-profile.menu-item {
 }
 
 li.open ul.dropdown-menu a:hover {
-    background-color: #ccc;
+    color: #fff;
+    background-color: #337ab7;
+}
+
+.dropdown-menu {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+}
+
+/* Other */
+
+label {
+    font-weight: normal;
 }
 
 .alert a {
