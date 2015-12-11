@@ -27,8 +27,9 @@ import qualified Svod as S
 -- | Editable pieces of user profile.
 
 data EditProfileForm = EditProfileForm
-  { epWebsite :: Maybe Text  -- ^ Website
-  , epDesc    :: Maybe Textarea -- ^ Description (“About me”)
+  { epEmailPublic :: Bool
+  , epWebsite     :: Maybe Text  -- ^ Website
+  , epDesc        :: Maybe Textarea -- ^ Description (“About me”)
   }
 
 -- | Everything user can edit in his profile is on this form. The argument
@@ -37,10 +38,15 @@ data EditProfileForm = EditProfileForm
 editProfileForm :: User -> Form EditProfileForm
 editProfileForm User {..} =
   renderBootstrap3 BootstrapBasicForm $ EditProfileForm
-    <$> aopt urlField (withAutofocus $ bfs ("Ваш сайт" :: Text))
+    <$> areq checkBoxField
+      (withAutofocus $ bfs
+       ("Публичный адрес почты (" <> email <> ")" :: Text))
+      (Just userEmailPublic)
+    <*> aopt urlField (bfs ("Ваш сайт" :: Text))
       (Just userWebsite)
     <*> aopt textareaField (bfs ("Расскажите о себе" :: Text))
       (Just $ Textarea <$> userDesc)
+  where email = fromMaybe "<неверный формат>" (emailPretty userEmail)
 
 -- | Serve page containing form that allows to edit user profile.
 
@@ -63,6 +69,7 @@ postEditProfileR slug' =
       FormSuccess EditProfileForm {..} -> do
         runDB $ S.editUserProfile
           (entityKey user)
+          epEmailPublic
           epWebsite
           (unTextarea <$> epDesc)
         render <- getUrlRender

@@ -14,7 +14,7 @@ module Import.NoFoundation
   ( module I )
 where
 
-import ClassyPrelude.Yesod   as I hiding ((</>), setMessage)
+import ClassyPrelude.Yesod   as I hiding ((</>), setMessage, ReleaseType (..))
 import Settings              as I
 import Settings.StaticFiles  as I
 import Svod.Model            as I
