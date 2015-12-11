@@ -20,8 +20,6 @@ where
 
 import ClassyPrelude.Yesod
 import Text.Hamlet (shamletFile)
-import qualified Data.Text.Lazy as TL
-import qualified Text.Markdown  as MD
 
 -- | Type of message. At the end of the day it affects which class to assign
 -- to rendered message.
@@ -39,11 +37,10 @@ data MsgType
 
 setMsg :: MonadHandler m
   => MsgType           -- ^ Message type
-  -> Text              -- ^ Format string
+  -> Html              -- ^ Format string
   -> m ()
-setMsg msgType raw =
-  let message   = MD.markdown MD.def (TL.fromStrict raw)
-      isSuccess = msgType == MsgSuccess
+setMsg msgType message =
+  let isSuccess = msgType == MsgSuccess
       isInfo    = msgType == MsgInfo
       isWarning = msgType == MsgWarning
       isDanger  = msgType == MsgDanger

@@ -11,6 +11,7 @@
 
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.EditProfile
@@ -66,9 +67,12 @@ postEditProfileR slug' =
           (unTextarea <$> epDesc)
         render <- getUrlRender
         let profileUrl = render (UserR slug')
-        setMsg MsgSuccess $
-          "Профиль пользователя [" <> userName (entityVal user) <>
-          "](" <> profileUrl <> ") обновлен успешно."
+        setMsg MsgSuccess [shamlet|
+Профиль пользователя #
+<a href="#{profileUrl}">
+  #{userName $ entityVal user}
+\ обновлен успешно.
+|]
       _ -> return ()
     serveEditProfile slug form enctype
 

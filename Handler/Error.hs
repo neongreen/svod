@@ -43,12 +43,12 @@ svodErrorHandler (PermissionDenied message) = selectRep $ do
   provideRep . return $ object
     ["message" .= ("Permission Denied. " <> message)]
 
-svodErrorHandler (InternalError e) = selectRep $ do
+svodErrorHandler (InternalError err) = selectRep $ do
   provideRep . defaultLayout $ do
     setTitle "500 Внутренняя ошибка сервера"
     $(widgetFile "500")
   provideRep . return $ object
     [ "message" .= ("Internal Server Error" :: Text)
-    , "error"   .= e ]
+    , "error"   .= err ]
 
 svodErrorHandler response = defaultErrorHandler response

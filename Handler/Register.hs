@@ -12,6 +12,7 @@
 {-# LANGUAGE CPP               #-}
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.Register
@@ -87,9 +88,12 @@ postRegisterR = do
 #else
       urlRender <- getUrlRender
       sendEmail userName userEmail (urlRender $ VerifyR userVerkey)
-      setMsg MsgInfo $
-        "Мы выслали вам ссылку для подтверждения регистрации на `" <>
-        userEmail <> "`."
+      setMsg MsgInfo [shamlet|
+Мы выслали вам ссылку для подтверждения регистрации на #
+<strong>
+  #{userEmail}
+.
+|]
 #endif
       when (userSlug == mkSlug "Свод") $ runDB $ do
         S.setVerified uid
