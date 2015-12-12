@@ -18,6 +18,7 @@ module Widget.FollowUser
   ( followUserW )
 where
 
+import Helper.Access (userViaSlug')
 import Import
 import qualified Data.Text.Encoding as TE
 import qualified Svod as S
@@ -27,25 +28,22 @@ import qualified Svod as S
 -- template.
 
 followUserW :: Slug -> Widget
-followUserW slug = do
+followUserW slug = userViaSlug' slug $ \target' -> do
   let φ = handlerToWidget . runDB
-  mtarget <- φ (S.getUserBySlug slug)
-  case entityKey <$> mtarget of
-    Nothing -> notFound
-    Just target -> do
-      muid <- handlerToWidget maybeAuthId
-      buttonId  <- newIdent
-      counterId <- newIdent
-      iconId    <- newIdent
-      let loggedIn = isJust muid
-      following <- case muid of
-        Nothing  -> return False
-        Just uid -> φ $ S.isFollower target uid
-      count'    <- φ (S.followerCount target)
-      let count         = fromIntegral count'           :: Int
-          activeTitle   = "Не следить за пользователем" :: Text
-          inactiveTitle = "Следить за пользователем"    :: Text
-          activeIcon    = "glyphicon-eye-close"         :: Text
-          inactiveIcon  = "glyphicon-eye-open"          :: Text
-      addScript (StaticR js_cookie_js)
-      $(widgetFile "follow-user")
+      target = entityKey target'
+  muid      <- handlerToWidget maybeAuthId
+  buttonId  <- newIdent
+  counterId <- newIdent
+  iconId    <- newIdent
+  let loggedIn = isJust muid
+  following <- case muid of
+    Nothing  -> return False
+    Just uid -> φ (S.isFollower target uid)
+  count'    <- φ (S.followerCount target)
+  let count         = fromIntegral count'           :: Int
+      activeTitle   = "Не следить за пользователем" :: Text
+      inactiveTitle = "Следить за пользователем"    :: Text
+      activeIcon    = "glyphicon-eye-close"         :: Text
+      inactiveIcon  = "glyphicon-eye-open"          :: Text
+  addScript (StaticR js_cookie_js)
+  $(widgetFile "follow-user")

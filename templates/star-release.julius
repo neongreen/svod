@@ -1,0 +1,49 @@
+if (#{toJSON loggedIn})
+{
+
+$(#{toJSONId buttonId}).click(function() {
+    var obj = $(this);
+    var artistSlug = obj.attr('data-artist-slug');
+    var releaseSlug = obj.attr('data-release-slug');
+    var xsrfToken =
+        Cookies.get(#{toJSON $ TE.decodeUtf8 $ defaultCsrfCookieName});
+    obj.removeClass('active');
+    obj.prop('disabled', true);
+    $.ajax({
+        method: 'POST',
+        url:    '@{StarReleaseR}',
+        data:   {#{toJSON defaultCsrfParamName}: xsrfToken,
+                 'artist-slug': artistSlug,
+                 'release-slug': releaseSlug
+                },
+        success: function (response) {
+            var count = obj.find(#{toJSONId counterId});
+            var icon  = obj.find(#{toJSONId iconId});
+            count.html(response.count);
+            if (response.active)
+            {
+                obj.addClass('active');
+                obj.attr('title', #{toJSON activeTitle});
+                icon.removeClass(#{toJSON inactiveIcon});
+                icon.addClass(#{toJSON activeIcon});
+            }
+            else
+            {
+                obj.attr('title', #{toJSON inactiveTitle});
+                icon.removeClass(#{toJSON activeIcon});
+                icon.addClass(#{toJSON inactiveIcon});
+            }
+        }
+    });
+    obj.prop('disabled', false);
+    obj.blur();
+});
+
+} else {
+
+$(#{toJSONId buttonId}).popover({
+    trigger: 'hover',
+    content: 'Войдите или зарегистрируйтесь чтобы отметить публикацию.'
+});
+
+}

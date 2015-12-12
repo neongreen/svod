@@ -1,0 +1,14 @@
+$with notStarred <- not starred
+  <a ##{buttonId}
+     .btn .btn-default :starred:.active
+     data-artist-slug="#{getSlug aslug}"
+     data-release-slug="#{getSlug rslug}"
+     href="javascript:void(0)"
+     :notStarred:title="#{inactiveTitle}"
+     :starred:title="#{activeTitle}">
+    <strong ##{counterId}>#{count}
+    <span ##{iconId}
+          .glyphicon
+          :following:.#{activeIcon}
+          :notFollowing:.#{inactiveIcon}
+          aria-hidden="true">
