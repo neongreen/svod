@@ -124,6 +124,7 @@ library
                     , Settings
                     , Settings.StaticFiles
                     , Widget.FollowUser
+                    , Widget.StarRelease
 
   if flag(dev) || flag(library-only)
     cpp-options:      -DDEVELOPMENT
