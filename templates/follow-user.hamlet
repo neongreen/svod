@@ -1,0 +1,13 @@
+$with notFollowing <- not following
+  <a ##{buttonId}
+     .btn .btn-default :following:.active
+     data-user-slug="#{getSlug slug}"
+     href="javascript:void(0)"
+     :notFollowing:title="#{inactiveTitle}"
+     :following:title="#{activeTitle}">
+    <strong ##{counterId}>#{count}
+    <span ##{iconId}
+          .glyphicon
+          :following:.#{activeIcon}
+          :notFollowing:.#{inactiveIcon}
+          aria-hidden="true">

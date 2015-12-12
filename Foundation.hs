@@ -311,7 +311,7 @@ instance YesodAuth App where
   loginDest         = const HomeR
   logoutDest        = const HomeR
   redirectToReferer = const True
-  onLogin           = return ()
+  onLogin           = setCsrfCookie
   onLogout          = return ()
 
   authenticate creds = runDB $ do

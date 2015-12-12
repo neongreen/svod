@@ -11,7 +11,8 @@
 -- "Prelude".
 
 module Import.NoFoundation
-  ( module I )
+  ( module I
+  , toJSONId )
 where
 
 import ClassyPrelude.Yesod   as I hiding ((</>), setMessage, ReleaseType (..))
@@ -21,3 +22,8 @@ import Svod.Model            as I
 import Yesod.Auth            as I hiding (LoginR, LogoutR)
 import Yesod.Core.Types      as I (loggerSet)
 import Yesod.Default.Config2 as I
+
+-- | A helper to render identifiers in jQuery as JSON objects.
+
+toJSONId :: Text -> Value
+toJSONId text = toJSON ("#" <> text)

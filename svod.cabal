@@ -123,6 +123,7 @@ library
                     , Import.NoFoundation
                     , Settings
                     , Settings.StaticFiles
+                    , Widget.FollowUser
 
   if flag(dev) || flag(library-only)
     cpp-options:      -DDEVELOPMENT
