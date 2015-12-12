@@ -28,6 +28,11 @@ import qualified Svod as S
 -- POST request should have @"artist-slug"@ and @"release-slug"@ parameters
 -- identifying release as well as 'defaultCsrfParamName' parameter
 -- containing CSRF-protection token.
+--
+-- Response is a JSON object with two attributes:
+--     * @active@ — Boolean value telling whether the release is starred
+--     by current user after executing of the action and
+--     * @count@ — the total number of users who have starred the release.
 
 postStarReleaseR :: Handler TypedContent
 postStarReleaseR = do

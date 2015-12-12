@@ -27,6 +27,11 @@ import qualified Svod as S
 --
 -- POST request should have @"slug"@ parameter identifying user to follow
 -- and 'defaultCsrfParamName' parameter containing CSRF-protection token.
+--
+-- Response is a JSON object with two attributes:
+--     * @active@ — Boolean value telling whether current user is
+--     following target user after executing of the action and
+--     * @count@ — the total number of users following target user now.
 
 postFollowUserR :: Handler TypedContent
 postFollowUserR = do
