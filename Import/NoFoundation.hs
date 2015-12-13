@@ -15,7 +15,8 @@ module Import.NoFoundation
   , toJSONId )
 where
 
-import ClassyPrelude.Yesod   as I hiding ((</>), setMessage, ReleaseType (..))
+import ClassyPrelude.Yesod   as I hiding
+  ((</>), setMessage, ReleaseType (..), count)
 import Settings              as I
 import Settings.StaticFiles  as I
 import Svod.Model            as I

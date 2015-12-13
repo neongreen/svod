@@ -35,7 +35,6 @@ followUserW slug = userViaSlug' slug $ \target' -> do
   buttonId  <- newIdent
   counterId <- newIdent
   iconId    <- newIdent
-  let loggedIn = isJust muid
   following <- case muid of
     Nothing  -> return False
     Just uid -> φ (S.isFollower target uid)
@@ -46,4 +45,7 @@ followUserW slug = userViaSlug' slug $ \target' -> do
       activeIcon    = "glyphicon-eye-close"         :: Text
       inactiveIcon  = "glyphicon-eye-open"          :: Text
   addScript (StaticR js_cookie_js)
+  if isJust muid
+  then $(widgetFile "follow-user-logged-in")
+  else $(widgetFile "follow-user-guest")
   $(widgetFile "follow-user")

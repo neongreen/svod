@@ -9,6 +9,6 @@ $with notStarred <- not starred
     <strong ##{counterId}>#{count}
     <span ##{iconId}
           .glyphicon
-          :following:.#{activeIcon}
-          :notFollowing:.#{inactiveIcon}
+          :starred:.#{activeIcon}
+          :notStarred:.#{inactiveIcon}
           aria-hidden="true">

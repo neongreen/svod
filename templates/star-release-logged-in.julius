@@ -1,18 +1,17 @@
-if (#{toJSON loggedIn})
-{
-
 $(#{toJSONId buttonId}).click(function() {
     var obj = $(this);
-    var userSlug = obj.attr('data-user-slug');
+    var artistSlug = obj.attr('data-artist-slug');
+    var releaseSlug = obj.attr('data-release-slug');
     var xsrfToken =
         Cookies.get(#{toJSON $ TE.decodeUtf8 $ defaultCsrfCookieName});
     obj.removeClass('active');
     obj.prop('disabled', true);
     $.ajax({
         method: 'POST',
-        url:    '@{FollowUserR}',
+        url:    '@{StarReleaseR}',
         data:   {#{toJSON defaultCsrfParamName}: xsrfToken,
-                 'slug': userSlug
+                 'artist-slug': artistSlug,
+                 'release-slug': releaseSlug
                 },
         success: function (response) {
             var count = obj.find(#{toJSONId counterId});
@@ -36,12 +35,3 @@ $(#{toJSONId buttonId}).click(function() {
     obj.prop('disabled', false);
     obj.blur();
 });
-
-} else {
-
-$(#{toJSONId buttonId}).popover({
-    trigger: 'hover',
-    content: 'Войдите или зарегистрируйтесь чтобы следить за пользователями.'
-});
-
-}

@@ -28,14 +28,13 @@ starReleaseW
   :: Slug              -- ^ Artist slug
   -> Slug              -- ^ Release slug
   -> Widget            -- ^ Resulting widget
-starReleaseW aslug rslug = releaseViaSlug aslug rslug $ \artist' release' -> do
+starReleaseW aslug rslug = releaseViaSlug' aslug rslug $ \_ release' -> do
   let φ = handlerToWidget . runDB
       release = entityKey release'
   muid      <- handlerToWidget maybeAuthId
   buttonId  <- newIdent
   counterId <- newIdent
   iconId    <- newIdent
-  let lgogedIn = isJust muid
   starred <- case muid of
     Nothing  -> return False
     Just uid -> φ (S.isStarredBy release uid)
@@ -46,4 +45,7 @@ starReleaseW aslug rslug = releaseViaSlug aslug rslug $ \artist' release' -> do
       activeIcon    = "glyphicon-star"         :: Text
       inactiveIcon  = "glyphicon-star-empty"   :: Text
   addScript (StaticR js_cookie_js)
+  if isJust muid
+  then $(widgetFile "star-release-logged-in")
+  else $(widgetFile "star-release-guest")
   $(widgetFile "star-release")
