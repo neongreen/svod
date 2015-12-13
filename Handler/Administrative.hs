@@ -32,34 +32,45 @@ import qualified Svod as S
 --
 -- POST request should have @"slug"@ parameter identifying user to verify
 -- and 'defaultCsrfParamName' parameter containing CSRF-protection token.
---
--- Response is a JSON object with single attribute:
---     * @verified@ which tells whether the user is currently verified.
 
 postVerifyUserR :: Handler TypedContent
-postVerifyUserR = postAdministrative S.setVerified S.isVerified "verified"
+postVerifyUserR = postAdministrative S.setVerified UserR
 
 -- | Ban a user. We use hellban, it's good for trolls.
+--
+-- POST request should have @"slug"@ parameter identifying user to ban and
+-- 'defaultCsrfParamName' parameter containing CSRF-protection token.
 
 postBanUserR :: Handler TypedContent
-postBanUserR = postAdministrative toggleBanned S.isBanned "banned"
+postBanUserR = postAdministrative toggleBanned UserR
   where toggleBanned uid = S.isBanned uid >>= S.setBanned uid . not
 
 -- | Delete a user, use with great care.
+--
+-- POST request should have @"slug"@ parameter identifying user to delete
+-- and 'defaultCsrfParamName' parameter containing CSRF-protection token.
 
 postDeleteUserR :: Handler TypedContent
-postDeleteUserR = postAdministrative S.deleteUser S.doesUserExist "exists"
+postDeleteUserR = postAdministrative S.deleteUser (const HomeR)
 
 -- | Make a user staff member.
+--
+-- POST request should have @"slug"@ parameter identifying user to make
+-- staff member and 'defaultCsrfParamName' parameter containing
+-- CSRF-protection token.
 
 postMakeStaffR :: Handler TypedContent
-postMakeStaffR = postAdministrative toggleStaff S.isStaff "staff"
+postMakeStaffR = postAdministrative toggleStaff UserR
   where toggleStaff uid = S.isStaff uid >>= S.setStaff uid . not
 
 -- | Make a user admin, use with great care.
+--
+-- POST request should have @"slug"@ parameter identifying user to make
+-- admin member and 'defaultCsrfParamName' parameter containing
+-- CSRF-protection token.
 
 postMakeAdminR :: Handler TypedContent
-postMakeAdminR = postAdministrative toggleAdmin S.isAdmin "admin"
+postMakeAdminR = postAdministrative toggleAdmin UserR
   where toggleAdmin uid = S.isAdmin uid >>= S.setAdmin uid . not
 
 -- | Generalized version of administrative action on user. User is always
@@ -67,14 +78,12 @@ postMakeAdminR = postAdministrative toggleAdmin S.isAdmin "admin"
 
 postAdministrative
   :: (UserId -> YesodDB App ()) -- ^ Action on perform on user
-  -> (UserId -> YesodDB App Bool) -- ^ How to check result
-  -> Text              -- ^ Name of attribute in response
+  -> (Text -> Route App)        -- ^ Where to redirect, given slug
   -> Handler TypedContent
-postAdministrative perform verify attr = do
+postAdministrative perform route = do
   checkCsrfParamNamed defaultCsrfParamName
   slug <- runInputPost (ireq textField "slug")
   userViaSlug (mkSlug slug) $ \target' -> do
     let target = entityKey target'
     runDB (perform target)
-    verified <- runDB (verify target)
-    return . toTypedContent . object $ [attr .= verified]
+    redirect (route slug)
