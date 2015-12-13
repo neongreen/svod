@@ -17,48 +17,52 @@
             СВОД
         <ul .nav .navbar-nav .navbar-right>
           $maybe user <- muser
-            <li>
-              <a .menu-item :releases:.menu-mark href="@{ReleasesR}"
-                 title="Публикации">
-                Публикации
-            <li>
-              <a .menu-item :artists:.menu-mark href="@{UsersR}"
-                 title="Авторы">
-                Авторы
-            <li>
-              <a .menu-item :notis:.menu-mark href="@{NotificationsR}"
-                 title="Сообщения">
-                <span .glyphicon .glyphicon-bell aria-hidden="true">
-            <li>
-              <a href="@{UserR $ getSlug $ userSlug $ user}"
-                 id="dropdown-profile"
-                 data-toggle="dropdown"
-                 .menu-item :profile:.menu-mark
-                 title="Профиль">
-                <span .glyphicon .glyphicon-user aria-hidden="true">
-                <span .caret>
-              <ul .dropdown-menu area-labelledby="dropdown-profile">
-                <li .dropdown-header>
-                  Вы вошли как #
-                  <strong>
-                    #{userName user}
-                <li .divider role="separator">
-                <li>
-                  <a href="@{UserR $ getSlug $ userSlug $ user}">
-                    Ваш профиль
-                <li>
-                  <a href="@{ChangePasswordR}">
-                    Сменить пароль
-                <li .divider role="separator">
-                <li>
-                  <a href="@{LogoutR}">
-                    Выйти
+            $with slug <- getSlug (userSlug user)
+              <li>
+                <a .menu-item :releasesTab:.menu-mark href="@{ReleasesR}"
+                   title="Публикации">
+                  Публикации
+              <li>
+                <a .menu-item :artistsTab:.menu-mark href="@{UsersR}"
+                   title="Авторы">
+                  Авторы
+              <li>
+                <a .menu-item :notificsTab:.menu-mark href="@{NotificationsR}"
+                   title="Сообщения">
+                  <span .glyphicon .glyphicon-bell aria-hidden="true">
+              <li>
+                <a href="@{UserR slug}"
+                   id="dropdown-profile"
+                   data-toggle="dropdown"
+                   .menu-item :profileTab:.menu-mark
+                   title="Профиль">
+                  <span .glyphicon .glyphicon-user aria-hidden="true">
+                  <span .caret>
+                <ul .dropdown-menu area-labelledby="dropdown-profile">
+                  <li .dropdown-header>
+                    Вы вошли как #
+                    <strong>
+                      #{userName user}
+                  <li .divider role="separator">
+                  <li>
+                    <a href="@{UserR slug}">
+                      Ваш профиль
+                  <li>
+                    <a href="@{EditProfileR slug}">
+                      Редактировать профиль
+                  <li>
+                    <a href="@{ChangePasswordR}">
+                      Сменить пароль
+                  <li .divider role="separator">
+                  <li>
+                    <a href="@{LogoutR}">
+                      Выйти
           $nothing
             <li>
-              <a .menu-item :register:.menu-mark href="@{RegisterR}">
+              <a .menu-item :registerTab:.menu-mark href="@{RegisterR}">
                 Загеристрироваться
             <li>
-              <a .menu-item :login:.menu-mark href="@{LoginR}">
+              <a .menu-item :loginTab:.menu-mark href="@{LoginR}">
                 Войти
 
     <div .container-fluid>
@@ -83,4 +87,4 @@
           &middot;
           <a href="@{InfoSupportSvodR}">Поддержать «Свод»
         <p .text-center>
-          #{appCopyright $ appSettings master}
+          #{copyright}

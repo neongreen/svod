@@ -51,8 +51,9 @@ data App = App
     -- one field depends on other fields.
     --
     -- Yesod authors and maintainers think that we should do such checks
-    -- after form submission and then set message in case of trouble. I
-    -- think it introduces inconsistency in UI. In other words, if user
+    -- after form submission and then set message in case of
+    -- trouble. They're right from the programmer's point of view, but I
+    -- also think it introduces inconsistency in UI. In other words, if user
     -- enters incorrect password, it shouldn't validate and clear message
     -- /under the password/ should appear telling the user that the password
     -- is incorrect. The same with password confirmation.
@@ -113,7 +114,7 @@ authm LoginR    = return Authorized
 authm LogoutR             = isUser
 authm (VerifyR _)         = isUser
 authm NotificationsR      = isUser
-authm (EditProfileR slug) = isAdminOrSelf slug
+authm (EditProfileR slug) = isAdmin *||* isSelf slug
 authm ChangePasswordR     = isUser
 
 -- Administrative actions on users
@@ -132,7 +133,7 @@ authm (UserR _) = return Authorized
 -- Actions on releases
 
 authm SubmitReleaseR        = isVerified
-authm (EditReleaseR slug _) = isAdminOrSelf slug
+authm (EditReleaseR slug _) = isAdmin *||* isSelf slug
 authm ApproveReleaseR       = isAdmin
 authm RejectReleaseR        = isStaff
 authm DeleteReleaseR        = isAdmin
@@ -165,7 +166,7 @@ isUser = checkWho "Да ну!" (const $ return True)
 -- | Select only logged-in users with verified emails.
 
 isVerified :: Handler AuthResult
-isVerified = checkWho "Сначала нужно подтвердить адрес почты!" S.isVerified
+isVerified = checkWho "Сначала нужно подтвердить адрес почты." S.isVerified
 
 -- | Select banned users.
 
@@ -175,21 +176,20 @@ isBanned = checkWho "Необходимо быть забанненным пол
 -- | Select staff members (always includes admins).
 
 isStaff :: Handler AuthResult
-isStaff = checkWho "Только персонал Свода может это сделать." S.isStaff
+isStaff = checkWho "Только персонал Свода имеет доступ." S.isStaff
 
 -- | Select only admins.
 
 isAdmin :: Handler AuthResult
-isAdmin = checkWho "Только администратор может сделать это." S.isAdmin
+isAdmin = checkWho "Лишь администратор имеет доступ." S.isAdmin
 
--- | Finally some pages can be accessed only by their owners or admins.
+-- | Finally some pages may be accessed only by their owners.
 
-isAdminOrSelf :: Text -> Handler AuthResult
-isAdminOrSelf slug =
-  checkWho "Вы не имеете доступа к этой странице." $ \uid -> do
-    admin <- S.isAdmin uid
+isSelf :: Text -> Handler AuthResult
+isSelf slug =
+  checkWho "Только владелец профиля имеет доступ." $ \uid -> do
     self  <- S.getUserBySlug (mkSlug slug)
-    return $ admin || (entityKey <$> self) == Just uid
+    return $ (entityKey <$> self) == Just uid
 
 -- | Generalized check of user identity.
 
@@ -203,11 +203,57 @@ checkWho msg f = do
     Nothing -> return AuthenticationRequired
     Just u  -> runDB $ bool (Unauthorized msg) Authorized <$> f u
 
+-- | Combine authentication results. If one of arguments returns
+-- 'Authorized', the whole thing returns 'Authorized'. Otherwise if at least
+-- one check returns 'AuthenticationRequired', we return this given user a
+-- change to get through after login. If the both things return
+-- 'Unauthorized', we combine the messages.
+
+infixr 2 *||*
+(*||*) :: Handler AuthResult -> Handler AuthResult -> Handler AuthResult
+(*||*) = liftM2 ξ
+  where ξ Authorized _             = Authorized
+        ξ _ Authorized             = Authorized
+        ξ AuthenticationRequired _ = AuthenticationRequired
+        ξ _ AuthenticationRequired = AuthenticationRequired
+        ξ (Unauthorized a) (Unauthorized b) =
+          Unauthorized (a <> "\n*ИЛИ*\n" <> b)
+
 -- | Build “yes or no” variation of the functions above.
 
 ynAuth :: AuthResult -> Bool
 ynAuth Authorized = True
 ynAuth _          = False
+
+----------------------------------------------------------------------------
+-- Tab selection
+
+-- | Tabs shown in site menu.
+
+data MenuTab
+  = RegisterTab        -- ^ For guests: you can register here
+  | LoginTab           -- ^ For guests: you can login here
+  | ReleasesTab        -- ^ Search for releases
+  | ArtistsTab         -- ^ Search for artists
+  | NotificationsTab   -- ^ See notifications
+  | ProfileTab         -- ^ See or change your profile
+  deriving (Show, Read, Eq, Enum, Bounded)
+
+-- | Since our site menu has some sort of tabs, we need a way to decide
+-- which of them to highlight for every route.
+
+selectTab :: Route App -> Handler (Maybe MenuTab)
+selectTab RegisterR       = return (Just RegisterTab)
+selectTab LoginR          = return (Just LoginTab)
+selectTab ReleasesR       = return (Just ReleasesTab)
+selectTab UsersR          = return (Just ArtistsTab) -- FIXME
+selectTab NotificationsR  = return (Just NotificationsTab)
+selectTab ChangePasswordR = return (Just ProfileTab)
+selectTab (UserR slug) =
+  bool Nothing (Just ProfileTab) . ynAuth <$> isSelf slug
+selectTab (EditProfileR slug) =
+  bool Nothing (Just ProfileTab) . ynAuth <$> isSelf slug
+selectTab _ = return Nothing
 
 ----------------------------------------------------------------------------
 -- Some instances
@@ -236,19 +282,16 @@ instance Yesod App where
     Just <$> defaultClientSessionBackend 120 "config/client_session_key.aes"
 
   defaultLayout widget = do
-    muser  <- fmap entityVal <$> maybeAuth
-    master <- getYesod
-    route  <- getCurrentRoute
-    let register = route == Just RegisterR
-        login    = route == Just LoginR
-        releases = route == Just ReleasesR
-        artists  = route == Just UsersR -- FIXME
-        notis    = route == Just NotificationsR
-        profile  = route `elem`
-          [ UserR . getSlug . userSlug <$> muser
-          , EditProfileR . getSlug . userSlug <$> muser
-          , Just ChangePasswordR ]
-    mmsg   <- getMessage
+    muser     <- fmap entityVal <$> maybeAuth
+    copyright <- appCopyright . appSettings <$> getYesod
+    tab       <- getCurrentRoute >>= maybe (return Nothing) selectTab
+    let registerTab = tab == Just RegisterTab
+        loginTab    = tab == Just LoginTab
+        releasesTab = tab == Just ReleasesTab
+        artistsTab  = tab == Just ArtistsTab
+        notificsTab = tab == Just NotificationsTab
+        profileTab  = tab == Just ProfileTab
+    mmsg      <- getMessage
 
     -- We break up the default layout into two components: default-layout is
     -- the contents of the body tag, and default-layout-wrapper is the
