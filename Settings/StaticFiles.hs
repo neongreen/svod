@@ -19,7 +19,7 @@
 --
 -- If the identifier is not available, you may use:
 --
--- > StaticFile ["js", "script.js"] []
+-- > StaticRoute ["js", "script.js"] []
 
 {-# LANGUAGE TemplateHaskell #-}
 
