@@ -1,0 +1,76 @@
+<div .panel .panel-info>
+  <div .panel-heading>
+    <h3 .panel-title>Общая информация
+  <table .table>
+    $if hasStatus
+      <tr>
+        <th>Статус
+        <td>
+          $if userAdmin
+            <span .label .label-success>
+              Администратор
+          $if userStaff
+            <span .label .label-info>
+              Член команды
+          $if userAuthor
+            <span .label .label-primary>
+              Автор
+          $if not userVerified
+            <span .label .label-warning>
+              Не подтвержден
+          $if userBanned && not ownerHere
+            <span .label .label-danger>
+              Забанен
+    <tr>
+      <th>Зарегистрирован
+      <td>#{datePretty userJoined}
+    $maybe website <- userWebsite
+      <tr>
+        <th>Сайт
+        <td>
+          <a href="#{website}">
+            #{website}
+    $if userEmailPublic
+      <tr>
+        <th>Почта
+        <td>#{email}
+
+$if adminHere
+  <div .panel .panel-danger>
+    <div .panel-heading>
+      <h3 .panel-title>Уголок администратора
+    <div .panel-body>
+      $if not userVerified
+        ^{verifyBtn}
+      ^{banBtn}
+      ^{deleteBtn}
+      ^{staffBtn}
+      ^{adminBtn}
+
+<h2>Биография #
+  $if ownerHere || adminHere
+    <a .btn .btn-default
+       title="Редактировать профиль"
+       href="@{EditProfileR slug'}">
+      <span .glyphicon .glyphicon-pencil aria-hidden="true">
+
+<div .clearfix>
+  <img src="@{placeholder}"
+       .img-responsive .img-rounded .pull-left
+       width="230" height="230"
+       title="#{userName}"
+       alt="#{userName}">
+
+  $maybe desc <- mdesc
+    #{desc}
+  $nothing
+    <p>
+      Этот пользователь о себе умалчивает…
+
+<h2>Публикации #
+  ^{followUserW slug}
+
+$if userAuthor
+  <p>FIXME: Nice table to releases goes here…
+$else
+  <p>Пока ничего.
