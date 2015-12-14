@@ -123,6 +123,7 @@ library
                     , Import.NoFoundation
                     , Settings
                     , Settings.StaticFiles
+                    , Widget.DngButton
                     , Widget.FollowUser
                     , Widget.StarRelease
 

@@ -1,0 +1,8 @@
+<form .form-inline method="post" role="form" action="@{route}"
+      enctype="application/x-www-form-urlencoded"
+      onsubmit="return confirm('#{title}?')">
+  <input type="hidden" name="#{defaultCsrfParamName}" value="#{csrfToken}">
+  $forall (name, value) <- params
+    <input type="hidden" name="#{name}" value="#{value}">
+  <button .btn .btn-float .#{btnTypeToClass btnType} type="submit">
+    #{title}
