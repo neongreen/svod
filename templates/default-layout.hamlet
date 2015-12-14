@@ -55,14 +55,20 @@
                       Сменить пароль
                   <li .divider role="separator">
                   <li>
+                    <a href="@{SubmitReleaseR}">
+                      Опубликовать
+                  <li .divider role="separator">
+                  <li>
                     <a href="@{LogoutR}">
                       Выйти
           $nothing
             <li>
-              <a .menu-item :registerTab:.menu-mark href="@{RegisterR}">
+              <a .menu-item :registerTab:.menu-mark href="@{RegisterR}"
+                 title="Загеристрироваться">
                 Загеристрироваться
             <li>
-              <a .menu-item :loginTab:.menu-mark href="@{LoginR}">
+              <a .menu-item :loginTab:.menu-mark href="@{LoginR}"
+                 title="Войти">
                 Войти
 
     <div .container-fluid>

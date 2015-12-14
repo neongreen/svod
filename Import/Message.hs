@@ -40,8 +40,13 @@ setMsg :: MonadHandler m
   -> Html              -- ^ Format string
   -> m ()
 setMsg msgType message =
-  let isSuccess = msgType == MsgSuccess
-      isInfo    = msgType == MsgInfo
-      isWarning = msgType == MsgWarning
-      isDanger  = msgType == MsgDanger
-  in setMessage $(shamletFile "templates/message.hamlet")
+  setMessage $(shamletFile "templates/message.hamlet")
+
+-- | For internal usage. Convert 'MsgType' to name of corresponding
+-- Bootstrap 3 class.
+
+msgTypeToClass :: MsgType -> Text
+msgTypeToClass MsgSuccess = "alert-success"
+msgTypeToClass MsgInfo    = "alert-info"
+msgTypeToClass MsgWarning = "alert-warning"
+msgTypeToClass MsgDanger  = "alert-danger"

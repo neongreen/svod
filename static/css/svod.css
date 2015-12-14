@@ -90,28 +90,44 @@ li.open ul.dropdown-menu a:hover {
     -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
 }
 
+/* Alerts */
+
+.alert a {
+    font-weight: bold;
+}
+
+.alert-success a {
+    color: #2b542c;
+}
+
+.alert-info a {
+    color: #245269;
+}
+
+.alert-warning a {
+    color: #66512c;
+}
+
+.alert-danger a {
+    color: #843534;
+}
+
 /* Other */
 
 label {
     font-weight: normal;
 }
 
-.alert a {
-  font-weight: bold;
+.pull-left {
+    margin-right: 20px;
 }
 
-.alert-success a {
-  color: #2b542c;
+.pull-right {
+    margin-left: 20px;
 }
 
-.alert-info a {
-  color: #245269;
-}
-
-.alert-warning a {
-  color: #66512c;
-}
-
-.alert-danger a {
-  color: #843534;
+.btn-float {
+    width: 120px;
+    float: left;
+    margin-right: 10px;
 }
