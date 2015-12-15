@@ -18,7 +18,7 @@
           $if not userVerified
             <span .label .label-warning>
               Не подтвержден
-          $if userBanned && not ownerHere
+          $if userBanned && staffHere
             <span .label .label-danger>
               Забанен
     <tr>
@@ -35,17 +35,19 @@
         <th>Почта
         <td>#{email}
 
-$if adminHere
+$if staffHere
   <div .panel .panel-danger>
     <div .panel-heading>
-      <h3 .panel-title>Уголок администратора
+      <h3 .panel-title>Административные действия
     <div .panel-body>
       $if not userVerified
         ^{verifyBtn}
       ^{banBtn}
-      ^{deleteBtn}
-      ^{staffBtn}
-      ^{adminBtn}
+      $if adminHere
+        ^{deleteBtn}
+        ^{staffBtn}
+        $if not userAdmin
+          ^{adminBtn}
 
 <h2>Биография #
   $if ownerHere || adminHere

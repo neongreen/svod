@@ -97,8 +97,7 @@ postRegisterR = do
 #endif
       when (userSlug == mkSlug "Свод") $ runDB $ do
         S.setVerified uid
-        S.setStaff uid True
-        S.setAdmin uid True
+        S.setUserStatus uid AdminUser
       toTypedContent <$> setCredsRedirect Creds
         { credsPlugin = "custom"
         , credsIdent  = getSlug userSlug

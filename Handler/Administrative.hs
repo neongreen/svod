@@ -23,6 +23,7 @@ module Handler.Administrative
   , postMakeAdminR )
 where
 
+import Data.Bool (bool)
 import Helper.Access (userViaSlug)
 import Import
 import qualified Svod as S
@@ -36,7 +37,7 @@ import qualified Svod as S
 postVerifyUserR :: Handler TypedContent
 postVerifyUserR = postAdministrative S.setVerified UserR
 
--- | Ban a user. We use hellban, it's good for trolls.
+-- | Toggle ban for a user. We use hellban, it's good for trolls.
 --
 -- POST request should have @"slug"@ parameter identifying user to ban and
 -- 'defaultCsrfParamName' parameter containing CSRF-protection token.
@@ -53,7 +54,7 @@ postBanUserR = postAdministrative toggleBanned UserR
 postDeleteUserR :: Handler TypedContent
 postDeleteUserR = postAdministrative S.deleteUser (const HomeR)
 
--- | Make a user staff member.
+-- | Toggle user between staff member and normal user.
 --
 -- POST request should have @"slug"@ parameter identifying user to make
 -- staff member and 'defaultCsrfParamName' parameter containing
@@ -61,9 +62,11 @@ postDeleteUserR = postAdministrative S.deleteUser (const HomeR)
 
 postMakeStaffR :: Handler TypedContent
 postMakeStaffR = postAdministrative toggleStaff UserR
-  where toggleStaff uid = S.isStaff uid >>= S.setStaff uid . not
+  where toggleStaff uid = do
+          staff <- S.isStaff uid
+          S.setUserStatus uid (bool StaffUser NormalUser staff)
 
--- | Make a user admin, use with great care.
+-- | Toggle user between admin and normal user, use with great care.
 --
 -- POST request should have @"slug"@ parameter identifying user to make
 -- admin member and 'defaultCsrfParamName' parameter containing
@@ -71,7 +74,9 @@ postMakeStaffR = postAdministrative toggleStaff UserR
 
 postMakeAdminR :: Handler TypedContent
 postMakeAdminR = postAdministrative toggleAdmin UserR
-  where toggleAdmin uid = S.isAdmin uid >>= S.setAdmin uid . not
+  where toggleAdmin uid = do
+          admin <- S.isAdmin uid
+          S.setUserStatus uid (bool AdminUser NormalUser admin)
 
 -- | Generalized version of administrative action on user. User is always
 -- identified by @"slug"@ parameter of POST request.

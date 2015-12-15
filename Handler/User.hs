@@ -30,19 +30,22 @@ getUserR :: Text -> Handler TypedContent
 getUserR slug' =
   let slug = mkSlug slug'
   in userViaSlug slug $ \user -> do
-    ownerHere  <- ynAuth <$> isSelf slug'
-    adminHere  <- ynAuth <$> isAdmin
+    ownerHere <- ynAuth <$> isSelf slug'
+    staffHere <- ynAuth <$> isStaff
+    adminHere <- ynAuth <$> isAdmin
     let User {..} = entityVal user
+        userAdmin = userStatus == AdminUser
+        userStaff = userStatus `elem` [StaffUser, AdminUser]
         uid       = entityKey user
-    releases    <- runDB (S.getReleasesOfUser uid)
-    render      <- getUrlRender
+    releases  <- runDB (S.getReleasesOfUser uid)
+    render    <- getUrlRender
     let userAuthor = not (null releases)
         hasStatus = or
           [ userAdmin
           , userStaff
           , userAuthor
           , not userVerified
-          , userBanned && not ownerHere ]
+          , userBanned && staffHere ]
         email = fromMaybe "-" (emailPretty userEmail)
         placeholder = StaticR $ StaticRoute ["img", "user", "placeholder.jpg"] []
     selectRep $ do
