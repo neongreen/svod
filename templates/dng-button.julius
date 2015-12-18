@@ -1,0 +1,3 @@
+$(#{toJSONId formId}).submit(function() {
+    return confirm(#{toJSON $ title <> "?"});
+});

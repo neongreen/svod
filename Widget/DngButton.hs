@@ -44,6 +44,7 @@ dngButtonW
   -> Widget            -- ^ Button widget
 dngButtonW btnType title params route = do
   csrfToken <- fromJust . reqToken <$> getRequest
+  formId    <- newIdent
   $(widgetFile "dng-button")
 
 -- | For internal usage only. Convert 'BtnType' to name of corresponding
