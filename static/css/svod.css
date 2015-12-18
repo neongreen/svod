@@ -131,3 +131,12 @@ label {
     float: left;
     margin-right: 10px;
 }
+
+.pad-around {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.invisible-field {
+    display: none;
+}

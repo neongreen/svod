@@ -1,0 +1,32 @@
+$(#{toJSONId addTrackId}).click(function() {
+    if ($(this).hasClass('disabled')) return;
+    var tracklist = $(#{toJSONId trackListId});
+    var index = tracklist.children(":not(.invisible-field)").length + 1;
+    var target = $(#{toJSONId baseId} + index);
+
+    target.removeClass('invisible-field');
+    target.find('input').prop('disabled', false);
+    target.find('input').prop('required', #{toJSON required});
+
+    if (index >= #{toJSON maxTracks})
+        $(this).addClass('disabled');
+    if (index > 1)
+        $(#{toJSONId remTrackId}).removeClass('disabled');
+});
+
+$(#{toJSONId remTrackId}).click(function() {
+    if ($(this).hasClass('disabled')) return;
+    var tracklist = $(#{toJSONId trackListId});
+    var index = tracklist.children(":not(.invisible-field)").length;
+    var target = $(#{toJSONId baseId} + index);
+
+    target.addClass('invisible-field');
+    target.find('input').prop('disabled', true);
+    target.find('input').prop('required', false);
+    index--;
+
+    if (index <= 1)
+        $(this).addClass('disabled');
+    if (index < #{toJSON maxTracks})
+        $(#{toJSONId addTrackId}).removeClass('disabled');
+});

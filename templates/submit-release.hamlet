@@ -1,0 +1,16 @@
+<p>
+  Пожалуйста ознакомитесь с #
+  <a href="@{InfoContentR}">критериями отбора содержимого для сайта
+  \ перед тем как посылать свою работу.
+
+<form ##{formId} method="post" role="form" action="@{SubmitReleaseR}"
+      enctype="#{enctype}">
+  ^{form}
+  <p>
+    <span .glyphicon .glyphicon-arrow-up aria-hidden="true">
+    В этом поле можно использовать #
+    <a href="@{InfoMarkdownR}">специальный язык разметки
+    .
+  <button ##{buttonId} .btn .btn-primary type="submit"
+          data-loading-text="Работает…">
+    Готово

@@ -275,6 +275,12 @@ instance Yesod App where
 
   errorHandler = svodErrorHandler
 
+  -- Allow uploads up to 500 megabytes when submitting or editing a release.
+
+  maximumContentLength _ (Just SubmitReleaseR)     = Just 524288000
+  maximumContentLength _ (Just (EditReleaseR _ _)) = Just 524288000
+  maximumContentLength _ _                         = Just 2097152
+
   -- Store session data on the client in encrypted cookies, default session
   -- idle timeout is 120 minutes.
 
@@ -307,7 +313,10 @@ instance Yesod App where
     withUrlRenderer $(hamletFile "templates/default-layout.hamlet")
 
   -- The page to be redirected to when authentication is required.
-  authRoute = const . Just $ LoginR
+
+  authRoute = const (Just LoginR)
+
+  -- See 'authm' above.
 
   isAuthorized route _ = authm route
 
