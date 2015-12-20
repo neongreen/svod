@@ -50,10 +50,11 @@
 
 -- Info articles
 
-/инфо/контактная-информация       InfoContactR       GET
-/инфо/краткий-тур                 InfoTourR          GET
-/инфо/о-проекте                   InfoAboutR         GET
-/инфо/поддержать-свод             InfoSupportSvodR   GET
-/инфо/пользовательское-соглашение InfoEulaR          GET
-/инфо/содержимое                  InfoContentR       GET
-/инфо/язык-разметки               InfoMarkdownR      GET
+/инфо/контактная-информация       InfoContactR     GET
+/инфо/краткий-тур                 InfoTourR        GET
+/инфо/лицензии                    InfoLicenseR     GET
+/инфо/о-проекте                   InfoAboutR       GET
+/инфо/поддержать-свод             InfoSupportSvodR GET
+/инфо/пользовательское-соглашение InfoEulaR        GET
+/инфо/содержимое                  InfoContentR     GET
+/инфо/язык-разметки               InfoMarkdownR    GET
