@@ -154,15 +154,14 @@ tracksField :: Field Handler (NonEmpty S.CreateFile)
 tracksField = Field parse view Multipart
   where parse titles' files' =
           return . either (Left . SomeMessage) (Right . Just) $ do
-            titles <- mapM checkTitle (takeWhile (not . T.null) titles')
+            titles <- mapM checkTitle titles'
             files  <- mapM checkUploadedFile files'
             let toCreateFile t f =
                   S.CreateFile
                     (H.mkTitle $ T.unpack t)
                     (fileMove f . fromAbsFile)
             return . NE.fromList $ zipWith toCreateFile titles files
-        view ident name attrs _result required =
-          -- XXX what to do with result?
+        view ident name attrs _ required =
           let baseId      = ident  <> "-"
               addTrackId  = baseId <> "add-track"
               remTrackId  = baseId <> "rem-track"

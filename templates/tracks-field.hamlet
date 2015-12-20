@@ -2,16 +2,17 @@
   $forall index <- indicies
     $with thisId <- baseId <> index
       $with (isFirst, nonFirst) <- (index == "1", index /= "1")
-        <div .row ##{thisId} :nonFirst:.invisible-field>
-          <div .col-lg-6>
-            <div .input-group>
-              <span .input-group-addon ##{thisId <> "-aria"}>#{index}
-              <input type="text" name="#{name}" *{attrs}
-                     :isFirst:required :nonFirst:disabled
-                     aria-describedby="#{thisId <> "-aria"}">
-          <div .col-lg-6>
-            <input type="file" name="#{name}" accept="audio/flac"
-                   :isFirst:required :nonFirst:disabled>
+        $with isRequired <- isFirst && required
+          <div .row ##{thisId} :nonFirst:.invisible-field>
+            <div .col-lg-6>
+              <div .input-group>
+                <span .input-group-addon ##{thisId <> "-aria"}>#{index}
+                <input type="text" name="#{name}" *{attrs}
+                       :isRequired:required :nonFirst:disabled
+                       aria-describedby="#{thisId <> "-aria"}">
+            <div .col-lg-6>
+              <input type="file" name="#{name}" accept="audio/flac"
+                     :isRequired:required :nonFirst:disabled>
 
 <div .pad-around>
   <a ##{addTrackId} .btn .btn-default href="javascript:void(0)"
