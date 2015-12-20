@@ -152,7 +152,7 @@ authm FollowUserR  = isVerified
 
 authm InfoContactR     = return Authorized
 authm InfoTourR        = return Authorized
-authm InfoLicenseR     = return Authorized
+authm InfoLicensesR    = return Authorized
 authm InfoAboutR       = return Authorized
 authm InfoSupportSvodR = return Authorized
 authm InfoEulaR        = return Authorized

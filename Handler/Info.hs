@@ -19,7 +19,7 @@
 module Handler.Info
   ( getInfoContactR
   , getInfoTourR
-  , getInfoLicenseR
+  , getInfoLicensesR
   , getInfoAboutR
   , getInfoSupportSvodR
   , getInfoEulaR
@@ -49,8 +49,8 @@ getInfoTourR = renderInfo $(mkRelFile "краткий-тур.md")
 
 -- | Why licenses are important and how to choose the right one.
 
-getInfoLicenseR :: Handler Html
-getInfoLicenseR = renderInfo $(mkRelFile "лицензии.md")
+getInfoLicensesR :: Handler Html
+getInfoLicensesR = renderInfo $(mkRelFile "лицензии.md")
 
 -- | About the Svod project.
 
