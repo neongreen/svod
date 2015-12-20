@@ -11,6 +11,7 @@
 
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.SubmitRelease
@@ -95,6 +96,15 @@ postSubmitReleaseR = do
           serveSubmitRelease form enctype
         Right rid -> do
           releaseSlug <- getSlug . releaseSlug . fromJust <$> runDB (get rid)
+          setMsg MsgSuccess [shamlet|
+Публикация #
+<strong>
+  #{srTitle}
+\ теперь ожидает рассмотрения. Пожалуйста будьте терпеливы, вы будете уведомлены
+о принятом решении. Вы можете редактировать вашу работу пока она не
+опубликована. В период рассмотрения администрация может посылать вам сообщения,
+чтобы обсудить или поправить что-либо, пожалуйста реагируйте своевременно.
+|]
           redirect (ReleaseR uslug releaseSlug)
     _ -> serveSubmitRelease form enctype
 
