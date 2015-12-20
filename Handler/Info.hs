@@ -17,7 +17,8 @@
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.Info
-  ( getInfoContactR
+  ( getInfoCodecsR
+  , getInfoContactR
   , getInfoTourR
   , getInfoLicensesR
   , getInfoAboutR
@@ -36,6 +37,11 @@ import qualified Data.Text.Lazy.IO    as TL
 import qualified Text.Markdown        as MD
 import qualified Text.Markdown.Block  as MD
 import qualified Text.Markdown.Inline as MD
+
+-- | Which codecs to use to prepare audio for publication.
+
+getInfoCodecsR :: Handler Html
+getInfoCodecsR = renderInfo $(mkRelFile "кодеки.md")
 
 -- | Contact information.
 

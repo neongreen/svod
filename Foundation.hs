@@ -150,6 +150,7 @@ authm FollowUserR  = isVerified
 
 -- Info articles
 
+authm InfoCodecsR      = return Authorized
 authm InfoContactR     = return Authorized
 authm InfoTourR        = return Authorized
 authm InfoLicensesR    = return Authorized

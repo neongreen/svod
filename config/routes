@@ -50,6 +50,7 @@
 
 -- Info articles
 
+/инфо/кодеки                      InfoCodecsR      GET
 /инфо/контактная-информация       InfoContactR     GET
 /инфо/краткий-тур                 InfoTourR        GET
 /инфо/лицензии                    InfoLicensesR    GET

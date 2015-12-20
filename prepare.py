@@ -35,6 +35,7 @@ EXTERNAL_ASSETS = {
         'favicon.ico':                    'config/favicon.ico',
     },
     'https://github.com/svod-music/svod-concepts': {
+        'кодеки.md':                      'info/кодеки.md',
         'контактная-информация.md':       'info/контактная-информация.md',
         'краткий-тур.md':                 'info/краткий-тур.md',
         'лицензии.md':                    'info/лицензии.md',
