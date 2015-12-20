@@ -1,0 +1,8 @@
+<div .panel .panel-info>
+  <div .panel-heading>
+    <h3 .panel-title>Публикация ожидает решения
+  <div .panel-body>
+    <p>
+      Работа #
+      <a href="@{releaseUrl}">#{release}
+      \ еще находится на рассмотрении, поэтому нельзя опубликовать еще одну.

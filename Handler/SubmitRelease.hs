@@ -65,20 +65,22 @@ submitReleaseForm html = do
 getSubmitReleaseR :: Handler Html
 getSubmitReleaseR = do
   (form, enctype) <- generateFormPost submitReleaseForm
-  serveSubmitRelease form enctype
+  uid <- fromJust <$> maybeAuthId
+  serveSubmitRelease uid form enctype
 
 -- | Process submission.
 
 postSubmitReleaseR :: Handler Html
 postSubmitReleaseR = do
-  -- TODO check all conditions
+  user <- fromJust <$> maybeAuth
+  let uid       = entityKey user
+      User {..} = entityVal user
+  status <- runDB (S.canSubmitAgain uid)
+  unless (status == S.CanSubmit) $
+    permissionDenied "Вы не можете опубликовать что-либо сейчас."
   ((result, form), enctype) <- runFormPost submitReleaseForm
   case result of
     FormSuccess SubmitReleaseForm {..} -> do
-      user <- fromJust <$> maybeAuth
-      let uid   = entityKey user
-          uslug = getSlug . userSlug . entityVal $ user
-      User {..} <- entityVal . fromJust <$> maybeAuth
       let rm = S.ReleaseMeta
             { rmArtist  = uid
             , rmAlbum   = H.mkAlbum  (T.unpack srTitle)
@@ -93,7 +95,7 @@ postSubmitReleaseR = do
       case outcome of
         Left msg -> do
           setMsg MsgDanger (toHtml msg)
-          serveSubmitRelease form enctype
+          serveSubmitRelease uid form enctype
         Right rid -> do
           releaseSlug <- getSlug . releaseSlug . fromJust <$> runDB (get rid)
           setMsg MsgSuccess [shamlet|
@@ -105,21 +107,33 @@ postSubmitReleaseR = do
 опубликована. В период рассмотрения администрация может посылать вам сообщения,
 чтобы обсудить или поправить что-либо, пожалуйста реагируйте своевременно.
 |]
-          redirect (ReleaseR uslug releaseSlug)
-    _ -> serveSubmitRelease form enctype
+          redirect (ReleaseR (getSlug userSlug) releaseSlug)
+    _ -> serveSubmitRelease uid form enctype
 
 -- | Serve “submit release” page.
 
 serveSubmitRelease :: ToWidget App a
-  => a                 -- ^ Submission form
+  => UserId            -- ^ Identifier of the potential author
+  -> a                 -- ^ Submission form
   -> Enctype           -- ^ Encoding type required by the form
   -> Handler Html      -- ^ Handler
-serveSubmitRelease form enctype = defaultLayout $ do
-  -- TODO check if user can submit. banned users cannot. too-sooners cannot
+serveSubmitRelease uid form enctype = defaultLayout $ do
+  let φ = handlerToWidget . runDB
   setTitle "Новая публикация"
-  formId   <- newIdent
-  buttonId <- newIdent
-  $(widgetFile "submit-release")
+  status <- φ (S.canSubmitAgain uid)
+  case status of
+    S.CanSubmit -> do
+      formId   <- newIdent
+      buttonId <- newIdent
+      $(widgetFile "submit-release")
+    S.AlreadySubmitted rid -> do
+      artist  <- userName     . fromJust <$> φ (get uid)
+      release <- releaseTitle . fromJust <$> φ (get rid)
+      let ξ = getSlug . mkSlug
+          releaseUrl = ReleaseR (ξ artist) (ξ release)
+      $(widgetFile "submit-release-already")
+    S.CannotSubmitYet next ->
+      $(widgetFile "submit-release-next")
 
 -- | Get current year.
 
