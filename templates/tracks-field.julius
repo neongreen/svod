@@ -8,7 +8,7 @@ $(#{toJSONId addTrackId}).click(function() {
     target.find('input').prop('disabled', false);
     target.find('input').prop('required', #{toJSON required});
 
-    if (index >= #{toJSON maxTracks})
+    if (index >= #{toJSON $ toInt maxTrackNumber})
         $(this).addClass('disabled');
     if (index > 1)
         $(#{toJSONId remTrackId}).removeClass('disabled');
@@ -27,6 +27,6 @@ $(#{toJSONId remTrackId}).click(function() {
 
     if (index <= 1)
         $(this).addClass('disabled');
-    if (index < #{toJSON maxTracks})
+    if (index < #{toJSON $ toInt maxTrackNumber})
         $(#{toJSONId addTrackId}).removeClass('disabled');
 });

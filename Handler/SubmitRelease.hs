@@ -191,7 +191,6 @@ tracksField = Field parse view Multipart
               remTrackId  = baseId <> "rem-track"
               trackListId = baseId <> "tracklist"
               indicies    = sformat int <$> [1..maxTrackNumber]
-              maxTracks   = fromIntegral maxTrackNumber :: Int
           in $(widgetFile "tracks-field")
 
 -- | Check single title. TODO Add additional checks here.

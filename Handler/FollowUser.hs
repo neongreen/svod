@@ -41,7 +41,6 @@ postFollowUserR = do
   userViaSlug (mkSlug slug) $ \target' -> do
     let target = entityKey target'
     active <- runDB (S.toggleFollowing target follower)
-    n'     <- runDB (S.followerCount target)
-    let n = fromIntegral n' :: Int
+    n      <- runDB (S.followerCount target)
     return . toTypedContent . object $
-      ["active" .= active, "count" .= n]
+      ["active" .= active, "count" .= toInt n]

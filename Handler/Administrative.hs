@@ -85,10 +85,10 @@ postAdministrative
   :: (UserId -> YesodDB App ()) -- ^ Action on perform on user
   -> (Text -> Route App)        -- ^ Where to redirect, given slug
   -> Handler TypedContent
-postAdministrative perform route = do
+postAdministrative action route = do
   checkCsrfParamNamed defaultCsrfParamName
   slug <- runInputPost (ireq textField "slug")
   userViaSlug (mkSlug slug) $ \target' -> do
     let target = entityKey target'
-    runDB (perform target)
+    runDB (action target)
     redirect (route slug)

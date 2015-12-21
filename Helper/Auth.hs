@@ -66,10 +66,10 @@ checkPassStrength password
 
 -- | A general way to check if given password is correct.
 
-checkPassCorrect :: MonadIO m
-  => Maybe (Entity User) -- ^ User name
+checkPassCorrect
+  :: Maybe (Entity User) -- ^ User name
   -> Text              -- ^ Password to check
-  -> SqlPersistT m (Either Text (Entity User)) -- ^ Error message or user entity
+  -> YesodDB App (Either Text (Entity User)) -- ^ Error message or user entity
 checkPassCorrect muser given =
   let msg = Left "Этот пароль не подходит."
       φ m f = case m of

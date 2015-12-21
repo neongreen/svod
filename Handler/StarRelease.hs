@@ -44,7 +44,6 @@ postStarReleaseR = do
   releaseViaSlug (mkSlug aslug) (mkSlug rslug) $ \_ release' -> do
     let release = entityKey release'
     active <- runDB (S.toggleStar release starrer)
-    n'     <- runDB (S.starCount release)
-    let n = fromIntegral n' :: Int
+    n      <- runDB (S.starCount release)
     return . toTypedContent . object $
-      ["active" .= active, "count" .= n]
+      ["active" .= active, "count" .= toInt n]

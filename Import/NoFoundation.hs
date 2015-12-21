@@ -12,7 +12,8 @@
 
 module Import.NoFoundation
   ( module I
-  , toJSONId )
+  , toJSONId
+  , toInt )
 where
 
 import ClassyPrelude.Yesod   as I hiding
@@ -28,3 +29,9 @@ import Yesod.Default.Config2 as I
 
 toJSONId :: Text -> Value
 toJSONId text = toJSON ("#" <> text)
+
+-- | Convert more exotic stuff like 'Natural' into plain 'Integer' suitable
+-- for direct interpolation into templates.
+
+toInt :: Integral a => a -> Integer
+toInt = fromIntegral
