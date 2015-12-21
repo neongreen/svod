@@ -23,8 +23,7 @@ where
 import Helper.Auth
   ( checkUserName
   , checkUserEmail
-  , checkPassStrength
-  , checkPassConfirm )
+  , checkPassStrength )
 import Import
 import Network.Mail.Mime hiding (htmlPart)
 import System.IO.Unsafe (unsafePerformIO)
@@ -55,11 +54,10 @@ registrationForm = renderBootstrap3 BootstrapBasicForm $ RegistrationForm
   <$> areq nameField (withAutofocus $ bfs ("Имя" :: Text)) Nothing
   <*> areq emailField' (bfs ("Почта" :: Text)) Nothing
   <*> areq passField (bfs ("Пароль" :: Text)) Nothing
-  <*> areq passField' (bfs ("Повторите пароль" :: Text)) Nothing
+  <*> areq passField (bfs ("Повторите пароль" :: Text)) Nothing
   where nameField   = checkM (checkUserName False) textField
         emailField' = checkM checkUserEmail emailField
-        passField   = checkM checkPassStrength passwordField
-        passField'  = checkM checkPassConfirm passwordField
+        passField   = check checkPassStrength passwordField
 
 -- | Serve registration page as visited for the first time.
 
@@ -76,32 +74,37 @@ postRegisterR :: Handler TypedContent
 postRegisterR = do
   ((result, form), enctype) <- runFormPost registrationForm
   case result of
-    FormSuccess RegistrationForm {..} -> do
-      verkey   <- liftIO randomKey
-      password <- liftIO (saltPass rfPass0)
-      user     <- runDB (S.addUnverified rfName rfEmail password verkey)
-      let uid       = entityKey user
-          User {..} = entityVal user
+    FormSuccess RegistrationForm {..} ->
+      if rfPass0 == rfPass1
+      then do
+        verkey   <- liftIO randomKey
+        password <- liftIO (saltPass rfPass0)
+        user     <- runDB (S.addUnverified rfName rfEmail password verkey)
+        let uid       = entityKey user
+            User {..} = entityVal user
 #if DEVELOPMENT
-      runDB (S.setVerified uid)
-      setMsg MsgSuccess "Профиль автоматически активирован."
+        runDB (S.setVerified uid)
+        setMsg MsgSuccess "Профиль автоматически активирован."
 #else
-      urlRender <- getUrlRender
-      sendEmail userName userEmail (urlRender $ VerifyR userVerkey)
-      setMsg MsgInfo [shamlet|
+        urlRender <- getUrlRender
+        sendEmail userName userEmail (urlRender $ VerifyR userVerkey)
+        setMsg MsgInfo [shamlet|
 Мы выслали вам ссылку для подтверждения регистрации на #
 <strong>
   #{userEmail}
 .
 |]
 #endif
-      when (userSlug == mkSlug "Свод") $ runDB $ do
-        S.setVerified uid
-        S.setUserStatus uid AdminUser
-      toTypedContent <$> setCredsRedirect Creds
-        { credsPlugin = "custom"
-        , credsIdent  = getSlug userSlug
-        , credsExtra  = [] }
+        when (userSlug == mkSlug "Свод") $ runDB $ do
+          S.setVerified uid
+          S.setUserStatus uid AdminUser
+        toTypedContent <$> setCredsRedirect Creds
+          { credsPlugin = "custom"
+          , credsIdent  = getSlug userSlug
+          , credsExtra  = [] }
+      else do
+        setMsg MsgDanger "Пароли не совпадают."
+        toTypedContent <$> serveRegistration form enctype
     _ -> toTypedContent <$> serveRegistration form enctype
 
 -- | Serve registration page.

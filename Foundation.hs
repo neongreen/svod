@@ -11,17 +11,15 @@
 -- the second half. We split the whole thing because of Template Haskell
 -- limitations.
 
-{-# LANGUAGE ExistentialQuantification #-}
-{-# LANGUAGE MultiParamTypeClasses     #-}
-{-# LANGUAGE NoImplicitPrelude         #-}
-{-# LANGUAGE TemplateHaskell           #-}
-{-# LANGUAGE TypeFamilies              #-}
-{-# LANGUAGE ViewPatterns              #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TypeFamilies          #-}
+{-# LANGUAGE ViewPatterns          #-}
 
 module Foundation where
 
 import Data.Bool (bool)
-import Data.Typeable (cast)
 import Database.Persist.Sql (ConnectionPool, runSqlPool)
 import Handler.Error (svodErrorHandler)
 import Import.NoFoundation
@@ -46,42 +44,7 @@ data App = App
   , appConnPool    :: ConnectionPool -- ^ Database connection pool
   , appHttpManager :: Manager        -- ^ HTTP manager
   , appLogger      :: Logger         -- ^ Logger settings
-  , appPocket      :: TVar Pocket
-    -- ^ HACK This is needed for decent form validation when validation of
-    -- one field depends on other fields.
-    --
-    -- Yesod authors and maintainers think that we should do such checks
-    -- after form submission and then set message in case of
-    -- trouble. They're right from the programmer's point of view, but I
-    -- also think it introduces inconsistency in UI. In other words, if user
-    -- enters incorrect password, it shouldn't validate and clear message
-    -- /under the password/ should appear telling the user that the password
-    -- is incorrect. The same with password confirmation.
   }
-
-----------------------------------------------------------------------------
--- Pocket implementation
-
--- | Existentially quantified wrapper around typeable instance.
-
-data Pocket = forall a. Typeable a => Pocket a
-
--- | Set pocket value.
-
-setPocket :: Typeable a
-  => a                 -- ^ Value to save
-  -> HandlerT App IO ()
-setPocket val = do
-  ref <- getsYesod appPocket
-  void . liftIO . atomically . swapTVar ref $ Pocket val
-
--- | Get value from the pocket.
-
-getPocket :: Typeable a => HandlerT App IO (Maybe a)
-getPocket = do
-  ref <- getsYesod appPocket
-  (Pocket val) <- liftIO (readTVarIO ref)
-  return (cast val)
 
 ----------------------------------------------------------------------------
 -- Define routes, see also 'mkYesodDispatch' in "Application".

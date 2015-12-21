@@ -19,7 +19,7 @@ module Handler.ChangePassword
 where
 
 import Data.Maybe (fromJust)
-import Helper.Auth (checkPassCorrect, checkPassStrength, checkPassConfirm)
+import Helper.Auth (checkPassCorrect, checkPassStrength)
 import Import
 import Yesod.Auth.Email (saltPass)
 import Yesod.Form.Bootstrap3
@@ -39,10 +39,9 @@ changePasswordForm :: Form ChangePasswordForm
 changePasswordForm = renderBootstrap3 BootstrapBasicForm $ ChangePasswordForm
   <$> areq oldPassField (withAutofocus $ bfs ("Текущий пароль" :: Text)) Nothing
   <*> areq newPassField (bfs ("Новый пароль" :: Text)) Nothing
-  <*> areq newPassField' (bfs ("Повторите новый пароль" :: Text)) Nothing
+  <*> areq newPassField (bfs ("Повторите новый пароль" :: Text)) Nothing
   where oldPassField  = checkM passwordMatch' passwordField
-        newPassField  = checkM checkPassStrength passwordField
-        newPassField' = checkM checkPassConfirm passwordField
+        newPassField  = check checkPassStrength passwordField
 
 -- | Serve page with form allowing to change user' password.
 
@@ -57,11 +56,14 @@ postChangePasswordR :: Handler Html
 postChangePasswordR = do
   ((result, form), enctype) <- runFormPost changePasswordForm
   case result of
-    FormSuccess ChangePasswordForm {..} -> do
-      uid      <- fromJust <$> maybeAuthId
-      password <- liftIO (saltPass cpNewPass0)
-      runDB (S.setPassword uid password)
-      setMsg MsgSuccess "Пароль изменен успешно."
+    FormSuccess ChangePasswordForm {..} ->
+      if cpNewPass0 == cpNewPass1
+      then do
+        uid      <- fromJust <$> maybeAuthId
+        password <- liftIO (saltPass cpNewPass0)
+        runDB (S.setPassword uid password)
+        setMsg MsgSuccess "Пароль изменен успешно."
+      else setMsg MsgDanger "Пароли не совпадают."
     _ -> return ()
   serveChangePassword form enctype
 
@@ -79,5 +81,6 @@ serveChangePassword form enctype = defaultLayout $ do
 
 passwordMatch' :: Text -> Handler (Either Text Text)
 passwordMatch' given = do
-  muid <- maybeAuthId
-  checkPassCorrect muid given
+  muser <- maybeAuth
+  acres <- runDB (checkPassCorrect muser given)
+  return (acres >> Right given)

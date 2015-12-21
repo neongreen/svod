@@ -35,9 +35,8 @@ data LoginForm = LoginForm
 loginForm :: Form LoginForm
 loginForm = renderBootstrap3 BootstrapBasicForm $ LoginForm
   <$> areq nameField (withAutofocus $ bfs ("Имя" :: Text)) Nothing
-  <*> areq passField (bfs ("Пароль" :: Text)) Nothing
+  <*> areq passwordField (bfs ("Пароль" :: Text)) Nothing
   where nameField = checkM (checkUserName True) textField
-        passField = checkM passwordMatch' passwordField
 
 -- | Serve a page with login form.
 
@@ -56,13 +55,16 @@ postLoginR = do
   case result of
     FormSuccess LoginForm {..} -> do
       muser <- runDB . S.getUserBySlug . mkSlug $ lfName
-      case muser of
-        Nothing -> toTypedContent <$>
-          setMsg MsgDanger "Нет такого пользователя."
-        Just user -> toTypedContent <$> setCredsRedirect Creds
-          { credsPlugin = "custom"
-          , credsIdent  = getSlug . userSlug . entityVal $ user
-          , credsExtra  = [] }
+      acres <- runDB (checkPassCorrect muser lfPassword)
+      case entityVal <$> acres of
+        Left msg -> do
+          setMsg MsgDanger (toHtml msg)
+          toTypedContent <$> serveLogin form enctype
+        Right user ->
+          toTypedContent <$> setCredsRedirect Creds
+            { credsPlugin = "custom"
+            , credsIdent  = getSlug (userSlug user)
+            , credsExtra  = [] }
     _ -> toTypedContent <$> serveLogin form enctype
 
 -- | Serve login page.
@@ -75,14 +77,3 @@ serveLogin form enctype = defaultLayout $ do
   -- TODO User must fill out CAPTCHA on every attempt.
   setTitle "Вход"
   $(widgetFile "login")
-
--- | Check if given password is correct.
-
-passwordMatch' :: Text -> Handler (Either Text Text)
-passwordMatch' given = do
-  mname <- getPocket
-  case mname of
-    Nothing -> return (Left "")
-    Just name -> do
-      muid <- runDB . S.getUserBySlug . mkSlug $ name
-      checkPassCorrect (entityKey <$> muid) given
