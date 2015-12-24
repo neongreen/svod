@@ -63,7 +63,7 @@ postLoginR = do
         Right user ->
           toTypedContent <$> setCredsRedirect Creds
             { credsPlugin = "custom"
-            , credsIdent  = getSlug (userSlug user)
+            , credsIdent  = unSlug (userSlug user)
             , credsExtra  = [] }
     _ -> toTypedContent <$> serveLogin form enctype
 

@@ -17,7 +17,7 @@
             СВОД
         <ul .nav .navbar-nav .navbar-right>
           $maybe user <- muser
-            $with slug <- getSlug (userSlug user)
+            $with slug <- unSlug (userSlug user)
               <li>
                 <a .menu-item :releasesTab:.menu-mark href="@{ReleasesR}"
                    title="Публикации">

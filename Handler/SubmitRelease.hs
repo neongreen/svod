@@ -83,8 +83,8 @@ postSubmitReleaseR = do
     FormSuccess SubmitReleaseForm {..} -> do
       let rm = S.ReleaseMeta
             { rmArtist  = uid
-            , rmAlbum   = H.mkAlbum  (T.unpack srTitle)
-            , rmGenre   = H.mkGenre . T.unpack <$> srGenre
+            , rmAlbum   = H.mkAlbum srTitle
+            , rmGenre   = H.mkGenre <$> srGenre
             , rmYear    = fromJust (H.mkYear srYear)
             , rmDesc    = unTextarea srDesc
             , rmLicense = srLicense
@@ -97,7 +97,7 @@ postSubmitReleaseR = do
           setMsg MsgDanger (toHtml msg)
           serveSubmitRelease uid form enctype
         Right rid -> do
-          releaseSlug <- getSlug . releaseSlug . fromJust <$> runDB (get rid)
+          releaseSlug <- unSlug . releaseSlug . fromJust <$> runDB (get rid)
           setMsg MsgSuccess [shamlet|
 Публикация #
 <strong>
@@ -107,7 +107,7 @@ postSubmitReleaseR = do
 опубликована. В период рассмотрения администрация может посылать вам сообщения,
 чтобы обсудить или поправить что-либо, пожалуйста реагируйте своевременно.
 |]
-          redirect (ReleaseR (getSlug userSlug) releaseSlug)
+          redirect (ReleaseR (unSlug userSlug) releaseSlug)
     _ -> serveSubmitRelease uid form enctype
 
 -- | Serve “submit release” page.
@@ -129,7 +129,7 @@ serveSubmitRelease uid form enctype = defaultLayout $ do
     S.AlreadySubmitted rid -> do
       artist  <- userName     . fromJust <$> φ (get uid)
       release <- releaseTitle . fromJust <$> φ (get rid)
-      let ξ = getSlug . mkSlug
+      let ξ = unSlug . mkSlug
           releaseUrl = ReleaseR (ξ artist) (ξ release)
       $(widgetFile "submit-release-already")
     S.CannotSubmitYet next ->
@@ -181,9 +181,7 @@ tracksField = Field parse view Multipart
             titles <- mapM checkTitle titles'
             files  <- mapM checkUploadedFile files'
             let toCreateFile t f =
-                  S.CreateFile
-                    (H.mkTitle $ T.unpack t)
-                    (fileMove f . fromAbsFile)
+                  S.CreateFile (H.mkTitle t) (fileMove f . fromAbsFile)
             return . NE.fromList $ zipWith toCreateFile titles files
         view ident name attrs _ required =
           let baseId      = ident  <> "-"

@@ -100,7 +100,7 @@ postRegisterR = do
           S.setUserStatus uid AdminUser
         toTypedContent <$> setCredsRedirect Creds
           { credsPlugin = "custom"
-          , credsIdent  = getSlug userSlug
+          , credsIdent  = unSlug userSlug
           , credsExtra  = [] }
       else do
         setMsg MsgDanger "Пароли не совпадают."

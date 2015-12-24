@@ -1,8 +1,8 @@
 $with notStarred <- not starred
   <a ##{buttonId}
      .btn .btn-default :starred:.active
-     data-artist-slug="#{getSlug aslug}"
-     data-release-slug="#{getSlug rslug}"
+     data-artist-slug="#{unSlug aslug}"
+     data-release-slug="#{unSlug rslug}"
      href="javascript:void(0)"
      :notStarred:title="#{inactiveTitle}"
      :starred:title="#{activeTitle}">

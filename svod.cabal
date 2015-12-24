@@ -62,7 +62,7 @@ library
                     , file-embed
                     , formatting             >= 6.2
                     , hjsmin                 >= 0.1
-                    , htaglib                >= 0.1
+                    , htaglib                >= 1.0
                     , http-conduit           >= 2.1
                     , markdown               >= 0.1
                     , mime-mail              >= 0.4
