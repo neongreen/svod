@@ -4,7 +4,7 @@
   <p>
     <span .glyphicon .glyphicon-arrow-up aria-hidden="true">
     В этом поле можно использовать #
-    <a href="@{InfoMarkdownR}">специальный язык разметки
+    <a href="@{InfoMarkdownR}">специальный язык разметки#
     .
   <button .btn .btn-primary type="submit">
     Готово

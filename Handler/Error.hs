@@ -38,7 +38,7 @@ svodErrorHandler NotFound = selectRep $ do
 
 svodErrorHandler (PermissionDenied message) = selectRep $ do
   provideRep . defaultLayout $ do
-    setTitle "403 Доступ запрещен"
+    setTitle "403 Доступ запрещён"
     $(widgetFile "403")
   provideRep . return $ object
     ["message" .= ("Permission Denied. " <> message)]

@@ -17,7 +17,7 @@
               Автор
           $if not userVerified
             <span .label .label-warning>
-              Не подтвержден
+              Не подтверждён
           $if userBanned && staffHere
             <span .label .label-danger>
               Забанен

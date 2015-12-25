@@ -62,7 +62,7 @@ postChangePasswordR = do
         uid      <- fromJust <$> maybeAuthId
         password <- liftIO (saltPass cpNewPass0)
         runDB (S.setPassword uid password)
-        setMsg MsgSuccess "Пароль изменен успешно."
+        setMsg MsgSuccess "Пароль изменён успешно."
       else setMsg MsgDanger "Пароли не совпадают."
     _ -> return ()
   serveChangePassword form enctype
