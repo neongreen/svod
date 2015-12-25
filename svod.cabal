@@ -97,10 +97,8 @@ library
   exposed-modules:    Application
                     , Foundation
                     , Handler.Administrative
-                    , Handler.ApproveRelease
                     , Handler.ChangePassword
                     , Handler.Common
-                    , Handler.DeleteRelease
                     , Handler.EditProfile
                     , Handler.EditRelease
                     , Handler.Error
@@ -111,8 +109,8 @@ library
                     , Handler.Logout
                     , Handler.Notifications
                     , Handler.Register
-                    , Handler.RejectRelease
                     , Handler.Release
+                    , Handler.ReleaseActions
                     , Handler.Releases
                     , Handler.StarRelease
                     , Handler.SubmitRelease

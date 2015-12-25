@@ -57,10 +57,8 @@ import System.Log.FastLogger
   , toLogStr )
 
 import Handler.Administrative
-import Handler.ApproveRelease
 import Handler.ChangePassword
 import Handler.Common
-import Handler.DeleteRelease
 import Handler.EditProfile
 import Handler.EditRelease
 import Handler.FollowUser
@@ -70,8 +68,8 @@ import Handler.Login
 import Handler.Logout
 import Handler.Notifications
 import Handler.Register
-import Handler.RejectRelease
 import Handler.Release
+import Handler.ReleaseActions
 import Handler.Releases
 import Handler.StarRelease
 import Handler.SubmitRelease
