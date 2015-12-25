@@ -2,6 +2,9 @@
   <div .panel-heading>
     <h3 .panel-title>Общая информация
   <table .table>
+    <colgroup>
+      <col span="1" .field-title>
+      <col span="1" .field-value>
     $if hasStatus
       <tr>
         <th>Статус
