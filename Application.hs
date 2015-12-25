@@ -59,6 +59,7 @@ import System.Log.FastLogger
 import Handler.Administrative
 import Handler.ChangePassword
 import Handler.Common
+import Handler.DownloadRelease
 import Handler.EditProfile
 import Handler.EditRelease
 import Handler.FollowUser

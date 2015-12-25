@@ -112,6 +112,28 @@ li.open ul.dropdown-menu a:hover {
     color: #843534;
 }
 
+/* Tables */
+
+col.field-title {
+    width: 35%;
+}
+
+col.field-value {
+    width: 65%;
+}
+
+col.track-number {
+    width: 10%;
+}
+
+col.track-title {
+    width: 80%;
+}
+
+col.track-duration {
+    width: 10%;
+}
+
 /* Other */
 
 label {

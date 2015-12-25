@@ -99,6 +99,7 @@ library
                     , Handler.Administrative
                     , Handler.ChangePassword
                     , Handler.Common
+                    , Handler.DownloadRelease
                     , Handler.EditProfile
                     , Handler.EditRelease
                     , Handler.Error

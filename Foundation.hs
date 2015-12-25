@@ -95,11 +95,15 @@ authm (UserR _) = return Authorized
 
 -- Actions on releases
 
-authm SubmitReleaseR        = isVerified
-authm (EditReleaseR slug _) = isAdmin *||* isSelf slug
-authm ApproveReleaseR       = isAdmin
-authm RejectReleaseR        = isStaff
-authm DeleteReleaseR        = isAdmin
+authm SubmitReleaseR         = isVerified
+authm (EditReleaseR slug _)  = isAdmin *||* isSelf slug
+authm (DownloadReleaseR _ _) = isVerified
+
+-- Administrative actions on releases
+
+authm ApproveReleaseR = isAdmin
+authm RejectReleaseR  = isStaff
+authm DeleteReleaseR  = isAdmin
 
 -- Public information about releases (also in JSON)
 

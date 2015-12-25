@@ -32,11 +32,15 @@
 
 -- Actions on releases
 
-/опубликовать                         SubmitReleaseR  GET POST
-/редактировать/публикацию/#Text/#Text EditReleaseR    GET POST
-/одобрить/публикацию                  ApproveReleaseR POST
-/отвергнуть/публикацию                RejectReleaseR  POST
-/удалить/публикацию                   DeleteReleaseR  POST
+/опубликовать                         SubmitReleaseR   GET POST
+/редактировать/публикацию/#Text/#Text EditReleaseR     GET POST
+/скачать/публикацию/#Text/#Text       DownloadReleaseR GET
+
+-- Administrative actions on releases
+
+/одобрить/публикацию   ApproveReleaseR POST
+/отвергнуть/публикацию RejectReleaseR  POST
+/удалить/публикацию    DeleteReleaseR  POST
 
 -- Public information about releases (also in JSON)
 
