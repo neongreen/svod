@@ -22,6 +22,7 @@ where
 import Data.List.NonEmpty (NonEmpty)
 import Data.Maybe (fromJust)
 import Formatting (sformat, int)
+import Helper.Path (getStagingDir)
 import Import
 import Path
 import System.Directory (getCurrentDirectory)
@@ -89,9 +90,8 @@ postSubmitReleaseR = do
             , rmDesc    = unTextarea srDesc
             , rmLicense = srLicense
             , rmTracks  = srTracks }
-      root  <- liftIO getCurrentDirectory >>= parseAbsDir
-      sroot <- appStagingDir . appSettings <$> getYesod
-      outcome <- runDB $ S.submitRelease (root </> sroot) rm srDemo
+      sroot   <- getStagingDir
+      outcome <- runDB $ S.submitRelease sroot rm srDemo
       case outcome of
         Left msg -> do
           setMsg MsgDanger (toHtml msg)
@@ -188,7 +188,7 @@ tracksField = Field parse view Multipart
               addTrackId  = baseId <> "add-track"
               remTrackId  = baseId <> "rem-track"
               trackListId = baseId <> "tracklist"
-              indicies    = sformat int <$> [1..maxTrackNumber]
+              indicies    = sformat int <$> [1..S.maxTrackNumber]
           in $(widgetFile "tracks-field")
 
 -- | Check single title. TODO Add additional checks here.

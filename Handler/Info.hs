@@ -28,6 +28,7 @@ module Handler.Info
   , getInfoMarkdownR )
 where
 
+import Helper.Path (getInfoDir)
 import Import
 import Path
 import Text.Read (readMaybe)
@@ -87,9 +88,9 @@ getInfoMarkdownR = renderInfo $(mkRelFile "язык-разметки.md")
 
 renderInfo :: Path Rel File -> Handler Html
 renderInfo file = do
-  articleDir <- appInfoDir . appSettings <$> getYesod
-  article    <- liftIO . TL.readFile . fromRelFile $ articleDir </> file
-  render     <- getUrlRender
+  infoDir <- getInfoDir
+  article <- liftIO . TL.readFile . fromAbsFile $ infoDir </> file
+  render  <- getUrlRender
   let (title', body) = TL.breakOn "\n\n" (TL.strip article)
       -- ↑ HACK we regard first paragraph as title no matter what.
       title          = MD.markdown strippingHeaders title'

@@ -25,6 +25,7 @@ where
 
 import Data.Bool (bool)
 import Helper.Access (userViaSlug)
+import Helper.Path (getStagingDir, getReleaseDir)
 import Import
 import qualified Svod as S
 
@@ -52,7 +53,10 @@ postBanUserR = postAdministrative toggleBanned UserR
 -- and 'defaultCsrfParamName' parameter containing CSRF-protection token.
 
 postDeleteUserR :: Handler TypedContent
-postDeleteUserR = postAdministrative S.deleteUser (const HomeR)
+postDeleteUserR = do
+  sroot <- getStagingDir
+  rroot <- getReleaseDir
+  postAdministrative (S.deleteUser sroot rroot) (const HomeR)
 
 -- | Toggle user between staff member and normal user.
 --

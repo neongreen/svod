@@ -121,6 +121,7 @@ library
                     , Handler.Verify
                     , Helper.Access
                     , Helper.Auth
+                    , Helper.Path
                     , Import
                     , Import.Message
                     , Import.NoFoundation
