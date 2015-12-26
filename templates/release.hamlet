@@ -39,6 +39,10 @@
     <tr>
       <th>Заявка подана
       <td>#{timePretty releaseApplied}
+    $maybe asize <- archiveSize
+      <tr>
+        <th>Размер архива
+        <td>#{asize}
 
 $if staffHere
   <div .panel .panel-danger>

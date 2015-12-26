@@ -18,10 +18,12 @@ where
 
 import Helper.Access (releaseViaSlug)
 import Import
+import Formatting
 import Widget.DngButton (BtnType (..), dngButtonW)
 import Widget.StarRelease (starReleaseW)
-import qualified Svod          as S
-import qualified Text.Markdown as MD
+import qualified Data.Text.Lazy.Builder as TB
+import qualified Svod                   as S
+import qualified Text.Markdown          as MD
 
 -- | Get public information about particular release in HTML or as JSON.
 
@@ -41,6 +43,10 @@ getReleaseR uslug' rslug' =
         Release {..} = entityVal release
         isFinalized  = isJust releaseFinalized
         hasStatus    = not isFinalized || releaseDemo
+        archiveSize  =
+          let fmt :: Format TB.Builder (Double -> TB.Builder)
+              fmt = fixed 2 % " "
+          in sformat (bytes fmt) <$> releaseFinalized
     unless (isFinalized || ownerHere || staffHere) $
       permissionDenied "Эта работа ещё не опубликована."
     render <- getUrlRender
