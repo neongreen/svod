@@ -1,0 +1,11 @@
+<div .panel .panel-default>
+  <div .panel-body>
+    <a href="@{UserR userSlug}">
+      #{userName}
+    &mdash;
+    <a href="@{ReleaseR userSlug releaseSlug}">
+      #{releaseTitle}
+      (#{toInt releaseYear})
+    <div .pull-right>
+      <span .glyphicon .#{icon} aria-hidden="true">
+      #{toInt stars}

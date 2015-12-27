@@ -41,7 +41,7 @@ userViaSlug'
   -> (Entity User -> Widget) -- ^ How to use found data
   -> Widget
 userViaSlug' slug f = do
-  muser <- handlerToWidget . runDB . S.getUserBySlug $ slug
+  muser <- φ (S.getUserBySlug slug)
   case muser of
     Nothing -> notFound
     Just user -> f user
@@ -71,7 +71,7 @@ releaseViaSlug'
   -> Widget
 releaseViaSlug' uslug rslug f = userViaSlug' uslug $ \user -> do
   let uid = entityKey user
-  mrelease <- handlerToWidget . runDB $ S.getReleaseBySlug uid rslug
+  mrelease <- φ (S.getReleaseBySlug uid rslug)
   case mrelease of
     Nothing -> notFound
     Just release -> f user release

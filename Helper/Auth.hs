@@ -72,13 +72,13 @@ checkPassCorrect
   -> YesodDB App (Either Text (Entity User)) -- ^ Error message or user entity
 checkPassCorrect muser given =
   let msg = Left "Этот пароль не подходит."
-      φ m f = case m of
+      ξ m f = case m of
         Nothing -> return msg
         Just a  -> f a
-  in φ muser $ \user -> do
+  in ξ muser $ \user -> do
        let uid  = entityKey user
        msalted <- S.getPassword uid
-       φ msalted $ \salted ->
+       ξ msalted $ \salted ->
          return $ if isValidPass given salted
            then Right user
            else msg

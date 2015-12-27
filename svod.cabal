@@ -129,6 +129,7 @@ library
                     , Settings.StaticFiles
                     , Widget.DngButton
                     , Widget.FollowUser
+                    , Widget.Release
                     , Widget.StarRelease
 
   if flag(dev) || flag(library-only)

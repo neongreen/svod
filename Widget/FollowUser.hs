@@ -15,7 +15,9 @@
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Widget.FollowUser
-  ( followUserW )
+  ( followUserW
+  , isFollowedBy
+  , followedIcon )
 where
 
 import Helper.Access (userViaSlug')
@@ -30,9 +32,8 @@ import qualified Svod as S
 
 followUserW :: Slug -> Widget
 followUserW slug = userViaSlug' slug $ \target' -> do
-  let φ = handlerToWidget . runDB
-      target = entityKey target'
-  muid      <- handlerToWidget maybeAuthId
+  let target = entityKey target'
+  muid      <- ζ maybeAuthId
   buttonId  <- newIdent
   counterId <- newIdent
   iconId    <- newIdent
@@ -41,12 +42,30 @@ followUserW slug = userViaSlug' slug $ \target' -> do
     Just uid -> φ (S.isFollower target uid)
   count'    <- φ (S.followerCount target)
   let count         = fromIntegral count'           :: Int
-      activeTitle   = "Не следить за пользователем" :: Text
       inactiveTitle = "Следить за пользователем"    :: Text
-      activeIcon    = "glyphicon-eye-close"         :: Text
-      inactiveIcon  = "glyphicon-eye-open"          :: Text
+      activeTitle   = "Не следить за пользователем" :: Text
+      inactiveIcon  = followedIcon False
+      activeIcon    = followedIcon True
   addScript (StaticR js_cookie_js)
   if isJust muid
   then $(widgetFile "follow-user-logged-in")
   else $(widgetFile "follow-user-guest")
   $(widgetFile "follow-user")
+
+-- | Check if particular user is follower by given user.
+
+isFollowedBy
+  :: UserId            -- ^ Whom to follow
+  -> Maybe UserId      -- ^ Potential follower
+  -> WidgetT App IO Bool -- ^ Does this user follows the first one?
+isFollowedBy target muid =
+  case muid of
+    Nothing -> return False
+    Just uid -> φ (S.isFollower target uid)
+
+-- | Return name of class to use for “number of followers” icon depending on
+-- whether it's followed by actual logged-in user or not.
+
+followedIcon :: Bool -> Text
+followedIcon False = "glyphicon-eye-open"
+followedIcon True  = "glyphicon-eye-close"

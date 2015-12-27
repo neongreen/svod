@@ -118,7 +118,6 @@ serveSubmitRelease :: ToWidget App a
   -> Enctype           -- ^ Encoding type required by the form
   -> Handler Html      -- ^ Handler
 serveSubmitRelease uid form enctype = defaultLayout $ do
-  let φ = handlerToWidget . runDB
   setTitle "Новая публикация"
   status <- φ (S.canSubmitAgain uid)
   case status of
