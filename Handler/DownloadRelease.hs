@@ -1,7 +1,7 @@
 -- |
 -- Module      :  Handler.DownloadRelease
 -- Copyright   :  © 2015 Mark Karpov
--- License     :  GPL-3
+-- License     :  GNU GPL version 3
 --
 -- Maintainer  :  Mark Karpov <markkarpov@openmailbox.org>
 -- Stability   :  experimental
@@ -17,7 +17,6 @@ module Handler.DownloadRelease
 where
 
 import Import
-import qualified Svod as S
 
 -- | TODO Serve specified release.
 

@@ -1,7 +1,7 @@
 -- |
 -- Module      :  Handler.Home
 -- Copyright   :  © 2015 Mark Karpov
--- License     :  GPL-3
+-- License     :  GNU GPL version 3
 --
 -- Maintainer  :  Mark Karpov <markkarpov@openmailbox.org>
 -- Stability   :  experimental
@@ -22,6 +22,5 @@ import Import
 
 getHomeR :: Handler Html
 getHomeR = defaultLayout $ do
-  aDomId <- newIdent
   setTitle "Свод"
   $(widgetFile "homepage")

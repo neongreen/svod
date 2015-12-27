@@ -1,7 +1,7 @@
 -- |
 -- Module      :  Handler.Notifications
 -- Copyright   :  © 2015 Mark Karpov
--- License     :  GPL-3
+-- License     :  GNU GPL version 3
 --
 -- Maintainer  :  Mark Karpov <markkarpov@openmailbox.org>
 -- Stability   :  experimental
