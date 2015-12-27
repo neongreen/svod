@@ -17,7 +17,7 @@
               Демо
     <tr>
       <th>Автор
-      <td><a href="@{UserR uslug'}">#{userName}
+      <td><a href="@{UserR uslug}">#{userName}
     $if isFinalized
       <tr>
         <th>Номер по каталогу
@@ -59,7 +59,7 @@ $if staffHere
   $if (not isFinalized && ownerHere) || adminHere
     <a .btn .btn-default
        title="Редактировать публикацию"
-       href="@{EditReleaseR uslug' rslug'}">
+       href="@{EditReleaseR uslug rslug}">
       <span .glyphicon .glyphicon-pencil aria-hidden="true">
   ^{starReleaseW uslug rslug}
 
@@ -97,7 +97,7 @@ $if staffHere
 <p .text-center>
   $if verifiedHere
     <a .btn .btn-success .btn-lg
-       href="@{DownloadReleaseR uslug' rslug'}">
+       href="@{DownloadReleaseR uslug rslug}">
       <span .glyphicon .glyphicon-download-alt aria-hidden="true">
       Скачать
 

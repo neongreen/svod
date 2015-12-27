@@ -37,8 +37,8 @@ postFollowUserR :: Handler TypedContent
 postFollowUserR = do
   checkCsrfParamNamed defaultCsrfParamName
   follower <- fromJust <$> maybeAuthId
-  slug     <- runInputPost (ireq textField "slug")
-  userViaSlug (mkSlug slug) $ \target' -> do
+  slug     <- runInputPost (ireq textField "slug") >>= parseSlug
+  userViaSlug slug $ \target' -> do
     let target = entityKey target'
     active <- runDB (S.toggleFollowing target follower)
     n      <- runDB (S.followerCount target)

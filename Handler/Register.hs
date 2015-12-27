@@ -95,7 +95,7 @@ postRegisterR = do
 .
 |]
 #endif
-        when (userSlug == mkSlug "Свод") $ runDB $ do
+        when (unSlug userSlug == "свод") $ runDB $ do
           S.setVerified uid
           S.setUserStatus uid AdminUser
         toTypedContent <$> setCredsRedirect Creds

@@ -65,14 +65,16 @@ postDeleteReleaseR = postAdministrative S.deleteRelease (\_ _ -> HomeR)
 postAdministrative
   :: (Path Abs Dir -> Path Abs Dir -> ReleaseId -> YesodDB App (Either Text a))
      -- ^ Action to perform
-  -> (Text -> Text -> Route App) -- ^ Where to redirect given pair of slugs
+  -> (Slug -> Slug -> Route App) -- ^ Where to redirect given pair of slugs
   -> Handler TypedContent
 postAdministrative action route = do
   checkCsrfParamNamed defaultCsrfParamName
-  (uslug, rslug) <- runInputPost $ (,)
+  (uslug', rslug') <- runInputPost $ (,)
     <$> ireq textField "user-slug"
     <*> ireq textField "release-slug"
-  releaseViaSlug (mkSlug uslug) (mkSlug rslug) $ \_ release -> do
+  uslug <- parseSlug uslug'
+  rslug <- parseSlug rslug'
+  releaseViaSlug uslug rslug $ \_ release -> do
     let rid = entityKey release
     sroot   <- getStagingDir
     rroot   <- getReleaseDir

@@ -14,7 +14,7 @@
 /выход                       LogoutR         GET
 /подтверждение/#Text         VerifyR         GET
 /сообщения                   NotificationsR  GET
-/редактировать/профиль/#Text EditProfileR    GET POST
+/редактировать/профиль/#Slug EditProfileR    GET POST
 /сменить/пароль              ChangePasswordR GET POST
 
 -- Administrative actions on users
@@ -28,13 +28,13 @@
 -- Public information about users (also in JSON)
 
 /пользователи       UsersR   GET
-/пользователь/#Text UserR    GET
+/пользователь/#Slug UserR    GET
 
 -- Actions on releases
 
 /опубликовать                         SubmitReleaseR   GET POST
-/редактировать/публикацию/#Text/#Text EditReleaseR     GET POST
-/скачать/публикацию/#Text/#Text       DownloadReleaseR GET
+/редактировать/публикацию/#Slug/#Slug EditReleaseR     GET POST
+/скачать/публикацию/#Slug/#Slug       DownloadReleaseR GET
 
 -- Administrative actions on releases
 
@@ -45,7 +45,7 @@
 -- Public information about releases (also in JSON)
 
 /публикации             ReleasesR GET
-/публикация/#Text/#Text ReleaseR  GET
+/публикация/#Slug/#Slug ReleaseR  GET
 
 -- Social features
 

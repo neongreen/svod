@@ -56,7 +56,7 @@ $if staffHere
   $if ownerHere || adminHere
     <a .btn .btn-default
        title="Редактировать профиль"
-       href="@{EditProfileR slug'}">
+       href="@{EditProfileR slug}">
       <span .glyphicon .glyphicon-pencil aria-hidden="true">
 
 <div .clearfix>

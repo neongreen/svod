@@ -54,7 +54,7 @@ postLoginR = do
   ((result, form), enctype) <- runFormPost loginForm
   case result of
     FormSuccess LoginForm {..} -> do
-      muser <- runDB . S.getUserBySlug . mkSlug $ lfName
+      muser <- mkSlug lfName >>= runDB . S.getUserBySlug
       acres <- runDB (checkPassCorrect muser lfPassword)
       case entityVal <$> acres of
         Left msg -> do

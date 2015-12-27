@@ -87,12 +87,12 @@ postMakeAdminR = postAdministrative toggleAdmin UserR
 
 postAdministrative
   :: (UserId -> YesodDB App ()) -- ^ Action on perform on user
-  -> (Text -> Route App)        -- ^ Where to redirect, given slug
+  -> (Slug -> Route App)        -- ^ Where to redirect, given slug
   -> Handler TypedContent
 postAdministrative action route = do
   checkCsrfParamNamed defaultCsrfParamName
-  slug <- runInputPost (ireq textField "slug")
-  userViaSlug (mkSlug slug) $ \target' -> do
+  slug <- runInputPost (ireq textField "slug") >>= parseSlug
+  userViaSlug slug $ \target' -> do
     let target = entityKey target'
     runDB (action target)
     redirect (route slug)

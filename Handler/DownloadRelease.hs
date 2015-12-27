@@ -21,5 +21,5 @@ import qualified Svod as S
 
 -- | TODO Serve specified release.
 
-getDownloadReleaseR :: Text -> Text -> Handler TypedContent
+getDownloadReleaseR :: Slug -> Slug -> Handler TypedContent
 getDownloadReleaseR = undefined

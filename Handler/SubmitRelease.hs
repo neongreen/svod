@@ -25,7 +25,6 @@ import Formatting (sformat, int)
 import Helper.Path (getStagingDir)
 import Import
 import Path
-import System.Directory (getCurrentDirectory)
 import Yesod.Form.Bootstrap3
 import qualified Data.List.NonEmpty as NE
 import qualified Data.Text          as T
@@ -87,7 +86,7 @@ postSubmitReleaseR = do
             , rmAlbum   = H.mkAlbum srTitle
             , rmGenre   = H.mkGenre <$> srGenre
             , rmYear    = fromJust (H.mkYear srYear)
-            , rmDesc    = unTextarea srDesc
+            , rmDesc    = mkDescription (unTextarea srDesc)
             , rmLicense = srLicense
             , rmTracks  = srTracks }
       sroot   <- getStagingDir
@@ -97,7 +96,7 @@ postSubmitReleaseR = do
           setMsg MsgDanger (toHtml msg)
           serveSubmitRelease uid form enctype
         Right rid -> do
-          releaseSlug <- unSlug . releaseSlug . fromJust <$> runDB (get rid)
+          releaseSlug <- releaseSlug . fromJust <$> runDB (get rid)
           setMsg MsgSuccess [shamlet|
 Публикация #
 <strong>
@@ -107,7 +106,7 @@ postSubmitReleaseR = do
 опубликована. В период рассмотрения администрация может посылать вам сообщения,
 чтобы обсудить или поправить что-либо, пожалуйста реагируйте своевременно.
 |]
-          redirect (ReleaseR (unSlug userSlug) releaseSlug)
+          redirect (ReleaseR userSlug releaseSlug)
     _ -> serveSubmitRelease uid form enctype
 
 -- | Serve “submit release” page.
@@ -127,10 +126,8 @@ serveSubmitRelease uid form enctype = defaultLayout $ do
       buttonId <- newIdent
       $(widgetFile "submit-release")
     S.AlreadySubmitted rid -> do
-      artist  <- userName     . fromJust <$> φ (get uid)
-      release <- releaseTitle . fromJust <$> φ (get rid)
-      let ξ = unSlug . mkSlug
-          releaseUrl = ReleaseR (ξ artist) (ξ release)
+      User    {..} <- fromJust <$> φ (get uid)
+      Release {..} <- fromJust <$> φ (get rid)
       $(widgetFile "submit-release-already")
     S.CannotSubmitYet next ->
       $(widgetFile "submit-release-next")

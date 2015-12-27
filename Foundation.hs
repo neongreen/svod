@@ -154,10 +154,10 @@ isAdmin = checkWho "Лишь администратор имеет доступ.
 
 -- | Finally some pages may be accessed only by their owners.
 
-isSelf :: Text -> Handler AuthResult
+isSelf :: Slug -> Handler AuthResult
 isSelf slug =
   checkWho "Только владелец профиля имеет доступ." $ \uid -> do
-    self  <- S.getUserBySlug (mkSlug slug)
+    self <- S.getUserBySlug slug
     return $ (entityKey <$> self) == Just uid
 
 -- | Generalized check of user identity.
@@ -335,11 +335,14 @@ instance YesodAuth App where
   onLogin           = setCsrfCookie
   onLogout          = return ()
 
-  authenticate creds = runDB $ do
-    user <- S.getUserBySlug . mkSlug . credsIdent $ creds
-    return $ case user of
-      Just (Entity uid _) -> Authenticated uid
-      Nothing             -> UserError InvalidLogin
+  authenticate creds =
+    case parseSlug (credsIdent creds) of
+      Nothing -> return (UserError InvalidLogin)
+      Just slug -> runDB $ do
+        muser <- S.getUserBySlug slug
+        return $ case muser of
+          Just (Entity uid _) -> Authenticated uid
+          Nothing -> UserError InvalidLogin
 
   authPlugins _   = []
   authHttpManager = error "Email doesn't need an HTTP manager"

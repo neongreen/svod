@@ -45,43 +45,39 @@ editProfileForm User {..} =
     <*> aopt urlField (bfs ("Ваш сайт" :: Text))
       (Just userWebsite)
     <*> aopt textareaField (bfs ("Расскажите о себе" :: Text))
-      (Just $ Textarea <$> userDesc)
+      (Just . Textarea . unDescription <$> userDesc)
   where email = fromMaybe "<неверный формат>" (emailPretty userEmail)
 
 -- | Serve page containing form that allows to edit user profile.
 
-getEditProfileR :: Text -> Handler Html
-getEditProfileR slug' =
-  let slug = mkSlug slug'
-  in userViaSlug slug $ \user -> do
-    (form, enctype) <- generateFormPost . editProfileForm . entityVal $ user
-    serveEditProfile slug form enctype
+getEditProfileR :: Slug -> Handler Html
+getEditProfileR slug = userViaSlug slug $ \user -> do
+  (form, enctype) <- generateFormPost . editProfileForm . entityVal $ user
+  serveEditProfile slug form enctype
 
 -- | Process submitted form and refresh user's profile.
 
-postEditProfileR :: Text -> Handler Html
-postEditProfileR slug' =
-  let slug = mkSlug slug'
-  in userViaSlug slug $ \user -> do
-    ((result, form), enctype) <-
-      runFormPost . editProfileForm . entityVal $ user
-    case result of
-      FormSuccess EditProfileForm {..} -> do
-        runDB $ S.editUserProfile
-          (entityKey user)
-          epEmailPublic
-          epWebsite
-          (unTextarea <$> epDesc)
-        render <- getUrlRender
-        let profileUrl = render (UserR slug')
-        setMsg MsgSuccess [shamlet|
+postEditProfileR :: Slug -> Handler Html
+postEditProfileR slug = userViaSlug slug $ \user -> do
+  ((result, form), enctype) <-
+    runFormPost . editProfileForm . entityVal $ user
+  case result of
+    FormSuccess EditProfileForm {..} -> do
+      runDB $ S.editUserProfile
+        (entityKey user)
+        epEmailPublic
+        epWebsite
+        (mkDescription . unTextarea <$> epDesc)
+      render <- getUrlRender
+      let profileUrl = render (UserR slug)
+      setMsg MsgSuccess [shamlet|
 Профиль пользователя #
 <a href="#{profileUrl}">
   #{userName $ entityVal user}
 \ обновлен успешно.
 |]
-      _ -> return ()
-    serveEditProfile slug form enctype
+    _ -> return ()
+  serveEditProfile slug form enctype
 
 serveEditProfile :: ToWidget App a
   => Slug              -- ^ Slug used to access the form

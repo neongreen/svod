@@ -38,10 +38,12 @@ postStarReleaseR :: Handler TypedContent
 postStarReleaseR = do
   checkCsrfParamNamed defaultCsrfParamName
   starrer <- fromJust <$> maybeAuthId
-  (aslug, rslug) <- runInputPost $ (,)
+  (aslug', rslug') <- runInputPost $ (,)
     <$> ireq textField "artist-slug"
     <*> ireq textField "release-slug"
-  releaseViaSlug (mkSlug aslug) (mkSlug rslug) $ \_ release' -> do
+  aslug <- parseSlug aslug'
+  rslug <- parseSlug rslug'
+  releaseViaSlug aslug rslug $ \_ release' -> do
     let release = entityKey release'
     active <- runDB (S.toggleStar release starrer)
     n      <- runDB (S.starCount release)

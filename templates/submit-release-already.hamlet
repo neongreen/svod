@@ -4,5 +4,6 @@
   <div .panel-body>
     <p>
       Работа #
-      <a href="@{releaseUrl}">#{release}
-      \ ещё находится на рассмотрении, поэтому нельзя опубликовать ещё одну.
+      <a href="@{ReleaseR userSlug releaseSlug}">#{releaseTitle}
+      \ ещё находится на рассмотрении, поэтому нельзя опубликовать ещё
+      одну.

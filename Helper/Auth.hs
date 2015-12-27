@@ -34,7 +34,7 @@ checkUserName
   -> Text              -- ^ Name of the user
   -> Handler (Either Text Text)
 checkUserName should name = do
-  muser <- runDB . S.getUserBySlug . mkSlug $ name
+  muser <- mkSlug name >>= runDB . S.getUserBySlug
   return $ case (should, muser) of
     (True,  Nothing) -> Left "Нет такого пользователя."
     (True,  Just  _) -> Right name

@@ -21,15 +21,15 @@ import Import
 -- | Render form for release editing.
 
 getEditReleaseR
-  :: Text              -- ^ User slug
-  -> Text              -- ^ Release slug
+  :: Slug              -- ^ User slug
+  -> Slug              -- ^ Release slug
   -> Handler Html
 getEditReleaseR = undefined
 
 -- | Process release editing request.
 
 postEditReleaseR
-  :: Text              -- ^ User slug
-  -> Text              -- ^ Release slug
+  :: Slug              -- ^ User slug
+  -> Slug              -- ^ Release slug
   -> Handler Html
 postEditReleaseR = undefined
