@@ -30,7 +30,6 @@ import Yesod.Auth.Message (AuthMessage (InvalidLogin))
 import Yesod.Core.Types (Logger)
 import Yesod.Default.Util (addStaticContentExternal)
 import Yesod.Form.I18n.Russian (russianFormMessage)
-import qualified Data.Text         as T
 import qualified Svod              as S
 import qualified Yesod.Core.Unsafe as Unsafe
 
@@ -236,14 +235,6 @@ instance HasHttpManager App where
   getHttpManager = appHttpManager
 
 instance Yesod App where
-
-  -- Make routes case-insensitive.
-
-  cleanPath _ s =
-    let corrected = T.toLower <$> filter (not . T.null) s
-    in if corrected == s
-       then Right s
-       else Left corrected
 
   -- Specify application root.
 
