@@ -54,10 +54,11 @@
                     <a href="@{ChangePasswordR}">
                       Сменить пароль
                   <li .divider role="separator">
-                  <li>
-                    <a href="@{SubmitReleaseR}">
-                      Опубликовать
-                  <li .divider role="separator">
+                  $if userVerified user
+                    <li>
+                      <a href="@{SubmitReleaseR}">
+                        Опубликовать
+                    <li .divider role="separator">
                   <li>
                     <a href="@{LogoutR}">
                       Выйти
