@@ -21,6 +21,7 @@ import Helper.Rendering (toInt, renderDescription)
 import Import
 import Widget.DngButton (BtnType (..), dngButtonW)
 import Widget.StarRelease (starReleaseW)
+import Widget.DownloadRelease (downloadReleaseW)
 import qualified Svod as S
 
 -- | Get public information about particular release in HTML or as JSON.
@@ -30,7 +31,6 @@ getReleaseR
   -> Slug              -- ^ Release slug
   -> Handler TypedContent
 getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
-  verifiedHere <- ynAuth <$> isVerified
   ownerHere    <- ynAuth <$> isSelf uslug
   staffHere    <- ynAuth <$> isStaff
   adminHere    <- ynAuth <$> isAdmin

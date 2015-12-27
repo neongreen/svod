@@ -1,0 +1,8 @@
+$(#{toJSONId buttonId}).popover({
+    trigger: 'hover',
+    content: 'Войдите или зарегистрируйтесь чтобы скачивать публикации.'
+});
+
+$(#{toJSONId buttonId}).click(function(event) {
+    event.preventDefault();
+});

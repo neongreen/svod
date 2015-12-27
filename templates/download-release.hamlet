@@ -1,0 +1,8 @@
+<a .btn .btn-success .btn-lg
+   href="@{DownloadReleaseR aslug rslug}"
+   title="Скачать публикацию"
+   ##{buttonId}>
+  <span .glyphicon .glyphicon-download-alt aria-hidden="true">
+  Скачать
+  $if releaseDownloads > 0
+    <small>(#{toInt releaseDownloads})
