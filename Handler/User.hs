@@ -18,10 +18,11 @@ where
 
 import Data.Bool (bool)
 import Helper.Access (userViaSlug)
-import Helper.Rendering (renderDescription)
+import Helper.Rendering (renderDescription, toInt)
 import Import
 import Widget.DngButton (BtnType (..), dngButtonW)
 import Widget.FollowUser (followUserW)
+import Widget.Release (releaseW)
 import qualified Svod as S
 
 -- | Get information about particular user in HTML or JSON.
@@ -52,15 +53,24 @@ getUserR slug = userViaSlug slug $ \user -> do
       setTitle (toHtml userName)
       $(widgetFile "user")
     -- JSON representation
-    provideRep . return . object $
-      maybeToList (("website" .=) <$> userWebsite)   ++
-      maybeToList (("desc"    .=) <$> userDesc)      ++
-      bool [] ["email" .= userEmail] userEmailPublic ++
-      [ "name"     .= userName
-      , "slug"     .= userSlug
-      , "url"      .= render (UserR slug)
-      , "joined"   .= datePretty userJoined
-      , "admin"    .= userAdmin
-      , "staff"    .= userStaff
-      , "banned"   .= userBanned
-      , "verified" .= userVerified ]
+    provideRep $ do
+      stars <- mapM (runDB . S.starCount . entityKey) releases
+      return . object $
+        maybeToList (("website" .=) <$> userWebsite)   ++
+        maybeToList (("desc"    .=) <$> userDesc)      ++
+        bool [] ["email" .= userEmail] userEmailPublic ++
+        [ "name"     .= userName
+        , "slug"     .= userSlug
+        , "url"      .= render (UserR slug)
+        , "joined"   .= datePretty userJoined
+        , "admin"    .= userAdmin
+        , "staff"    .= userStaff
+        , "banned"   .= userBanned
+        , "verified" .= userVerified
+        , "releases" .= (f <$> zip stars releases) ]
+        where f (s, e) =
+                let x = entityVal e
+                in object
+                  [ "title" .= releaseTitle x
+                  , "year"  .= toInt (releaseYear x)
+                  , "stars" .= toInt s ]
