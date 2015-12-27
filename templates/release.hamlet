@@ -39,21 +39,22 @@
     <tr>
       <th>Заявка подана
       <td>#{timePretty releaseApplied}
-    $maybe asize <- archiveSize
+    $maybe asize <- bytesPretty <$> releaseFinalized
       <tr>
         <th>Размер архива
         <td>#{asize}
 
 $if staffHere
-  <div .panel .panel-danger>
-    <div .panel-heading>
-      <h3 .panel-title>Административные действия
-    <div .panel-body>
-      $if not isFinalized
-        $if adminHere
-          ^{approveBtn}
-        ^{rejectBtn}
-      ^{deleteBtn}
+  $with s <- [("user-slug", unSlug uslug), ("release-slug", unSlug rslug)]
+    <div .panel .panel-danger>
+      <div .panel-heading>
+        <h3 .panel-title>Административные действия
+      <div .panel-body>
+        $if not isFinalized
+          $if adminHere
+            ^{dngButtonW BtnSuccess "Одобрить" s ApproveReleaseR}
+          ^{dngButtonW BtnWarning "Отвергнуть" s RejectReleaseR}
+        ^{dngButtonW BtnDanger "Удалить" s DeleteReleaseR}
 
 <h2>Описание #
   $if (not isFinalized && ownerHere) || adminHere
@@ -70,7 +71,7 @@ $if staffHere
        title="#{releaseTitle}"
        alt="#{releaseTitle}">
 
-  #{desc}
+  #{renderDescription releaseDesc}
 
 <div .panel .panel-info>
   <div .panel-heading>

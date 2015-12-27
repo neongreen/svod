@@ -39,20 +39,21 @@
         <td>#{email}
 
 $if staffHere
-  <div .panel .panel-danger>
-    <div .panel-heading>
-      <h3 .panel-title>Административные действия
-    <div .panel-body>
-      $if not userVerified
-        ^{verifyBtn}
-      ^{banBtn}
-      $if adminHere
-        ^{deleteBtn}
-        ^{staffBtn}
-        $if not userAdmin
-          ^{adminBtn}
+  $with s <- [("slug", unSlug slug)]
+    <div .panel .panel-danger>
+      <div .panel-heading>
+        <h3 .panel-title>Административные действия
+      <div .panel-body>
+        $if not userVerified
+          ^{dngButtonW BtnSuccess "Подтвердить" s VerifyUserR}
+        ^{dngButtonW BtnWarning (bool "Забанить" "Разбанить" userBanned) s BanUserR}
+        $if adminHere
+          ^{dngButtonW BtnDanger "Удалить" s DeleteUserR}
+          ^{dngButtonW BtnInfo (bool "Нанять" "Уволить" userStaff) s MakeStaffR}
+          $if not userAdmin
+            ^{dngButtonW BtnPrimary "Возвысить" s MakeAdminR}
 
-<h2>Биография #
+<h2>О пользователе #
   $if ownerHere || adminHere
     <a .btn .btn-default
        title="Редактировать профиль"
@@ -66,7 +67,7 @@ $if staffHere
        title="#{userName}"
        alt="#{userName}">
 
-  $maybe desc <- mdesc
+  $maybe desc <- renderDescription <$> userDesc
     #{desc}
   $nothing
     <p>

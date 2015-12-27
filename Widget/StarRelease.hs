@@ -17,6 +17,7 @@ module Widget.StarRelease
 where
 
 import Helper.Access (releaseViaSlug')
+import Helper.Rendering (toJSONId)
 import Import
 import qualified Data.Text.Encoding as TE
 import qualified Svod as S

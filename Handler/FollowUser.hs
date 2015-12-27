@@ -19,6 +19,7 @@ where
 
 import Data.Maybe (fromJust)
 import Helper.Access (userViaSlug)
+import Helper.Rendering (toInt)
 import Import
 import qualified Svod as S
 

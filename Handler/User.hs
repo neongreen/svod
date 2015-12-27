@@ -18,11 +18,11 @@ where
 
 import Data.Bool (bool)
 import Helper.Access (userViaSlug)
+import Helper.Rendering (renderDescription)
 import Import
 import Widget.DngButton (BtnType (..), dngButtonW)
 import Widget.FollowUser (followUserW)
-import qualified Svod          as S
-import qualified Text.Markdown as MD
+import qualified Svod as S
 
 -- | Get information about particular user in HTML or JSON.
 
@@ -48,23 +48,10 @@ getUserR slug = userViaSlug slug $ \user -> do
       placeholder = StaticR $ StaticRoute ["img", "user", "placeholder.jpg"] []
   selectRep $ do
     -- HTML representation
-    -- TODO Render table of releases
     provideRep . defaultLayout $ do
       setTitle (toHtml userName)
-      let mdesc     = MD.markdown MD.def . fromStrict . unDescription
-            <$> userDesc
-          s         = [("slug", unSlug slug)]
-          verifyBtn = dngButtonW BtnSuccess "Подтвердить" s VerifyUserR
-          banBtn    = dngButtonW BtnWarning
-            (bool "Забанить" "Разбанить" userBanned) s BanUserR
-          deleteBtn = dngButtonW BtnDanger "Удалить" s DeleteUserR
-          staffBtn  = dngButtonW BtnInfo
-            (bool "Нанять" "Уволить" userStaff) s MakeStaffR
-          adminBtn  = dngButtonW BtnPrimary
-            (bool "Возвысить" "Унизить" userAdmin) s MakeAdminR
       $(widgetFile "user")
     -- JSON representation
-    -- TODO Add info about releases
     provideRep . return . object $
       maybeToList (("website" .=) <$> userWebsite)   ++
       maybeToList (("desc"    .=) <$> userDesc)      ++

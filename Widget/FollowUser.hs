@@ -19,6 +19,7 @@ module Widget.FollowUser
 where
 
 import Helper.Access (userViaSlug')
+import Helper.Rendering (toJSONId)
 import Import
 import qualified Data.Text.Encoding as TE
 import qualified Svod as S

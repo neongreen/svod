@@ -11,9 +11,7 @@
 -- "Prelude".
 
 module Import.NoFoundation
-  ( module I
-  , toJSONId
-  , toInt )
+  ( module I )
 where
 
 import ClassyPrelude.Yesod   as I hiding
@@ -24,14 +22,3 @@ import Svod.Model            as I
 import Yesod.Auth            as I hiding (LoginR, LogoutR)
 import Yesod.Core.Types      as I (loggerSet)
 import Yesod.Default.Config2 as I
-
--- | A helper to render identifiers in jQuery as JSON objects.
-
-toJSONId :: Text -> Value
-toJSONId text = toJSON ("#" <> text)
-
--- | Convert more exotic stuff like 'Natural' into plain 'Integer' suitable
--- for direct interpolation into templates.
-
-toInt :: Integral a => a -> Integer
-toInt = fromIntegral
