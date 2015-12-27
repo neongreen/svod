@@ -33,13 +33,11 @@ import qualified Svod as S
 followUserW :: Slug -> Widget
 followUserW slug = userViaSlug' slug $ \target' -> do
   let target = entityKey target'
-  muid      <- ζ maybeAuthId
+  muser     <- ζ maybeAuth
   buttonId  <- newIdent
   counterId <- newIdent
   iconId    <- newIdent
-  following <- case muid of
-    Nothing  -> return False
-    Just uid -> φ (S.isFollower target uid)
+  following <- isFollowedBy target (entityKey <$> muser)
   count'    <- φ (S.followerCount target)
   let count         = fromIntegral count'           :: Int
       inactiveTitle = "Следить за пользователем"    :: Text
@@ -47,9 +45,12 @@ followUserW slug = userViaSlug' slug $ \target' -> do
       inactiveIcon  = followedIcon False
       activeIcon    = followedIcon True
   addScript (StaticR js_cookie_js)
-  if isJust muid
-  then $(widgetFile "follow-user-logged-in")
-  else $(widgetFile "follow-user-guest")
+  case entityVal <$> muser of
+    Nothing -> $(widgetFile "follow-user-guest")
+    Just User {..} ->
+      if userVerified
+      then $(widgetFile "follow-user-logged-in")
+      else $(widgetFile "follow-user-unverified")
   $(widgetFile "follow-user")
 
 -- | Check if particular user is follower by given user.

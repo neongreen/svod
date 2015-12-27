@@ -1,0 +1,4 @@
+$(#{toJSONId buttonId}).popover({
+    trigger: 'hover',
+    content: 'Завершите регистрацию чтобы отмечать публикации.'
+});

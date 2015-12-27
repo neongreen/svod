@@ -33,11 +33,11 @@ starReleaseW
   -> Widget            -- ^ Resulting widget
 starReleaseW aslug rslug = releaseViaSlug' aslug rslug $ \_ release' -> do
   let rid = entityKey release'
-  muid      <- ζ maybeAuthId
+  muser     <- ζ maybeAuth
   buttonId  <- newIdent
   counterId <- newIdent
   iconId    <- newIdent
-  starred   <- isStarredBy rid muid
+  starred   <- isStarredBy rid (entityKey <$> muser)
   count'    <- φ (S.starCount rid)
   let count         = fromIntegral count'   :: Int
       inactiveTitle = "Отметить публикацию" :: Text
@@ -45,9 +45,12 @@ starReleaseW aslug rslug = releaseViaSlug' aslug rslug $ \_ release' -> do
       inactiveIcon  = starredIcon False
       activeIcon    = starredIcon True
   addScript (StaticR js_cookie_js)
-  if isJust muid
-  then $(widgetFile "star-release-logged-in")
-  else $(widgetFile "star-release-guest")
+  case entityVal <$> muser of
+    Nothing -> $(widgetFile "star-release-guest")
+    Just User {..} ->
+      if userVerified
+      then $(widgetFile "star-release-logged-in")
+      else $(widgetFile "star-release-unverified")
   $(widgetFile "star-release")
 
 -- | Check if particular release is starred by given user.
