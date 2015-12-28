@@ -39,6 +39,9 @@
     <tr>
       <th>Заявка подана
       <td>#{timePretty releaseApplied}
+    <tr>
+      <th>Количество скачиваний
+      <td>#{toInt releaseDownloads}
     $maybe asize <- bytesPretty <$> releaseFinalized
       <tr>
         <th>Размер архива
@@ -73,27 +76,28 @@ $if staffHere
 
   #{renderDescription releaseDesc}
 
-<div .panel .panel-info>
-  <div .panel-heading>
-    <h3 .panel-title>
-      $maybe releaseType <- getReleaseType totalDur
-        #{releaseTypePretty releaseType}
-      $nothing
-        Список записей
-  <table .table>
-    <colgroup>
-      <col span="1" .track-number>
-      <col span="1" .track-title>
-      <col span="1" .track-duration>
-    $forall track <- tracks
+<p>
+  <div .panel .panel-info>
+    <div .panel-heading>
+      <h3 .panel-title>
+        $maybe releaseType <- getReleaseType totalDur
+          #{releaseTypePretty releaseType}
+        $nothing
+          Список записей
+    <table .table>
+      <colgroup>
+        <col span="1" .track-number>
+        <col span="1" .track-title>
+        <col span="1" .track-duration>
+      $forall track <- tracks
+        <tr>
+          <td>#{toInt $ trackNumber track}
+          <td>#{trackTitle track}
+          <td>#{durationPretty $ trackDuration track}
       <tr>
-        <td>#{toInt $ trackNumber track}
-        <td>#{trackTitle track}
-        <td>#{durationPretty $ trackDuration track}
-    <tr>
-      <td>Σ
-      <td>
-      <td>#{durationPretty totalDur}
+        <td>Σ
+        <td>
+        <td>#{durationPretty totalDur}
 
 <p .text-center>
   ^{downloadReleaseW uslug rslug}

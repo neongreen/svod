@@ -49,6 +49,7 @@ library
                     , app
   build-depends:      aeson                  >= 0.8
                     , base                   >= 4.8 && < 5
+                    , blaze-builder          >= 0.3
                     , blaze-html             >= 0.8
                     , bytestring             >= 0.9
                     , classy-prelude         >= 0.10.2

@@ -77,7 +77,8 @@ $if staffHere
   ^{followUserW slug}
 
 $if userAuthor
-  $forall release <- releases
-    ^{releaseW release}
+  <p>
+    $forall release <- releases
+      ^{releaseW release}
 $else
   <p>Пока ничего.

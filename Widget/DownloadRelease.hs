@@ -16,8 +16,7 @@ module Widget.DownloadRelease
   ( downloadReleaseW )
 where
 
-import Helper.Access (releaseViaSlug')
-import Helper.Rendering (toJSONId, toInt)
+import Helper.Rendering (toJSONId)
 import Import
 
 -- | Button that allows to download releases.
@@ -26,8 +25,7 @@ downloadReleaseW
   :: Slug              -- ^ Artist slug
   -> Slug              -- ^ Release slug
   -> Widget            -- ^ Resulting widget
-downloadReleaseW aslug rslug = releaseViaSlug' aslug rslug $ \_ release -> do
-  let Release {..} = entityVal release
+downloadReleaseW uslug rslug = do
   muser    <- ζ maybeAuth
   buttonId <- newIdent
   case entityVal <$> muser of
