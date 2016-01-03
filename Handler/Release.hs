@@ -52,17 +52,17 @@ getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
       $(widgetFile "release")
     -- JSON representation
     provideRep . return . object $
-      maybeToList (("genre" .=) <$> releaseGenre) ++
-      maybeToList (("finalized" .=) . toInt <$> releaseFinalized) ++
       [ "artist"       .= userName
       , "title"        .= releaseTitle
       , "release-url"  .= render (ReleaseR uslug rslug)
       , "artist-url"   .= render (UserR uslug)
+      , "genre"        .= releaseGenre
       , "year"         .= toInt releaseYear
       , "applied"      .= timePretty releaseApplied
       , "desc"         .= releaseDesc
       , "license"      .= licensePretty releaseLicense
       , "license-url"  .= licenseUrl releaseLicense
+      , "finalized"    .= (toInt <$> releaseFinalized)
       , "downloads"    .= toInt releaseDownloads
       , "download-url" .= render (DownloadReleaseR uslug rslug)
       , "demo"         .= releaseDemo

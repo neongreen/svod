@@ -55,22 +55,20 @@ getUserR slug = userViaSlug slug $ \user -> do
     -- JSON representation
     provideRep $ do
       stars <- mapM (runDB . S.starCount . entityKey) releases
+      let f (s, e) = let x = entityVal e in object
+            [ "title" .= releaseTitle x
+            , "url"   .= render (ReleaseR userSlug (releaseSlug x))
+            , "year"  .= toInt (releaseYear x)
+            , "stars" .= toInt s ]
       return . object $
-        maybeToList (("website" .=) <$> userWebsite)   ++
-        maybeToList (("desc"    .=) <$> userDesc)      ++
-        bool [] ["email" .= userEmail] userEmailPublic ++
         [ "name"     .= userName
-        , "slug"     .= userSlug
-        , "url"      .= render (UserR slug)
+        , "url"      .= render (UserR userSlug)
+        , "email"    .= bool Nothing (Just userEmail) userEmailPublic
+        , "website"  .= userWebsite
+        , "desc"     .= userDesc
         , "joined"   .= datePretty userJoined
         , "admin"    .= userAdmin
         , "staff"    .= userStaff
         , "banned"   .= userBanned
         , "verified" .= userVerified
         , "releases" .= (f <$> zip stars releases) ]
-        where f (s, e) =
-                let x = entityVal e
-                in object
-                  [ "title" .= releaseTitle x
-                  , "year"  .= toInt (releaseYear x)
-                  , "stars" .= toInt s ]
