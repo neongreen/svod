@@ -1,6 +1,6 @@
 -- |
 -- Module      :  Handler.ChangePassword
--- Copyright   :  © 2015 Mark Karpov
+-- Copyright   :  © 2015–2016 Mark Karpov
 -- License     :  GNU GPL version 3
 --
 -- Maintainer  :  Mark Karpov <markkarpov@openmailbox.org>

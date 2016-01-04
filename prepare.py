@@ -4,7 +4,7 @@
 # application. It creates some directories if they don't exist and also
 # clones some info directories and refreshes some files.
 #
-# Copyright © 2015 Mark Karpov <markkarpov@openmailbox.org>
+# Copyright © 2015–2016 Mark Karpov <markkarpov@openmailbox.org>
 #
 # This script is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

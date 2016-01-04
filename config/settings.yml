@@ -29,4 +29,4 @@ database:
   database: "_env:PGDATABASE:svod"
   poolsize: "_env:PGPOOLSIZE:10"
 
-copyright: "© 2015 Марк Карпов"
+copyright: "© 2015–2016 Марк Карпов"

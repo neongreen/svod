@@ -13,6 +13,6 @@ still difficult to estimate when it will be operational.
 
 ## License
 
-Copyright © 2015 Mark Karpov
+Copyright © 2015–2016 Mark Karpov
 
 Distributed under GNU GPL, version 3.
