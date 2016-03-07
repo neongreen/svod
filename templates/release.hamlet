@@ -39,13 +39,16 @@
     <tr>
       <th>Заявка подана
       <td>#{timePretty releaseApplied}
+    $maybe finalized <- timePretty <$> releaseFinalized
+      <tr>
+        <th>Заявка удовлетворена
+        <td>#{finalized}
+    <tr>
+      <th>Размер архива
+      <td>#{bytesPretty releaseSize}
     <tr>
       <th>Количество скачиваний
       <td>#{toInt releaseDownloads}
-    $maybe asize <- bytesPretty <$> releaseFinalized
-      <tr>
-        <th>Размер архива
-        <td>#{asize}
 
 $if staffHere
   $with s <- [("user-slug", unSlug uslug), ("release-slug", unSlug rslug)]

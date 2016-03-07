@@ -28,7 +28,7 @@
                   Авторы
               <li>
                 <a .menu-item :notificsTab:.menu-mark href="@{NotificationsR}"
-                   title="Сообщения">
+                   title="Уведомления">
                   <span .glyphicon .glyphicon-bell aria-hidden="true">
               <li>
                 <a href="@{UserR slug}"

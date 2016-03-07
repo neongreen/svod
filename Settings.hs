@@ -40,10 +40,8 @@ data AppSettings = AppSettings
     -- ^ Directory from which to serve static files
   , appInfoDir :: Path Rel Dir
     -- ^ Directory that contains info articles.
-  , appStagingDir :: Path Rel Dir
-    -- ^ Where to keep staging releases
-  , appReleaseDir :: Path Rel Dir
-    -- ^ Where to keep release tarballs
+  , appContentDir :: Path Rel Dir
+    -- ^ Where to perform operations on user's content
   , appDatabaseConf :: PostgresConf
     -- ^ Configuration settings for accessing the database
   , appRoot :: Text
@@ -70,7 +68,7 @@ data AppSettings = AppSettings
 
 instance FromJSON AppSettings where
   parseJSON = withObject "AppSettings" $ \o -> do
-    let ξ = maybe mzero return . parseRelDir
+    let ξ = maybe (fail "cannot parse relative path") return . parseRelDir
         defaultDev =
 #if DEVELOPMENT
           True
@@ -79,8 +77,7 @@ instance FromJSON AppSettings where
 #endif
     appStaticDir              <- o .: "static-dir"  >>= ξ
     appInfoDir                <- o .: "info-dir"    >>= ξ
-    appStagingDir             <- o .: "staging-dir" >>= ξ
-    appReleaseDir             <- o .: "release-dir" >>= ξ
+    appContentDir             <- o .: "content-dir" >>= ξ
     appDatabaseConf           <- o .: "database"
     appRoot                   <- o .: "approot"
     appHost                   <- fromString <$> o .: "host"

@@ -22,7 +22,7 @@ where
 import Data.List.NonEmpty (NonEmpty)
 import Data.Maybe (fromJust)
 import Formatting (sformat, int)
-import Helper.Path (getStagingDir)
+import Helper.Path (getFConfig)
 import Helper.Rendering (toInt, toJSONId)
 import Import
 import Path
@@ -90,8 +90,8 @@ postSubmitReleaseR = do
             , rmDesc    = mkDescription (unTextarea srDesc)
             , rmLicense = srLicense
             , rmTracks  = srTracks }
-      sroot   <- getStagingDir
-      outcome <- runDB $ S.submitRelease sroot rm srDemo
+      fconfig <- getFConfig
+      outcome <- runDB (S.submitRelease fconfig rm srDemo)
       case outcome of
         Left msg -> do
           setMsg MsgDanger (toHtml msg)

@@ -26,8 +26,14 @@ import tempfile
 
 MUST_HAVE_DIRS = [
     'info/',
-    'user-content/release/',
-    'user-content/staging/',
+    'user-content/work/',
+    'user-content/work/avatar/',
+    'user-content/work/cover/',
+    'user-content/work/release/',
+    'user-content/mock-lts/',
+    'user-content/mock-lts/avatar/',
+    'user-content/mock-lts/cover/',
+    'user-content/mock-lts/release/',
 ]
 
 EXTERNAL_ASSETS = {

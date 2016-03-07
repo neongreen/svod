@@ -25,7 +25,7 @@ where
 
 import Data.Bool (bool)
 import Helper.Access (userViaSlug)
-import Helper.Path (getStagingDir, getReleaseDir)
+import Helper.Path (getFConfig)
 import Import
 import qualified Svod as S
 
@@ -54,9 +54,8 @@ postBanUserR = postAdministrative toggleBanned UserR
 
 postDeleteUserR :: Handler TypedContent
 postDeleteUserR = do
-  sroot <- getStagingDir
-  rroot <- getReleaseDir
-  postAdministrative (S.deleteUser sroot rroot) (const HomeR)
+  fconfig <- getFConfig
+  postAdministrative (S.deleteUser fconfig) (const HomeR)
 
 -- | Toggle user between staff member and normal user.
 --

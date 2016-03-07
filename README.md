@@ -2,7 +2,6 @@
 
 [![License GPL 3](https://img.shields.io/badge/license-GPL_3-green.svg)](http://www.gnu.org/licenses/gpl-3.0.txt)
 [![Build Status](https://travis-ci.org/svod-music/svod.svg?branch=master)](https://travis-ci.org/svod-music/svod)
-[![Coverage Status](https://coveralls.io/repos/svod-music/svod/badge.svg?branch=master&service=github)](https://coveralls.io/github/svod-music/svod?branch=master)
 
 *Work in progress. If you have questions about the project, please send me
  an email to markkarpov at opmbx dot org.*

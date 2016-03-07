@@ -22,9 +22,10 @@ module Handler.ReleaseActions
 where
 
 import Helper.Access (releaseViaSlug)
-import Helper.Path (getStagingDir, getReleaseDir)
+import Helper.Path (getFConfig)
 import Import
 import Path
+import Svod.LTS (FConfig)
 import qualified Svod as S
 
 -- | Approve submitted release. Only admins can do that.
@@ -43,8 +44,7 @@ postApproveReleaseR = postAdministrative S.approveRelease ReleaseR
 -- containing CSRF-protection token.
 
 postRejectReleaseR :: Handler TypedContent
-postRejectReleaseR = postAdministrative rejectRelease (\_ _ -> HomeR)
-  where rejectRelease sroot _ = S.rejectRelease sroot
+postRejectReleaseR = postAdministrative S.rejectRelease (\_ _ -> HomeR)
 
 -- | Delete any release, even already published. Only admins can do
 -- that. Just like deletion of users, this should be used with care, only
@@ -63,7 +63,7 @@ postDeleteReleaseR = postAdministrative S.deleteRelease (\_ _ -> HomeR)
 -- parameters of POST request.
 
 postAdministrative
-  :: (Path Abs Dir -> Path Abs Dir -> ReleaseId -> YesodDB App (Either Text a))
+  :: (FConfig -> ReleaseId -> YesodDB App (Either Text a))
      -- ^ Action to perform
   -> (Slug -> Slug -> Route App) -- ^ Where to redirect given pair of slugs
   -> Handler TypedContent
@@ -76,9 +76,8 @@ postAdministrative action route = do
   rslug <- parseSlug rslug'
   releaseViaSlug uslug rslug $ \_ release -> do
     let rid = entityKey release
-    sroot   <- getStagingDir
-    rroot   <- getReleaseDir
-    outcome <- runDB (action sroot rroot rid)
+    fconfig <- getFConfig
+    outcome <- runDB (action fconfig rid)
     case outcome of
       Left msg -> do
         setMsg MsgDanger (toHtml msg)

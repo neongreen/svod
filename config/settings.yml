@@ -3,8 +3,7 @@
 
 static-dir:     "_env:STATIC_DIR:static/"
 info-dir:       "_env:ARTICLE_DIR:info/"
-staging-dir:    "_env:STAGING_DIR:user-content/staging/"
-release-dir:    "_env:RELEASE_DIR:user-content/release/"
+content-dir:    "_env:STAGING_DIR:user-content/"
 
 host:           "_env:HOST:*4" # any IPv4 host
 port:           "_env:PORT:3000"
