@@ -135,7 +135,7 @@ library
 
   if flag(dev) || flag(library-only)
     cpp-options:      -DDEVELOPMENT
-    ghc-options:      -Wall -O0
+    ghc-options:      -Wall -O2 -Werror
   else
     ghc-options:      -Wall -O2
 
@@ -148,14 +148,20 @@ executable            svod
   main-is:            Main.hs
   hs-source-dirs:     app
   build-depends:      base, svod
-  ghc-options:        -threaded -O2 -rtsopts -with-rtsopts=-N
+  if flag(dev)
+    ghc-options:      -O2 -Wall -Werror -rtsopts -with-rtsopts=-N
+  else
+    ghc-options:      -O2 -Wall -rtsopts -with-rtsopts=-N
   default-language:   Haskell2010
 
 test-suite test
   type:               exitcode-stdio-1.0
   main-is:            Spec.hs
   hs-source-dirs:     test
-  ghc-options:        -Wall
+  if flag(dev)
+    ghc-options:      -O2 -Wall -Werror -rtsopts -with-rtsopts=-N
+  else
+    ghc-options:      -O2 -Wall -rtsopts -with-rtsopts=-N
   build-depends:      base
                     , classy-prelude
                     , classy-prelude-yesod

@@ -24,7 +24,6 @@ where
 import Helper.Access (releaseViaSlug)
 import Helper.Path (getFConfig)
 import Import
-import Path
 import Svod.LTS (FConfig)
 import qualified Svod as S
 
