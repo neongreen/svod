@@ -33,10 +33,14 @@
         <td>
           <a href="#{website}">
             #{website}
-    $if userEmailPublic
+    $if userEmailPublic || staffHere
       <tr>
-        <th>Почта
+        <th>Адрес почты
         <td>#{email}
+          $if not userEmailPublic
+            &nbsp;
+            <span .label .label-danger>
+              Не публичный
 
 $if staffHere
   $with s <- [("slug", unSlug slug)]

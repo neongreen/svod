@@ -63,7 +63,9 @@ getUserR slug = userViaSlug slug $ \user -> do
       return . object $
         [ "name"     .= userName
         , "url"      .= render (UserR userSlug)
-        , "email"    .= bool Nothing (Just userEmail) userEmailPublic
+        , "email"    .=
+          bool Nothing (Just userEmail) (userEmailPublic || staffHere)
+        , "email_public" .= userEmailPublic
         , "website"  .= userWebsite
         , "desc"     .= userDesc
         , "joined"   .= datePretty userJoined
