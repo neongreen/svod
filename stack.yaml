@@ -3,7 +3,7 @@ packages:
 - '.'
 - location:
     git: https://github.com/svod-music/svod-core.git
-    commit: e4115db5b576ade5aab5f14a1dc047ee43ce70ef
+    commit: 1a65b47cb53d0ccfcd0aedda693e10e91dc5fc73
 extra-deps:
 - htaglib-1.0.2
 - path-io-1.1.0

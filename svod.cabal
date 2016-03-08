@@ -135,7 +135,7 @@ library
 
   if flag(dev) || flag(library-only)
     cpp-options:      -DDEVELOPMENT
-    ghc-options:      -Wall -O2 -Werror
+    ghc-options:      -Wall -O2
   else
     ghc-options:      -Wall -O2
 

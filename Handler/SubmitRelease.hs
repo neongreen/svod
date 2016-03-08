@@ -120,13 +120,13 @@ serveSubmitRelease :: ToWidget App a
 serveSubmitRelease uid form enctype = defaultLayout $ do
   setTitle "Новая публикация"
   status <- φ (S.canSubmitAgain uid)
+  User {..} <- fromJust <$> φ (get uid)
   case status of
     S.CanSubmit -> do
       formId   <- newIdent
       buttonId <- newIdent
       $(widgetFile "submit-release")
     S.AlreadySubmitted rid -> do
-      User    {..} <- fromJust <$> φ (get uid)
       Release {..} <- fromJust <$> φ (get rid)
       $(widgetFile "submit-release-already")
     S.CannotSubmitYet next ->

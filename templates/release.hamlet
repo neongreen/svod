@@ -38,8 +38,8 @@
       <td>#{toInt releaseYear}
     <tr>
       <th>Заявка подана
-      <td>#{timePretty releaseApplied}
-    $maybe finalized <- timePretty <$> releaseFinalized
+      <td>#{timePretty timeZone releaseApplied}
+    $maybe finalized <- timePretty timeZone <$> releaseFinalized
       <tr>
         <th>Заявка удовлетворена
         <td>#{finalized}

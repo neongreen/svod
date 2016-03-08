@@ -29,6 +29,7 @@ import qualified Svod as S
 
 getUserR :: Slug -> Handler TypedContent
 getUserR slug = userViaSlug slug $ \user -> do
+  timeZone  <- fmap (userTimeZone . entityVal) <$> maybeAuth
   ownerHere <- ynAuth <$> isSelf slug
   staffHere <- ynAuth <$> isStaff
   adminHere <- ynAuth <$> isAdmin
@@ -68,7 +69,7 @@ getUserR slug = userViaSlug slug $ \user -> do
         , "email_public" .= userEmailPublic
         , "website"  .= userWebsite
         , "desc"     .= userDesc
-        , "joined"   .= datePretty userJoined
+        , "joined"   .= renderISO8601 userJoined
         , "admin"    .= userAdmin
         , "staff"    .= userStaff
         , "banned"   .= userBanned

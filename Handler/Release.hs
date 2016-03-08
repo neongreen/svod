@@ -31,9 +31,10 @@ getReleaseR
   -> Slug              -- ^ Release slug
   -> Handler TypedContent
 getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
-  ownerHere    <- ynAuth <$> isSelf uslug
-  staffHere    <- ynAuth <$> isStaff
-  adminHere    <- ynAuth <$> isAdmin
+  timeZone  <- fmap (userTimeZone . entityVal) <$> maybeAuth
+  ownerHere <- ynAuth <$> isSelf uslug
+  staffHere <- ynAuth <$> isStaff
+  adminHere <- ynAuth <$> isAdmin
   let User    {..} = entityVal user
       Release {..} = entityVal release
       isFinalized  = isJust releaseFinalized
@@ -58,13 +59,13 @@ getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
       , "artist-url"   .= render (UserR uslug)
       , "genre"        .= releaseGenre
       , "year"         .= toInt releaseYear
-      , "applied"      .= timePretty releaseApplied
+      , "applied"      .= renderISO8601 releaseApplied
       , "desc"         .= releaseDesc
       , "license"      .= licensePretty releaseLicense
       , "license-url"  .= licenseUrl releaseLicense
       , "size"         .= toInt releaseSize
       , "downloads"    .= toInt releaseDownloads
       , "download-url" .= render (DownloadReleaseR uslug rslug)
-      , "finalized"    .= (timePretty <$> releaseFinalized)
+      , "finalized"    .= (renderISO8601 <$> releaseFinalized)
       , "demo"         .= releaseDemo
       , "index"        .= unCatalogueIndex releaseIndex ]
