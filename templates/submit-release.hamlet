@@ -1,16 +1,17 @@
 <p>
   Пожалуйста ознакомитесь с #
-  <a href="@{InfoContentR}">критериями отбора содержимого для сайта
+  <a href="@{InfoContentR}" target="_blank">
+    критериями отбора содержимого для сайта
   \ перед тем как посылать свою работу. Если вы испытываете трудности с
   конвертацией аудио записей во FLAC формат, #
-  <a href="@{InfoCodecsR}">эта статья
+  <a href="@{InfoCodecsR}" target="_blank">эта статья
   \ может быть не безынтересна.
 
 <p>
   Другая важная тема — это лицензирование. Для того, чтобы мы и наши
   пользователи могли законно распространять ваши работы, вы должны чётко
   установить что можно с ними делать, а что нет. Прочитайте нашу #
-  <a href="@{InfoLicensesR}">статью о лицензировании#
+  <a href="@{InfoLicensesR}" target="_blank">статью о лицензировании#
   , чтобы узнать больше и сделать правильный выбор.
 
 <form ##{formId} method="post" role="form" action="@{SubmitReleaseR}"
@@ -19,7 +20,7 @@
   <p>
     <span .glyphicon .glyphicon-arrow-up aria-hidden="true">
     В этом поле можно использовать #
-    <a href="@{InfoMarkdownR}">специальный язык разметки#
+    <a href="@{InfoMarkdownR}" target="_blank">специальный язык разметки#
     .
 
   <button ##{buttonId} .btn .btn-primary type="submit"
