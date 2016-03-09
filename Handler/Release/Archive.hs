@@ -1,5 +1,5 @@
 -- |
--- Module      :  Handler.DownloadRelease
+-- Module      :  Handler.Release.Archive
 -- Copyright   :  © 2015–2016 Mark Karpov
 -- License     :  GNU GPL version 3
 --
@@ -7,13 +7,13 @@
 -- Stability   :  experimental
 -- Portability :  portable
 --
--- This handler serves tarball contents for published works for normal
--- users, and also unpublished works for admins and authors.
+-- This handler serves zip archives of published works for verified users
+-- and also staging works for staff and authors.
 
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Handler.DownloadRelease
-  ( getDownloadReleaseR )
+module Handler.Release.Archive
+  ( getReleaseArchiveR )
 where
 
 import Helper.Access (releaseViaSlug)
@@ -25,11 +25,11 @@ import qualified Svod as S
 
 -- | Serve specified release.
 
-getDownloadReleaseR
+getReleaseArchiveR
   :: Slug              -- ^ Artist slug
   -> Slug              -- ^ Release slug
   -> Handler TypedContent
-getDownloadReleaseR uslug rslug = releaseViaSlug uslug rslug $ \_ release -> do
+getReleaseArchiveR uslug rslug = releaseViaSlug uslug rslug $ \_ release -> do
   let rid          = entityKey release
       Release {..} = entityVal release
       isFinalized  = isJust releaseFinalized

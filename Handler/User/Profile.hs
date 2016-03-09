@@ -1,5 +1,5 @@
 -- |
--- Module      :  Handler.EditProfile
+-- Module      :  Handler.User.Profile
 -- Copyright   :  © 2015–2016 Mark Karpov
 -- License     :  GNU GPL version 3
 --
@@ -14,9 +14,9 @@
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
-module Handler.EditProfile
-  ( getEditProfileR
-  , postEditProfileR )
+module Handler.User.Profile
+  ( getUserProfileR
+  , postUserProfileR )
 where
 
 import Helper.Access (userViaSlug)
@@ -26,19 +26,19 @@ import qualified Svod as S
 
 -- | Editable pieces of user profile.
 
-data EditProfileForm = EditProfileForm
-  { epEmailPublic    :: Bool           -- ^ Whether user's email is public
-  , epTimeZoneOffset :: TimeZoneOffset -- ^ User's time zone
-  , epWebsite        :: Maybe Text     -- ^ Website
-  , epDesc           :: Maybe Textarea -- ^ Description (“About me”)
+data UserProfileForm = UserProfileForm
+  { upEmailPublic    :: Bool           -- ^ Whether user's email is public
+  , upTimeZoneOffset :: TimeZoneOffset -- ^ User's time zone
+  , upWebsite        :: Maybe Text     -- ^ Website
+  , upDesc           :: Maybe Textarea -- ^ Description (“About me”)
   }
 
 -- | Everything user can edit in his profile is on this form. The argument
 -- of the function is used to populate default values for the form.
 
-editProfileForm :: User -> Form EditProfileForm
-editProfileForm User {..} =
-  renderBootstrap3 BootstrapBasicForm $ EditProfileForm
+userProfileForm :: User -> Form UserProfileForm
+userProfileForm User {..} =
+  renderBootstrap3 BootstrapBasicForm $ UserProfileForm
     <$> areq checkBoxField
       (withAutofocus $ bfs
        ("Публичный адрес почты (" <> email <> ")" :: Text))
@@ -65,25 +65,25 @@ editProfileForm User {..} =
 
 -- | Serve page containing form that allows to edit user profile.
 
-getEditProfileR :: Slug -> Handler Html
-getEditProfileR slug = userViaSlug slug $ \user -> do
-  (form, enctype) <- generateFormPost . editProfileForm . entityVal $ user
-  serveEditProfile slug form enctype
+getUserProfileR :: Slug -> Handler Html
+getUserProfileR slug = userViaSlug slug $ \user -> do
+  (form, enctype) <- generateFormPost . userProfileForm . entityVal $ user
+  serveUserProfile slug form enctype
 
 -- | Process submitted form and refresh user's profile.
 
-postEditProfileR :: Slug -> Handler Html
-postEditProfileR slug = userViaSlug slug $ \user -> do
+postUserProfileR :: Slug -> Handler Html
+postUserProfileR slug = userViaSlug slug $ \user -> do
   ((result, form), enctype) <-
-    runFormPost . editProfileForm . entityVal $ user
+    runFormPost . userProfileForm . entityVal $ user
   case result of
-    FormSuccess EditProfileForm {..} -> do
+    FormSuccess UserProfileForm {..} -> do
       runDB $ S.editUserProfile
+        upEmailPublic
+        upTimeZoneOffset
+        upWebsite
+        (mkDescription . unTextarea <$> upDesc)
         (entityKey user)
-        epEmailPublic
-        epTimeZoneOffset
-        epWebsite
-        (mkDescription . unTextarea <$> epDesc)
       render <- getUrlRender
       let profileUrl = render (UserR slug)
       setMsg MsgSuccess [shamlet|
@@ -93,13 +93,13 @@ postEditProfileR slug = userViaSlug slug $ \user -> do
 \ обновлен успешно.
 |]
     _ -> return ()
-  serveEditProfile slug form enctype
+  serveUserProfile slug form enctype
 
-serveEditProfile :: ToWidget App a
+serveUserProfile :: ToWidget App a
   => Slug              -- ^ Slug used to access the form
   -> a                 -- ^ Form with editable profile parameters
   -> Enctype           -- ^ Encoding type required by the form
   -> Handler Html
-serveEditProfile slug form enctype = defaultLayout $ do
+serveUserProfile slug form enctype = defaultLayout $ do
   setTitle "Редактирование профиля"
-  $(widgetFile "edit-profile")
+  $(widgetFile "user-profile")

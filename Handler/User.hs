@@ -7,18 +7,21 @@
 -- Stability   :  experimental
 -- Portability :  portable
 --
--- Get information about particular user, in HTML or JSON.
+-- Get information about particular user.
 
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.User
-  ( getUserR )
+  ( getUserR
+  , deleteUserR )
 where
 
 import Data.Bool (bool)
 import Helper.Access (userViaSlug)
-import Helper.Rendering (renderDescription, toInt)
+import Helper.Property (changeUserProperty)
+import Helper.Path (getFConfig)
+import Helper.Rendering (renderDescription)
 import Import
 import Widget.DngButton (BtnType (..), dngButtonW)
 import Widget.FollowUser (followUserW)
@@ -54,24 +57,30 @@ getUserR slug = userViaSlug slug $ \user -> do
       setTitle (toHtml userName)
       $(widgetFile "user")
     -- JSON representation
-    provideRep $ do
-      stars <- mapM (runDB . S.starCount . entityKey) releases
-      let f (s, e) = let x = entityVal e in object
-            [ "title" .= releaseTitle x
-            , "url"   .= render (ReleaseR userSlug (releaseSlug x))
-            , "year"  .= toInt (releaseYear x)
-            , "stars" .= toInt s ]
-      return . object $
-        [ "name"     .= userName
-        , "url"      .= render (UserR userSlug)
-        , "email"    .=
-          bool Nothing (Just userEmail) (userEmailPublic || staffHere)
-        , "email_public" .= userEmailPublic
-        , "website"  .= userWebsite
-        , "desc"     .= userDesc
-        , "joined"   .= renderISO8601 userJoined
-        , "admin"    .= userAdmin
-        , "staff"    .= userStaff
-        , "banned"   .= userBanned
-        , "verified" .= userVerified
-        , "releases" .= (f <$> zip stars releases) ]
+    provideRep . return . object $
+      [ "name"             .= userName
+      , "slug"             .= userSlug
+      , "email"            .= bool Nothing (Just userEmail) userEmailPublic
+      , "website"          .= userWebsite
+      , "desc"             .= userDesc
+      , "joined"           .= renderISO8601 userJoined
+      , "time_zone_offset" .= userTimeZone
+      , "admin"            .= userAdmin
+      , "staff"            .= userStaff
+      , "banned"           .= userBanned
+      , "verified"         .= userVerified
+      , "url"              .= render (UserR userSlug)
+      , "profile_url"      .= render (UserProfileR   userSlug)
+      , "verified_url"     .= render (UserVerifiedR  userSlug)
+      , "banned_url"       .= render (UserBannedR    userSlug)
+      , "staff_url"        .= render (UserStaffR     userSlug)
+      , "admin_url"        .= render (UserAdminR     userSlug)
+      , "followers_url"    .= render (UserFollowersR userSlug)
+      , "releases_url"     .= render (ReleasesR      userSlug) ]
+
+-- | Delete specified user.
+
+deleteUserR :: Slug -> Handler TypedContent
+deleteUserR slug = do
+  fc <- getFConfig
+  changeUserProperty (S.deleteUser fc) (const UsersR) slug

@@ -31,7 +31,7 @@ import qualified Svod as S
 -- template.
 
 followUserW :: Slug -> Widget
-followUserW slug = userViaSlug' slug $ \target' -> do
+followUserW tslug = userViaSlug' tslug $ \target' -> do
   let target = entityKey target'
   muser     <- ζ maybeAuth
   buttonId  <- newIdent
@@ -49,8 +49,8 @@ followUserW slug = userViaSlug' slug $ \target' -> do
     Nothing -> $(widgetFile "follow-user-guest")
     Just User {..} ->
       if userVerified
-      then $(widgetFile "follow-user-logged-in")
-      else $(widgetFile "follow-user-unverified")
+        then $(widgetFile "follow-user-logged-in")
+        else $(widgetFile "follow-user-unverified")
   $(widgetFile "follow-user")
 
 -- | Check if particular user is follower by given user.

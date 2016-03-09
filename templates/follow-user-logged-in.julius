@@ -1,16 +1,14 @@
 $(#{toJSONId buttonId}).click(function() {
     var obj = $(this);
-    var userSlug = obj.attr('data-user-slug');
     var xsrfToken =
         Cookies.get(#{toJSON $ TE.decodeUtf8 $ defaultCsrfCookieName});
+    var following = obj.hasClass('active');
     obj.removeClass('active');
     obj.prop('disabled', true);
     $.ajax({
-        method: 'POST',
-        url:    '@{FollowUserR}',
-        data:   {#{toJSON defaultCsrfParamName}: xsrfToken,
-                 'slug': userSlug
-                },
+        method: following ? 'DELETE' : 'PUT',
+        url:    '@{UserFollowerR tslug userSlug}',
+        data:   {#{toJSON defaultCsrfParamName}: xsrfToken},
         success: function (response) {
             var count = obj.find(#{toJSONId counterId});
             var icon  = obj.find(#{toJSONId iconId});

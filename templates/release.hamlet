@@ -50,23 +50,20 @@
       <th>Количество скачиваний
       <td>#{toInt releaseDownloads}
 
-$if staffHere
-  $with s <- [("user-slug", unSlug uslug), ("release-slug", unSlug rslug)]
-    <div .panel .panel-danger>
-      <div .panel-heading>
-        <h3 .panel-title>Административные действия
-      <div .panel-body>
-        $if not isFinalized
-          $if adminHere
-            ^{dngButtonW BtnSuccess "Одобрить" s ApproveReleaseR}
-          ^{dngButtonW BtnWarning "Отвергнуть" s RejectReleaseR}
-        ^{dngButtonW BtnDanger "Удалить" s DeleteReleaseR}
+$if adminHere
+  <div .panel .panel-danger>
+    <div .panel-heading>
+      <h3 .panel-title>Административные действия
+    <div .panel-body>
+      $if not isFinalized
+        ^{dngButtonW BtnSuccess "Одобрить" "PUT" $ ReleaseApprovedR uslug rslug}
+      ^{dngButtonW BtnDanger "Удалить" "DELETE" $ ReleaseR uslug rslug}
 
 <h2>Описание #
   $if (not isFinalized && ownerHere) || adminHere
     <a .btn .btn-default
        title="Редактировать публикацию"
-       href="@{EditReleaseR uslug rslug}">
+       href="@{ReleaseDataR uslug rslug}">
       <span .glyphicon .glyphicon-pencil aria-hidden="true">
   ^{starReleaseW uslug rslug}
 

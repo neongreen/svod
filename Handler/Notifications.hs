@@ -7,7 +7,7 @@
 -- Stability   :  experimental
 -- Portability :  portable
 --
--- Page with notifications.
+-- Notification page.
 
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -20,4 +20,4 @@ import Import
 -- | Serve page with notifications for currently logged-in user.
 
 getNotificationsR :: Handler Html
-getNotificationsR = undefined
+getNotificationsR = undefined -- TODO

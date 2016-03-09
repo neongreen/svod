@@ -58,12 +58,12 @@ postChangePasswordR = do
   case result of
     FormSuccess ChangePasswordForm {..} ->
       if cpNewPass0 == cpNewPass1
-      then do
-        uid      <- fromJust <$> maybeAuthId
-        password <- liftIO (saltPass cpNewPass0)
-        runDB (S.setPassword uid password)
-        setMsg MsgSuccess "Пароль изменён успешно."
-      else setMsg MsgDanger "Пароли не совпадают."
+        then do
+          uid      <- fromJust <$> maybeAuthId
+          password <- liftIO (saltPass cpNewPass0)
+          runDB (S.setPassword password uid)
+          setMsg MsgSuccess "Пароль изменён успешно."
+        else setMsg MsgDanger "Пароли не совпадают."
     _ -> return ()
   serveChangePassword form enctype
 

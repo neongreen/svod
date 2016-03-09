@@ -83,7 +83,7 @@ postRegisterR = do
         let uid       = entityKey user
             User {..} = entityVal user
 #if DEVELOPMENT
-        runDB (S.setVerified uid)
+        runDB (S.setVerified True uid)
         setMsg MsgSuccess "Профиль автоматически активирован."
 #else
         urlRender <- getUrlRender
@@ -96,8 +96,8 @@ postRegisterR = do
 |]
 #endif
         when (unSlug userSlug == "свод") $ runDB $ do
-          S.setVerified uid
-          S.setUserStatus uid AdminUser
+          S.setVerified True uid
+          S.setUserStatus AdminUser uid
         toTypedContent <$> setCredsRedirect Creds
           { credsPlugin = "custom"
           , credsIdent  = unSlug userSlug

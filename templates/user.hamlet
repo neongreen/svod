@@ -43,25 +43,30 @@
               Не публичный
 
 $if staffHere
-  $with s <- [("slug", unSlug slug)]
-    <div .panel .panel-danger>
-      <div .panel-heading>
-        <h3 .panel-title>Административные действия
-      <div .panel-body>
-        $if not userVerified
-          ^{dngButtonW BtnSuccess "Подтвердить" s VerifyUserR}
-        ^{dngButtonW BtnWarning (bool "Забанить" "Разбанить" userBanned) s BanUserR}
-        $if adminHere
-          ^{dngButtonW BtnDanger "Удалить" s DeleteUserR}
-          ^{dngButtonW BtnInfo (bool "Нанять" "Уволить" userStaff) s MakeStaffR}
-          $if not userAdmin
-            ^{dngButtonW BtnPrimary "Возвысить" s MakeAdminR}
+  <div .panel .panel-danger>
+    <div .panel-heading>
+      <h3 .panel-title>Административные действия
+    <div .panel-body>
+      $if not userVerified
+        ^{dngButtonW BtnSuccess "Подтвердить" "PUT" $ UserVerifiedR slug}
+      $if userBanned
+        ^{dngButtonW BtnWarning "Разбанить" "DELETE" $ UserBannedR slug}
+      $else
+        ^{dngButtonW BtnWarning "Забанить" "PUT" $ UserBannedR slug}
+      $if adminHere
+        ^{dngButtonW BtnDanger "Удалить" "DELETE" $ UserR slug}
+        $if userStaff
+          ^{dngButtonW BtnInfo "Уволить" "DELETE" $ UserStaffR slug}
+        $else
+          ^{dngButtonW BtnInfo "Нанять" "PUT" $ UserStaffR slug}
+        $if not userAdmin
+          ^{dngButtonW BtnPrimary "Возвысить" "PUT" $ UserAdminR slug}
 
 <h2>О пользователе #
   $if ownerHere || adminHere
     <a .btn .btn-default
        title="Редактировать профиль"
-       href="@{EditProfileR slug}">
+       href="@{UserProfileR slug}">
       <span .glyphicon .glyphicon-pencil aria-hidden="true">
 
 <div .clearfix>

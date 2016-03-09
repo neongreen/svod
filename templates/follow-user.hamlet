@@ -1,7 +1,6 @@
 $with notFollowing <- not following
   <a ##{buttonId}
      .btn .btn-default :following:.active
-     data-user-slug="#{unSlug slug}"
      href="javascript:void(0)"
      :notFollowing:title="#{inactiveTitle}"
      :following:title="#{activeTitle}">

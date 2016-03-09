@@ -21,4 +21,4 @@ import Import
 -- | Serve paginated list of users.
 
 getUsersR :: Handler TypedContent
-getUsersR = undefined
+getUsersR = undefined -- TODO Also in JSON

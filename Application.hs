@@ -56,13 +56,8 @@ import System.Log.FastLogger
   , newStdoutLoggerSet
   , toLogStr )
 
-import Handler.Administrative
 import Handler.ChangePassword
-import Handler.Common
-import Handler.DownloadRelease
-import Handler.EditProfile
-import Handler.EditRelease
-import Handler.FollowUser
+import Handler.Favicon
 import Handler.Home
 import Handler.Info
 import Handler.Login
@@ -70,11 +65,22 @@ import Handler.Logout
 import Handler.Notifications
 import Handler.Register
 import Handler.Release
-import Handler.ReleaseActions
+import Handler.Release.Approved
+import Handler.Release.Archive
+import Handler.Release.Data
+import Handler.Release.Starred
+import Handler.Release.Starrers
 import Handler.Releases
-import Handler.StarRelease
+import Handler.Robots
 import Handler.SubmitRelease
 import Handler.User
+import Handler.User.Admin
+import Handler.User.Banned
+import Handler.User.Follower
+import Handler.User.Followers
+import Handler.User.Profile
+import Handler.User.Staff
+import Handler.User.Verified
 import Handler.Users
 import Handler.Verify
 

@@ -1,5 +1,5 @@
 -- |
--- Module      :  Handler.Common
+-- Module      :  Handler.Favicon
 -- Copyright   :  © 2015–2016 Mark Karpov
 -- License     :  GNU GPL version 3
 --
@@ -7,28 +7,20 @@
 -- Stability   :  experimental
 -- Portability :  portable
 --
--- These handlers embed files in the executable at compile time to avoid a
--- runtime dependency, and for efficiency.
+-- Serve favicon of the site.
 
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
-module Handler.Common
-  ( getFaviconR
-  , getRobotsR )
+module Handler.Favicon
+  ( getFaviconR )
 where
 
 import Data.FileEmbed (embedFile)
 import Import
 
--- | Favicon handler.
+-- | Serve favicon of the site.
 
 getFaviconR :: Handler TypedContent
 getFaviconR = return . TypedContent "image/x-icon" . toContent $
   $(embedFile "config/favicon.ico")
-
--- | This one serves @robots.txt@ file.
-
-getRobotsR :: Handler TypedContent
-getRobotsR = return . TypedContent typePlain . toContent $
-  $(embedFile "config/robots.txt")

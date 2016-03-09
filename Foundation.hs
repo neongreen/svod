@@ -62,7 +62,7 @@ mkYesodData "App" $(parseRoutesFile "config/routes")
 
 authm :: Route App -> Handler AuthResult
 
--- General stuff
+-- General
 
 authm HomeR       = return Authorized
 authm FaviconR    = return Authorized
@@ -71,49 +71,35 @@ authm (StaticR _) = return Authorized
 
 -- Registration, authentication, and profile management
 
-authm RegisterR = return Authorized
-authm LoginR    = return Authorized
+authm RegisterR       = return Authorized
+authm (VerifyR _)     = isUser
+authm NotificationsR  = isUser
+authm ChangePasswordR = isUser
+authm SubmitReleaseR  = isVerified
+authm LoginR          = return Authorized
+authm LogoutR         = isUser
 
-authm LogoutR             = isUser
-authm (VerifyR _)         = isUser
-authm NotificationsR      = isUser
-authm (EditProfileR slug) = isAdmin *||* isSelf slug
-authm ChangePasswordR     = isUser
+-- Users
 
--- Administrative actions on users
+authm UsersR                 = return Authorized
+authm (UserR _)              = return Authorized
+authm (UserProfileR slug)    = isAdmin *||* isSelf slug
+authm (UserVerifiedR _)      = isStaff
+authm (UserBannedR _)        = isStaff
+authm (UserStaffR _)         = isAdmin
+authm (UserAdminR _)         = isAdmin
+authm (UserFollowersR _)     = isVerified
+authm (UserFollowerR _ slug) = isSelf slug
 
-authm VerifyUserR = isStaff
-authm BanUserR    = isStaff
-authm DeleteUserR = isAdmin
-authm MakeStaffR  = isAdmin
-authm MakeAdminR  = isAdmin
+-- Releases
 
--- Public information about users (also in JSON)
-
-authm UsersR    = return Authorized
-authm (UserR _) = return Authorized
-
--- Actions on releases
-
-authm SubmitReleaseR         = isVerified
-authm (EditReleaseR slug _)  = isAdmin *||* isSelf slug
-authm (DownloadReleaseR _ _) = isVerified
-
--- Administrative actions on releases
-
-authm ApproveReleaseR = isAdmin
-authm RejectReleaseR  = isStaff
-authm DeleteReleaseR  = isAdmin
-
--- Public information about releases (also in JSON)
-
-authm ReleasesR      = return Authorized
-authm (ReleaseR _ _) = return Authorized
-
--- Social features
-
-authm StarReleaseR = isVerified
-authm FollowUserR  = isVerified
+authm (ReleasesR _)              = return Authorized
+authm (ReleaseR _ _)             = return Authorized
+authm (ReleaseDataR slug _)      = isAdmin *||* isSelf slug
+authm (ReleaseArchiveR _ _)      = isVerified
+authm (ReleaseApprovedR _ _)     = isAdmin
+authm (ReleaseStarrersR _ _)     = isVerified
+authm (ReleaseStarredR _ _ slug) = isSelf slug
 
 -- Info articles
 
@@ -214,13 +200,13 @@ data MenuTab
 selectTab :: Route App -> Handler (Maybe MenuTab)
 selectTab RegisterR       = return (Just RegisterTab)
 selectTab LoginR          = return (Just LoginTab)
-selectTab ReleasesR       = return (Just ReleasesTab)
+selectTab (ReleasesR _)   = return (Just ReleasesTab) -- FIXME
 selectTab UsersR          = return (Just ArtistsTab) -- FIXME
 selectTab NotificationsR  = return (Just NotificationsTab)
 selectTab ChangePasswordR = return (Just ProfileTab)
 selectTab (UserR slug) =
   bool Nothing (Just ProfileTab) . ynAuth <$> isSelf slug
-selectTab (EditProfileR slug) =
+selectTab (UserProfileR slug) =
   bool Nothing (Just ProfileTab) . ynAuth <$> isSelf slug
 selectTab _ = return Nothing
 
@@ -247,7 +233,7 @@ instance Yesod App where
   -- Allow uploads up to 500 megabytes when submitting or editing a release.
 
   maximumContentLength _ (Just SubmitReleaseR)     = Just 524288000
-  maximumContentLength _ (Just (EditReleaseR _ _)) = Just 524288000
+  maximumContentLength _ (Just (ReleaseDataR _ _)) = Just 524288000
   maximumContentLength _ _                         = Just 2097152
 
   -- Store session data on the client in encrypted cookies, default session

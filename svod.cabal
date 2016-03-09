@@ -96,14 +96,9 @@ library
                     , RecordWildCards
   exposed-modules:    Application
                     , Foundation
-                    , Handler.Administrative
                     , Handler.ChangePassword
-                    , Handler.Common
-                    , Handler.DownloadRelease
-                    , Handler.EditProfile
-                    , Handler.EditRelease
                     , Handler.Error
-                    , Handler.FollowUser
+                    , Handler.Favicon
                     , Handler.Home
                     , Handler.Info
                     , Handler.Login
@@ -111,15 +106,27 @@ library
                     , Handler.Notifications
                     , Handler.Register
                     , Handler.Release
-                    , Handler.ReleaseActions
+                    , Handler.Release.Approved
+                    , Handler.Release.Archive
+                    , Handler.Release.Data
+                    , Handler.Release.Starred
+                    , Handler.Release.Starrers
                     , Handler.Releases
-                    , Handler.StarRelease
+                    , Handler.Robots
                     , Handler.SubmitRelease
                     , Handler.User
+                    , Handler.User.Admin
+                    , Handler.User.Banned
+                    , Handler.User.Follower
+                    , Handler.User.Followers
+                    , Handler.User.Profile
+                    , Handler.User.Staff
+                    , Handler.User.Verified
                     , Handler.Users
                     , Handler.Verify
                     , Helper.Access
                     , Helper.Auth
+                    , Helper.Property
                     , Helper.Path
                     , Helper.Rendering
                     , Import

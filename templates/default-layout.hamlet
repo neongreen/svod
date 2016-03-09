@@ -19,7 +19,7 @@
           $maybe user <- muser
             $with slug <- userSlug user
               <li>
-                <a .menu-item :releasesTab:.menu-mark href="@{ReleasesR}"
+                <a .menu-item :releasesTab:.menu-mark href="@{ReleasesR slug}"
                    title="Публикации">
                   Публикации
               <li>
@@ -48,7 +48,7 @@
                     <a href="@{UserR slug}">
                       Ваш профиль
                   <li>
-                    <a href="@{EditProfileR slug}">
+                    <a href="@{UserProfileR slug}">
                       Редактировать профиль
                   <li>
                     <a href="@{ChangePasswordR}">

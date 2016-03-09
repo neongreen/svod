@@ -1,65 +1,55 @@
--- General stuff
+-- -------------------------------------------------------------------------
+-- General
 
-/ HomeR GET
+/                                              HomeR            GET
+/favicon.ico                                   FaviconR         GET
+/robots.txt                                    RobotsR          GET
+/static                                        StaticR Static appStatic
 
-/favicon.ico FaviconR GET
-/robots.txt  RobotsR  GET
-/static      StaticR Static appStatic
-
+-- -------------------------------------------------------------------------
 -- Registration, authentication, and profile management
 
-/регистрация RegisterR GET POST
-/вход        LoginR    GET POST
+/регистрация                                   RegisterR        GET POST
+/подтверждение/#Text                           VerifyR          GET
+/уведомления                                   NotificationsR   GET
+/сменить-пароль                                ChangePasswordR  GET POST
+/опубликовать                                  SubmitReleaseR   GET POST
+/вход                                          LoginR           GET POST
+/выход                                         LogoutR          GET
 
-/выход                       LogoutR         GET
-/подтверждение/#Text         VerifyR         GET
-/сообщения                   NotificationsR  GET
-/редактировать/профиль/#Slug EditProfileR    GET POST
-/сменить/пароль              ChangePasswordR GET POST
+-- -------------------------------------------------------------------------
+-- Users
 
--- Administrative actions on users
+/люди                                          UsersR           GET
+/люди/#Slug                                    UserR            GET DELETE
+/люди/#Slug/настройки                          UserProfileR     GET POST
+/люди/#Slug/подтверждён                        UserVerifiedR    PUT DELETE
+/люди/#Slug/забанен                            UserBannedR      PUT DELETE
+/люди/#Slug/сотрудник                          UserStaffR       PUT DELETE
+/люди/#Slug/администратор                      UserAdminR       PUT DELETE
+/люди/#Slug/подписчики                         UserFollowersR   GET
+/люди/#Slug/подписчики/#Slug                   UserFollowerR    PUT DELETE
 
-/подтвердить/пользователя VerifyUserR POST
-/забанить/пользователя    BanUserR    POST
-/удалить/пользователя     DeleteUserR POST
-/нанять/пользователя      MakeStaffR  POST
-/возвысить/пользователя   MakeAdminR  POST
+-- -------------------------------------------------------------------------
+-- Releases
 
--- Public information about users (also in JSON)
+/люди/#Slug/публикации                         ReleasesR        GET
+/люди/#Slug/публикации/#Slug                   ReleaseR         GET DELETE
+/люди/#Slug/публикации/#Slug/настройки         ReleaseDataR     GET POST
+/люди/#Slug/публикации/#Slug/архив             ReleaseArchiveR  GET
+/люди/#Slug/публикации/#Slug/одобрена          ReleaseApprovedR PUT
+/люди/#Slug/публикации/#Slug/подписчики        ReleaseStarrersR GET
+/люди/#Slug/публикации/#Slug/подписчики/#Slug  ReleaseStarredR  PUT DELETE
 
-/пользователи       UsersR   GET
-/пользователь/#Slug UserR    GET
-
--- Actions on releases
-
-/опубликовать                         SubmitReleaseR   GET POST
-/редактировать/публикацию/#Slug/#Slug EditReleaseR     GET POST
-/скачать/публикацию/#Slug/#Slug       DownloadReleaseR GET
-
--- Administrative actions on releases
-
-/одобрить/публикацию   ApproveReleaseR POST
-/отвергнуть/публикацию RejectReleaseR  POST
-/удалить/публикацию    DeleteReleaseR  POST
-
--- Public information about releases (also in JSON)
-
-/публикации             ReleasesR GET
-/публикация/#Slug/#Slug ReleaseR  GET
-
--- Social features
-
-/отметить/публикацию   StarReleaseR POST
-/отметить/пользователя FollowUserR  POST
-
+-- -------------------------------------------------------------------------
 -- Info articles
 
-/инфо/кодеки                      InfoCodecsR      GET
-/инфо/контактная-информация       InfoContactR     GET
-/инфо/краткий-тур                 InfoTourR        GET
-/инфо/лицензии                    InfoLicensesR    GET
-/инфо/о-проекте                   InfoAboutR       GET
-/инфо/поддержать-свод             InfoSupportSvodR GET
-/инфо/пользовательское-соглашение InfoEulaR        GET
-/инфо/содержимое                  InfoContentR     GET
-/инфо/язык-разметки               InfoMarkdownR    GET
+/инфо/кодеки                                   InfoCodecsR      GET
+/инфо/контактная-информация                    InfoContactR     GET
+/инфо/краткий-тур                              InfoTourR        GET
+/инфо/лицензии                                 InfoLicensesR    GET
+/инфо/о-проекте                                InfoAboutR       GET
+/инфо/поддержать-свод                          InfoSupportSvodR GET
+/инфо/пользовательское-соглашение              InfoEulaR        GET
+/инфо/содержимое                               InfoContentR     GET
+/инфо/язык-разметки                            InfoMarkdownR    GET

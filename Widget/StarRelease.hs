@@ -49,8 +49,8 @@ starReleaseW aslug rslug = releaseViaSlug' aslug rslug $ \_ release' -> do
     Nothing -> $(widgetFile "star-release-guest")
     Just User {..} ->
       if userVerified
-      then $(widgetFile "star-release-logged-in")
-      else $(widgetFile "star-release-unverified")
+        then $(widgetFile "star-release-logged-in")
+        else $(widgetFile "star-release-unverified")
   $(widgetFile "star-release")
 
 -- | Check if particular release is starred by given user.

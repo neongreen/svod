@@ -1,5 +1,5 @@
 <a .btn .btn-success .btn-lg
-   href="@{DownloadReleaseR uslug rslug}"
+   href="@{ReleaseArchiveR uslug rslug}"
    title="Скачать публикацию"
    ##{buttonId}>
   <span .glyphicon .glyphicon-download-alt aria-hidden="true">
