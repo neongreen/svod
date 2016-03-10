@@ -20,26 +20,26 @@
 -- -------------------------------------------------------------------------
 -- Users
 
-/люди                                          UsersR           GET
-/люди/#Slug                                    UserR            GET DELETE
-/люди/#Slug/настройки                          UserProfileR     GET POST
-/люди/#Slug/подтверждён                        UserVerifiedR    PUT DELETE
-/люди/#Slug/забанен                            UserBannedR      PUT DELETE
-/люди/#Slug/сотрудник                          UserStaffR       PUT DELETE
-/люди/#Slug/администратор                      UserAdminR       PUT DELETE
-/люди/#Slug/подписчики                         UserFollowersR   GET
-/люди/#Slug/подписчики/#Slug                   UserFollowerR    PUT DELETE
+/кто                                           UsersR           GET
+/кто/#Slug                                     UserR            GET DELETE
+/кто/#Slug/настройки                           UserProfileR     GET POST
+/кто/#Slug/подтверждён                         UserVerifiedR    PUT DELETE
+/кто/#Slug/забанен                             UserBannedR      PUT DELETE
+/кто/#Slug/сотрудник                           UserStaffR       PUT DELETE
+/кто/#Slug/администратор                       UserAdminR       PUT DELETE
+/кто/#Slug/подписчики                          UserFollowersR   GET
+/кто/#Slug/подписчики/#Slug                    UserFollowerR    PUT DELETE
 
 -- -------------------------------------------------------------------------
 -- Releases
 
-/люди/#Slug/публикации                         ReleasesR        GET
-/люди/#Slug/публикации/#Slug                   ReleaseR         GET DELETE
-/люди/#Slug/публикации/#Slug/настройки         ReleaseDataR     GET POST
-/люди/#Slug/публикации/#Slug/архив             ReleaseArchiveR  GET
-/люди/#Slug/публикации/#Slug/одобрена          ReleaseApprovedR PUT
-/люди/#Slug/публикации/#Slug/подписчики        ReleaseStarrersR GET
-/люди/#Slug/публикации/#Slug/подписчики/#Slug  ReleaseStarredR  PUT DELETE
+/кто/#Slug/что                                 ReleasesR        GET
+/кто/#Slug/что/#Slug                           ReleaseR         GET DELETE
+/кто/#Slug/что/#Slug/настройки                 ReleaseDataR     GET POST
+/кто/#Slug/что/#Slug/архив                     ReleaseArchiveR  GET
+/кто/#Slug/что/#Slug/одобрена                  ReleaseApprovedR PUT
+/кто/#Slug/что/#Slug/подписчики                ReleaseStarrersR GET
+/кто/#Slug/что/#Slug/подписчики/#Slug          ReleaseStarredR  PUT DELETE
 
 -- -------------------------------------------------------------------------
 -- Info articles
