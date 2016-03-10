@@ -7,5 +7,5 @@
       #{releaseTitle}
       (#{toInt releaseYear})
     <div .pull-right>
-      <span .glyphicon .#{icon} aria-hidden="true">
+      <span .glyphicon .glyphicon-star aria-hidden="true">
       #{toInt stars}

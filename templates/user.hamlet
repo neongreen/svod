@@ -1,93 +1,97 @@
-<div .panel .panel-info>
-  <div .panel-heading>
-    <h3 .panel-title>Общая информация
-  <table .table>
-    <colgroup>
-      <col span="1" .field-title>
-      <col span="1" .field-value>
-    $if hasStatus
-      <tr>
-        <th>Статус
-        <td>
-          $if userAdmin
-            <span .label .label-success>
-              Администратор
-          $if userStaff
-            <span .label .label-info>
-              Член команды
-          $if userAuthor
-            <span .label .label-primary>
-              Автор
-          $if not userVerified
-            <span .label .label-warning>
-              Не подтверждён
-          $if userBanned && staffHere
-            <span .label .label-danger>
-              Забанен
-    <tr>
-      <th>Зарегистрирован
-      <td>#{datePretty timeZone userJoined}
-    $maybe website <- userWebsite
-      <tr>
-        <th>Сайт
-        <td>
-          <a href="#{website}">
-            #{website}
-    $if userEmailPublic || staffHere
-      <tr>
-        <th>Адрес почты
-        <td>#{email}
-          $if not userEmailPublic
-            &nbsp;
-            <span .label .label-danger>
-              Не публичный
+<div .page-header>
+  <h1>#{userName} #
+    ^{followUserW slug}
 
-$if staffHere
-  <div .panel .panel-danger>
+<div .content>
+  <div .panel .panel-info>
     <div .panel-heading>
-      <h3 .panel-title>Административные действия
-    <div .panel-body>
-      $if not userVerified
-        ^{dngButtonW BtnSuccess "Подтвердить" "PUT" $ UserVerifiedR slug}
-      $if userBanned
-        ^{dngButtonW BtnWarning "Разбанить" "DELETE" $ UserBannedR slug}
-      $else
-        ^{dngButtonW BtnWarning "Забанить" "PUT" $ UserBannedR slug}
-      $if adminHere
-        ^{dngButtonW BtnDanger "Удалить" "DELETE" $ UserR slug}
-        $if userStaff
-          ^{dngButtonW BtnInfo "Уволить" "DELETE" $ UserStaffR slug}
+      <h3 .panel-title>Общая информация
+    <table .table>
+      <colgroup>
+        <col span="1" .field-title>
+        <col span="1" .field-value>
+      $if hasStatus
+        <tr>
+          <th>Статус
+          <td>
+            $if userAdmin
+              <span .label .label-success>
+                Администратор
+            $if userStaff
+              <span .label .label-info>
+                Член команды
+            $if userAuthor
+              <span .label .label-primary>
+                Автор
+            $if not userVerified
+              <span .label .label-warning>
+                Не подтверждён
+            $if userBanned && staffHere
+              <span .label .label-danger>
+                Забанен
+      <tr>
+        <th>Зарегистрирован
+        <td>#{datePretty timeZone userJoined}
+      $maybe website <- userWebsite
+        <tr>
+          <th>Сайт
+          <td>
+            <a href="#{website}">
+              #{website}
+      $if userEmailPublic || staffHere
+        <tr>
+          <th>Адрес почты
+          <td>#{email}
+            $if not userEmailPublic
+              &nbsp;
+              <span .label .label-danger>
+                Не публичный
+
+  $if staffHere
+    <div .panel .panel-danger>
+      <div .panel-heading>
+        <h3 .panel-title>Административные действия
+      <div .panel-body>
+        $if not userVerified
+          ^{dngButtonW BtnSuccess "Подтвердить" "PUT" $ UserVerifiedR slug}
+        $if userBanned
+          ^{dngButtonW BtnWarning "Разбанить" "DELETE" $ UserBannedR slug}
         $else
-          ^{dngButtonW BtnInfo "Нанять" "PUT" $ UserStaffR slug}
-        $if not userAdmin
-          ^{dngButtonW BtnPrimary "Возвысить" "PUT" $ UserAdminR slug}
+          ^{dngButtonW BtnWarning "Забанить" "PUT" $ UserBannedR slug}
+        $if adminHere
+          ^{dngButtonW BtnDanger "Удалить" "DELETE" $ UserR slug}
+          $if userStaff
+            ^{dngButtonW BtnInfo "Уволить" "DELETE" $ UserStaffR slug}
+          $else
+            ^{dngButtonW BtnInfo "Нанять" "PUT" $ UserStaffR slug}
+          $if not userAdmin
+            ^{dngButtonW BtnPrimary "Возвысить" "PUT" $ UserAdminR slug}
 
-<h2>О пользователе #
-  $if ownerHere || adminHere
-    <a .btn .btn-default
-       title="Редактировать профиль"
-       href="@{UserProfileR slug}">
-      <span .glyphicon .glyphicon-pencil aria-hidden="true">
+  <h2>О пользователе #
+    $if ownerHere || adminHere
+      <a .btn .btn-default
+         title="Редактировать профиль"
+         href="@{UserProfileR slug}">
+        <span .glyphicon .glyphicon-pencil aria-hidden="true">
 
-<div .clearfix>
-  <img src="@{placeholder}"
-       .img-responsive .img-rounded .pull-left
-       width="230" height="230"
-       title="#{userName}"
-       alt="#{userName}">
+  <div .clearfix>
+    <img src="@{placeholder}"
+         .img-responsive .img-rounded .pull-left
+         width="230" height="230"
+         title="#{userName}"
+         alt="#{userName}">
 
-  $maybe desc <- renderDescription <$> userDesc
-    #{desc}
-  $nothing
+    $maybe desc <- renderDescription <$> userDesc
+      #{desc}
+    $nothing
+      <p>
+        Этот пользователь о себе умалчивает…
+
+  <h2>Публикации
+
+  $if userAuthor
     <p>
-      Этот пользователь о себе умалчивает…
-
-<h2>Публикации #
-  ^{followUserW slug}
-
-$if userAuthor
-  <p>
-    $forall release <- releases
-      ^{releaseW release}
-$else
-  <p>Пока ничего.
+      $forall release <- releases
+        ^{releaseW release}
+  $else
+    <p>Пока ничего.

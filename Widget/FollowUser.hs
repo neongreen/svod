@@ -16,8 +16,7 @@
 
 module Widget.FollowUser
   ( followUserW
-  , isFollowedBy
-  , followedIcon )
+  , isFollowedBy )
 where
 
 import Helper.Access (userViaSlug')
@@ -36,14 +35,9 @@ followUserW tslug = userViaSlug' tslug $ \target' -> do
   muser     <- ζ maybeAuth
   buttonId  <- newIdent
   counterId <- newIdent
-  iconId    <- newIdent
   following <- isFollowedBy target (entityKey <$> muser)
   count'    <- φ (S.followerCount target)
-  let count         = fromIntegral count'           :: Int
-      inactiveTitle = "Следить за пользователем"    :: Text
-      activeTitle   = "Не следить за пользователем" :: Text
-      inactiveIcon  = followedIcon False
-      activeIcon    = followedIcon True
+  let count = fromIntegral count' :: Int
   addScript (StaticR js_cookie_js)
   case entityVal <$> muser of
     Nothing -> $(widgetFile "follow-user-guest")
@@ -63,10 +57,3 @@ isFollowedBy target muid =
   case muid of
     Nothing -> return False
     Just uid -> φ (S.isFollower target uid)
-
--- | Return name of class to use for “number of followers” icon depending on
--- whether it's followed by actual logged-in user or not.
-
-followedIcon :: Bool -> Text
-followedIcon False = "glyphicon-eye-open"
-followedIcon True  = "glyphicon-eye-close"

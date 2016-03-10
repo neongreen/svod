@@ -216,6 +216,15 @@ selectTab (UserProfileR slug) =
   bool Nothing (Just ProfileTab) . ynAuth <$> isSelf slug
 selectTab _ = return Nothing
 
+-- | Determine whether to format page and insert title automatically. On
+-- pages that have custom formatting it's recommended to use divs
+-- @.page-header@ and @.content@ anyway.
+
+customFormatting :: Route App -> Bool
+customFormatting (UserR _)      = True
+customFormatting (ReleaseR _ _) = True
+customFormatting _              = False
+
 ----------------------------------------------------------------------------
 -- Some instances
 
@@ -251,7 +260,8 @@ instance Yesod App where
   defaultLayout widget = do
     muser     <- fmap entityVal <$> maybeAuth
     copyright <- appCopyright . appSettings <$> getYesod
-    tab       <- getCurrentRoute >>= maybe (return Nothing) selectTab
+    mroute    <- getCurrentRoute
+    tab       <- maybe (return Nothing) selectTab mroute
     let registerTab = tab == Just RegisterTab
         loginTab    = tab == Just LoginTab
         releasesTab = tab == Just ReleasesTab

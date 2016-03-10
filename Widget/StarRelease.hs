@@ -14,8 +14,7 @@
 
 module Widget.StarRelease
   ( starReleaseW
-  , isStarredBy
-  , starredIcon )
+  , isStarredBy )
 where
 
 import Helper.Access (releaseViaSlug')
@@ -36,14 +35,9 @@ starReleaseW aslug rslug = releaseViaSlug' aslug rslug $ \_ release' -> do
   muser     <- ζ maybeAuth
   buttonId  <- newIdent
   counterId <- newIdent
-  iconId    <- newIdent
   starred   <- isStarredBy rid (entityKey <$> muser)
   count'    <- φ (S.starCount rid)
-  let count         = fromIntegral count'   :: Int
-      inactiveTitle = "Отметить публикацию" :: Text
-      activeTitle   = "Снять метку"         :: Text
-      inactiveIcon  = starredIcon False
-      activeIcon    = starredIcon True
+  let count = fromIntegral count' :: Int
   addScript (StaticR js_cookie_js)
   case entityVal <$> muser of
     Nothing -> $(widgetFile "star-release-guest")
@@ -63,10 +57,3 @@ isStarredBy rid muid =
   case muid of
     Nothing -> return False
     Just uid -> φ (S.isStarredBy rid uid)
-
--- | Return name of class to use for “number of stars” icon depending on
--- whether it's starred by actual logged-in user or not.
-
-starredIcon :: Bool -> Text
-starredIcon False = "glyphicon-star-empty"
-starredIcon True  = "glyphicon-star"

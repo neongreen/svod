@@ -1,12 +1,6 @@
-$with notStarred <- not starred
-  <a ##{buttonId}
-     .btn .btn-default :starred:.active
-     href="javascript:void(0)"
-     :notStarred:title="#{inactiveTitle}"
-     :starred:title="#{activeTitle}">
-    <strong ##{counterId}>#{count}
-    <span ##{iconId}
-          .glyphicon
-          :starred:.#{activeIcon}
-          :notStarred:.#{inactiveIcon}
-          aria-hidden="true">
+<a ##{buttonId}
+   .btn .btn-default :starred:.active
+   href="javascript:void(0)"
+   title="Мне нравится!">
+  <strong ##{counterId}>#{count}
+  <span .glyphicon .glyphicon-star aria-hidden="true">

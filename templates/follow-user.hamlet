@@ -1,12 +1,6 @@
-$with notFollowing <- not following
-  <a ##{buttonId}
-     .btn .btn-default :following:.active
-     href="javascript:void(0)"
-     :notFollowing:title="#{inactiveTitle}"
-     :following:title="#{activeTitle}">
-    <strong ##{counterId}>#{count}
-    <span ##{iconId}
-          .glyphicon
-          :following:.#{activeIcon}
-          :notFollowing:.#{inactiveIcon}
-          aria-hidden="true">
+<a ##{buttonId}
+   .btn .btn-default :following:.active
+   href="javascript:void(0)"
+   title="Стать подписчиком">
+  <strong ##{counterId}>#{count}
+  <span .glyphicon .glyphicon-eye-open aria-hidden="true">

@@ -11,19 +11,8 @@ $(#{toJSONId buttonId}).click(function() {
         data:   {#{toJSON defaultCsrfParamName}: xsrfToken},
         success: function (response) {
             var count = obj.find(#{toJSONId counterId});
-            var icon  = obj.find(#{toJSONId iconId});
             count.html(response.count);
-            if (response.active) {
-                obj.addClass('active');
-                obj.attr('title', #{toJSON activeTitle});
-                icon.removeClass(#{toJSON inactiveIcon});
-                icon.addClass(#{toJSON activeIcon});
-            }
-            else {
-                obj.attr('title', #{toJSON inactiveTitle});
-                icon.removeClass(#{toJSON activeIcon});
-                icon.addClass(#{toJSON inactiveIcon});
-            }
+            if (response.active) obj.addClass('active');
         }
     });
     obj.prop('disabled', false);

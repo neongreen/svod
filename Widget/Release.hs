@@ -19,7 +19,6 @@ where
 import Data.Maybe (fromJust)
 import Helper.Rendering (toInt)
 import Import
-import Widget.StarRelease (isStarredBy, starredIcon)
 import qualified Svod as S
 
 -- | Display most important information about given release.
@@ -32,5 +31,4 @@ releaseW release = do
       Release {..} = entityVal release
   User {..} <- fromJust <$> φ (get releaseArtist)
   stars <- φ (S.starCount rid)
-  icon  <- starredIcon <$> (ζ maybeAuthId >>= isStarredBy rid)
   $(widgetFile "release-widget")

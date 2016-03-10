@@ -1,103 +1,107 @@
-<div .panel .panel-info>
-  <div .panel-heading>
-    <h3 .panel-title>Общая информация
-  <table .table>
-    <colgroup>
-      <col span="1" .field-title>
-      <col span="1" .field-value>
-    $if hasStatus
-      <tr>
-        <th>Статус
-        <td>
-          $if not isFinalized
-            <span .label .label-warning>
-              Рассматривается
-          $if releaseDemo
-            <span .label .label-info>
-              Демо
-    <tr>
-      <th>Автор
-      <td><a href="@{UserR uslug}">#{userName}
-    $if isFinalized
-      <tr>
-        <th>Номер по каталогу
-        <td>
-          <span .label .label-primary>
-            #{catalogueIndexPretty releaseIndex}
-    <tr>
-      <th>Лицензия
-      <td>
-        <a href="#{licenseUrl releaseLicense}">
-          #{licensePretty releaseLicense}
-    $maybe genre <- releaseGenre
-      <tr>
-        <th>Жанр
-        <td>#{genre}
-    <tr>
-      <th>Год публикации
-      <td>#{toInt releaseYear}
-    <tr>
-      <th>Заявка подана
-      <td>#{timePretty timeZone releaseApplied}
-    $maybe finalized <- timePretty timeZone <$> releaseFinalized
-      <tr>
-        <th>Заявка удовлетворена
-        <td>#{finalized}
-    <tr>
-      <th>Размер архива
-      <td>#{bytesPretty releaseSize}
-    <tr>
-      <th>Количество скачиваний
-      <td>#{toInt releaseDownloads}
+<div .page-header>
+  <h1>#{releaseTitle} #
+    ^{starReleaseW uslug rslug}
 
-$if adminHere
-  <div .panel .panel-danger>
-    <div .panel-heading>
-      <h3 .panel-title>Административные действия
-    <div .panel-body>
-      $if not isFinalized
-        ^{dngButtonW BtnSuccess "Одобрить" "PUT" $ ReleaseApprovedR uslug rslug}
-      ^{dngButtonW BtnDanger "Удалить" "DELETE" $ ReleaseR uslug rslug}
-
-<h2>Описание #
-  $if (not isFinalized && ownerHere) || adminHere
-    <a .btn .btn-default
-       title="Редактировать публикацию"
-       href="@{ReleaseDataR uslug rslug}">
-      <span .glyphicon .glyphicon-pencil aria-hidden="true">
-  ^{starReleaseW uslug rslug}
-
-<div .clearfix>
-  <img src="@{placeholder}"
-       .img-responsive .img-rounded .pull-left
-       width="230" height="230"
-       title="#{releaseTitle}"
-       alt="#{releaseTitle}">
-
-  #{renderDescription releaseDesc}
-
-<p>
+<div .content>
   <div .panel .panel-info>
     <div .panel-heading>
-      <h3 .panel-title>
-        $maybe releaseType <- getReleaseType totalDur
-          #{releaseTypePretty releaseType}
-        $nothing
-          Список записей
+      <h3 .panel-title>Общая информация
     <table .table>
       <colgroup>
-        <col span="1" .track-number>
-        <col span="1" .track-title>
-        <col span="1" .track-duration>
-      $forall track <- tracks
+        <col span="1" .field-title>
+        <col span="1" .field-value>
+      $if hasStatus
         <tr>
-          <td>#{toInt $ trackNumber track}
-          <td>#{trackTitle track}
-          <td>#{durationPretty $ trackDuration track}
+          <th>Статус
+          <td>
+            $if not isFinalized
+              <span .label .label-warning>
+                Рассматривается
+            $if releaseDemo
+              <span .label .label-info>
+                Демо
       <tr>
-        <td>Σ
+        <th>Автор
+        <td><a href="@{UserR uslug}">#{userName}
+      $if isFinalized
+        <tr>
+          <th>Номер по каталогу
+          <td>
+            <span .label .label-primary>
+              #{catalogueIndexPretty releaseIndex}
+      <tr>
+        <th>Лицензия
         <td>
-        <td>#{durationPretty totalDur}
+          <a href="#{licenseUrl releaseLicense}">
+            #{licensePretty releaseLicense}
+      $maybe genre <- releaseGenre
+        <tr>
+          <th>Жанр
+          <td>#{genre}
+      <tr>
+        <th>Год публикации
+        <td>#{toInt releaseYear}
+      <tr>
+        <th>Заявка подана
+        <td>#{timePretty timeZone releaseApplied}
+      $maybe finalized <- timePretty timeZone <$> releaseFinalized
+        <tr>
+          <th>Заявка удовлетворена
+          <td>#{finalized}
+      <tr>
+        <th>Размер архива
+        <td>#{bytesPretty releaseSize}
+      <tr>
+        <th>Количество скачиваний
+        <td>#{toInt releaseDownloads}
 
-<p .text-center>
-  ^{downloadReleaseW uslug rslug}
+  $if adminHere
+    <div .panel .panel-danger>
+      <div .panel-heading>
+        <h3 .panel-title>Административные действия
+      <div .panel-body>
+        $if not isFinalized
+          ^{dngButtonW BtnSuccess "Одобрить" "PUT" $ ReleaseApprovedR uslug rslug}
+        ^{dngButtonW BtnDanger "Удалить" "DELETE" $ ReleaseR uslug rslug}
+
+  <h2>Описание #
+    $if (not isFinalized && ownerHere) || adminHere
+      <a .btn .btn-default
+         title="Редактировать публикацию"
+         href="@{ReleaseDataR uslug rslug}">
+        <span .glyphicon .glyphicon-pencil aria-hidden="true">
+
+  <div .clearfix>
+    <img src="@{placeholder}"
+         .img-responsive .img-rounded .pull-left
+         width="230" height="230"
+         title="#{releaseTitle}"
+         alt="#{releaseTitle}">
+
+    #{renderDescription releaseDesc}
+
+  <p>
+    <div .panel .panel-info>
+      <div .panel-heading>
+        <h3 .panel-title>
+          $maybe releaseType <- getReleaseType totalDur
+            #{releaseTypePretty releaseType}
+          $nothing
+            Список записей
+      <table .table>
+        <colgroup>
+          <col span="1" .track-number>
+          <col span="1" .track-title>
+          <col span="1" .track-duration>
+        $forall track <- tracks
+          <tr>
+            <td>#{toInt $ trackNumber track}
+            <td>#{trackTitle track}
+            <td>#{durationPretty $ trackDuration track}
+        <tr>
+          <td>Σ
+          <td>
+          <td>#{durationPretty totalDur}
+
+  <p .text-center>
+    ^{downloadReleaseW uslug rslug}
