@@ -1,0 +1,2 @@
+$forall release <- releases
+  ^{releaseW release}

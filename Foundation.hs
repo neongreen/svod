@@ -95,6 +95,7 @@ authm (UserFollowerR _ slug) = isSelf slug
 
 -- Releases
 
+authm SearchReleasesR            = return Authorized
 authm (ReleasesR _)              = return Authorized
 authm (ReleaseR _ _)             = return Authorized
 authm (ReleaseDataR slug _)      = isAdmin <> isSelf slug
@@ -195,7 +196,6 @@ data MenuTab
   = RegisterTab        -- ^ For guests: you can register here
   | LoginTab           -- ^ For guests: you can login here
   | ReleasesTab        -- ^ Search for releases
-  | ArtistsTab         -- ^ Search for artists
   | NotificationsTab   -- ^ See notifications
   | ProfileTab         -- ^ See or change your profile
   deriving (Show, Read, Eq, Enum, Bounded)
@@ -206,8 +206,7 @@ data MenuTab
 selectTab :: Route App -> Handler (Maybe MenuTab)
 selectTab RegisterR       = return (Just RegisterTab)
 selectTab LoginR          = return (Just LoginTab)
-selectTab (ReleasesR _)   = return (Just ReleasesTab) -- FIXME
-selectTab UsersR          = return (Just ArtistsTab) -- FIXME
+selectTab SearchReleasesR = return (Just ReleasesTab)
 selectTab NotificationsR  = return (Just NotificationsTab)
 selectTab ChangePasswordR = return (Just ProfileTab)
 selectTab (UserR slug) =
@@ -265,7 +264,6 @@ instance Yesod App where
     let registerTab = tab == Just RegisterTab
         loginTab    = tab == Just LoginTab
         releasesTab = tab == Just ReleasesTab
-        artistsTab  = tab == Just ArtistsTab
         notificsTab = tab == Just NotificationsTab
         profileTab  = tab == Just ProfileTab
     mmsg      <- getMessage

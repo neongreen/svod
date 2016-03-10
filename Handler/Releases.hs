@@ -10,22 +10,42 @@
 -- Public information about releases (HTML and JSON).
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.Releases
   ( getReleasesR )
 where
 
+import Helper.Access (userViaSlug)
 import Import
+import Widget.Release (releaseW)
+import qualified Svod as S
 
--- | Get list of releases either in paginated form (HTML), or as JSON.
+-- | Get list of releases of a particular user.
 
 getReleasesR :: Slug -> Handler TypedContent
-getReleasesR = undefined
-
-      -- stars <- mapM (runDB . S.starCount . entityKey) releases
-      -- let f (s, e) = let x = entityVal e in object
-      --       [ "title" .= releaseTitle x
-      --       , "url"   .= render (ReleaseR userSlug (releaseSlug x))
-      --       , "year"  .= toInt (releaseYear x)
-      --       , "stars" .= toInt s ]
--- (f <$> zip stars releases)
+getReleasesR slug = userViaSlug slug $ \user -> do
+  let User {..} = entityVal user
+      uid       = entityKey user
+  render <- getUrlRender
+  releases  <- runDB (S.getReleasesOfUser uid)
+  selectRep $ do
+    -- HTML representation
+    provideRep . defaultLayout $ do
+      setTitle (toHtml userName >> toHtml (" — дискография" :: Text))
+      $(widgetFile "releases")
+    -- JSON representation
+    provideRep . return . toJSON . flip fmap (entityVal <$> releases) $
+      \Release {..} -> object
+        [ "title"       .= releaseTitle
+        , "slug"        .= releaseSlug
+        , "genre"       .= releaseGenre
+        , "year"        .= releaseYear
+        , "applied"     .= renderISO8601 releaseApplied
+        , "description" .= releaseDesc
+        , "license"     .= releaseLicense
+        , "size"        .= releaseSize
+        , "downloads"   .= releaseDownloads
+        , "finalized"   .= (renderISO8601 <$> releaseFinalized)
+        , "index"       .= unCatalogueIndex releaseIndex
+        , "url"         .= render (ReleaseR userSlug releaseSlug) ]

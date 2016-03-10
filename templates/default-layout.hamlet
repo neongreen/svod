@@ -19,15 +19,13 @@
           $maybe user <- muser
             $with slug <- userSlug user
               <li>
-                <a .menu-item :releasesTab:.menu-mark href="@{ReleasesR slug}"
-                   title="Публикации">
-                  Публикации
+                <a .menu-item :releasesTab:.menu-mark
+                   href="@{SearchReleasesR}"
+                   title="Поиск публикаций">
+                  <span .glyphicon .glyphicon-search aria-hidden="true">
               <li>
-                <a .menu-item :artistsTab:.menu-mark href="@{UsersR}"
-                   title="Авторы">
-                  Авторы
-              <li>
-                <a .menu-item :notificsTab:.menu-mark href="@{NotificationsR}"
+                <a .menu-item :notificsTab:.menu-mark
+                   href="@{NotificationsR}"
                    title="Уведомления">
                   <span .glyphicon .glyphicon-bell aria-hidden="true">
               <li>

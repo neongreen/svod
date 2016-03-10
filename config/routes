@@ -33,6 +33,7 @@
 -- -------------------------------------------------------------------------
 -- Releases
 
+/поиск                                         SearchReleasesR  GET
 /кто/#Slug/что                                 ReleasesR        GET
 /кто/#Slug/что/#Slug                           ReleaseR         GET DELETE
 /кто/#Slug/что/#Slug/настройки                 ReleaseDataR     GET POST

@@ -72,6 +72,7 @@ import Handler.Release.Starred
 import Handler.Release.Starrers
 import Handler.Releases
 import Handler.Robots
+import Handler.SearchReleases
 import Handler.SubmitRelease
 import Handler.User
 import Handler.User.Admin

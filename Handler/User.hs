@@ -26,7 +26,6 @@ import Helper.Rendering (renderDescription)
 import Import
 import Widget.DngButton (BtnType (..), dngButtonW)
 import Widget.FollowUser (followUserW)
-import Widget.Release (releaseW)
 import qualified Svod as S
 
 -- | Get information about particular user in HTML or JSON.
@@ -41,10 +40,9 @@ getUserR slug = userViaSlug slug $ \user -> do
       userAdmin = userStatus == AdminUser
       userStaff = userStatus `elem` [StaffUser, AdminUser]
       uid       = entityKey user
-  releases  <- runDB (S.getReleasesOfUser uid)
+  userAuthor <- not . null <$> runDB (S.getReleasesOfUser uid)
   render    <- getUrlRender
-  let userAuthor = not (null releases)
-      hasStatus = or
+  let hasStatus = or
         [ userAdmin
         , userStaff
         , userAuthor
@@ -63,7 +61,7 @@ getUserR slug = userViaSlug slug $ \user -> do
       , "slug"             .= userSlug
       , "email"            .= bool Nothing (Just userEmail) userEmailPublic
       , "website"          .= userWebsite
-      , "desc"             .= userDesc
+      , "description"      .= userDesc
       , "joined"           .= renderISO8601 userJoined
       , "time_zone_offset" .= userTimeZone
       , "admin"            .= userAdmin

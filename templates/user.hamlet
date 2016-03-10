@@ -86,12 +86,9 @@
     $nothing
       <p>
         Этот пользователь о себе умалчивает…
-
-  <h2>Публикации
-
-  $if userAuthor
-    <p>
-      $forall release <- releases
-        ^{releaseW release}
-  $else
-    <p>Пока ничего.
+    $if userAuthor
+      <p>
+        См. также: #
+        <a href="@{ReleasesR slug}">
+          дискография этого пользователя#
+        .
