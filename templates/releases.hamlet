@@ -1,2 +1,6 @@
-$forall release <- releases
-  ^{releaseW release}
+$if not (null releases)
+  $forall release <- releases
+    ^{releaseW release}
+$else
+  <p>
+    Этот пользователь пока ничего не опубликовал…
