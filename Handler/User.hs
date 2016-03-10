@@ -17,11 +17,11 @@ module Handler.User
   , deleteUserR )
 where
 
-import Data.Bool (bool)
 import Helper.Access (userViaSlug)
 import Helper.Auth (checkAuthWith)
-import Helper.Property (changeUserProperty)
+import Helper.Json (userJson)
 import Helper.Path (getFConfig)
+import Helper.Property (changeUserProperty)
 import Helper.Rendering (renderDescription)
 import Import
 import Widget.DngButton (BtnType (..), dngButtonW)
@@ -36,12 +36,11 @@ getUserR slug = userViaSlug slug $ \user -> do
   ownerHere <- ynAuth <$> isSelf slug
   staffHere <- ynAuth <$> isStaff
   adminHere <- ynAuth <$> isAdmin
-  let User {..} = entityVal user
-      userAdmin = userStatus == AdminUser
-      userStaff = userStatus `elem` [StaffUser, AdminUser]
-      uid       = entityKey user
+  let u@User {..} = entityVal user
+      userAdmin   = userStatus == AdminUser
+      userStaff   = userStatus `elem` [StaffUser, AdminUser]
+      uid         = entityKey user
   userAuthor <- not . null <$> runDB (S.getReleasesOfUser uid)
-  render    <- getUrlRender
   let hasStatus = or
         [ userAdmin
         , userStaff
@@ -56,26 +55,10 @@ getUserR slug = userViaSlug slug $ \user -> do
       setTitle (toHtml userName)
       $(widgetFile "user")
     -- JSON representation
-    provideRep . return . object $
-      [ "name"             .= userName
-      , "slug"             .= userSlug
-      , "email"            .= bool Nothing (Just userEmail) userEmailPublic
-      , "website"          .= userWebsite
-      , "description"      .= userDesc
-      , "joined"           .= renderISO8601 userJoined
-      , "time_zone_offset" .= userTimeZone
-      , "admin"            .= userAdmin
-      , "staff"            .= userStaff
-      , "banned"           .= userBanned
-      , "verified"         .= userVerified
-      , "url"              .= render (UserR userSlug)
-      , "profile_url"      .= render (UserProfileR   userSlug)
-      , "verified_url"     .= render (UserVerifiedR  userSlug)
-      , "banned_url"       .= render (UserBannedR    userSlug)
-      , "staff_url"        .= render (UserStaffR     userSlug)
-      , "admin_url"        .= render (UserAdminR     userSlug)
-      , "followers_url"    .= render (UserFollowersR userSlug)
-      , "releases_url"     .= render (ReleasesR      userSlug) ]
+    provideRep $ do
+      render    <- getUrlRender
+      followers <- runDB (S.followerCount uid)
+      return (userJson render (Just followers) u)
 
 -- | Delete specified user.
 

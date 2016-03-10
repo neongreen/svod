@@ -18,4 +18,4 @@ where
 import Import
 
 getUserFollowersR :: Slug -> Handler Html
-getUserFollowersR = undefined -- TODO Also is JSON
+getUserFollowersR = undefined -- TODO provide better support in core

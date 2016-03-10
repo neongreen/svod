@@ -19,6 +19,7 @@ where
 
 import Helper.Access (releaseViaSlug)
 import Helper.Auth (checkAuthWith)
+import Helper.Json (releaseJson)
 import Helper.Property (changeReleaseProperty)
 import Helper.Rendering (toInt, renderDescription)
 import Import
@@ -37,14 +38,14 @@ getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
   timeZone  <- fmap (userTimeZone . entityVal) <$> maybeAuth
   ownerHere <- ynAuth <$> isSelf uslug
   adminHere <- ynAuth <$> isAdmin
-  let User    {..} = entityVal user
-      Release {..} = entityVal release
-      isFinalized  = isJust releaseFinalized
-      hasStatus    = not isFinalized || releaseDemo
+  let u@User    {..} = entityVal user
+      r@Release {..} = entityVal release
+      rid            = entityKey release
+      isFinalized    = isJust releaseFinalized
+      hasStatus      = not isFinalized || releaseDemo
   unless isFinalized $
     checkAuthWith (isSelf uslug <> isStaff)
-  render <- getUrlRender
-  tracks <- runDB . S.getReleaseTracklist . entityKey $ release
+  tracks <- runDB (S.getReleaseTracklist rid)
   let totalDur = totalDuration (trackDuration <$> tracks)
       placeholder = StaticR $ StaticRoute ["img", "user", "placeholder.jpg"] []
   -- ↑ FIXME In the future we will need to render real cover here.
@@ -54,27 +55,10 @@ getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
       setTitle (toHtml releaseTitle)
       $(widgetFile "release")
     -- JSON representation
-    provideRep . return . object $
-      [ "artist"       .= userName
-      , "title"        .= releaseTitle
-      , "slug"         .= releaseSlug
-      , "genre"        .= releaseGenre
-      , "year"         .= toInt releaseYear
-      , "applied"      .= renderISO8601 releaseApplied
-      , "description"  .= releaseDesc
-      , "license"      .= licensePretty releaseLicense
-      , "size"         .= toInt releaseSize
-      , "downloads"    .= toInt releaseDownloads
-      , "finalized"    .= (renderISO8601 <$> releaseFinalized)
-      , "demo"         .= releaseDemo
-      , "index"        .= unCatalogueIndex releaseIndex
-      , "license_url"  .= licenseUrl releaseLicense
-      , "release_url"  .= render (ReleaseR uslug rslug)
-      , "artist_url"   .= render (UserR uslug)
-      , "archive_url"  .= render (ReleaseArchiveR uslug rslug)
-      , "data_url"     .= render (ReleaseDataR uslug rslug)
-      , "approved_url" .= render (ReleaseApprovedR uslug rslug)
-      , "starrers_url" .= render (ReleaseStarrersR uslug rslug) ]
+    provideRep $ do
+      render <- getUrlRender
+      stars  <- runDB (S.starCount rid)
+      return (releaseJson render (Just stars) u r)
 
 -- | Delete specified release.
 

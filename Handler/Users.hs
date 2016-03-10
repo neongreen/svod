@@ -13,12 +13,19 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Handler.Users
-  ( getUsersR )
+  ( getUsersR
+  , postUsersR )
 where
 
+import Handler.Register (processRegistration)
 import Import
 
 -- | Serve paginated list of users.
 
 getUsersR :: Handler TypedContent
 getUsersR = undefined -- TODO Also in JSON
+
+-- | Process registration and add new user.
+
+postUsersR :: Handler TypedContent
+postUsersR = processRegistration

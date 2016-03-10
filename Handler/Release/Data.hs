@@ -25,7 +25,7 @@ getReleaseDataR
   :: Slug              -- ^ User slug
   -> Slug              -- ^ Release slug
   -> Handler Html
-getReleaseDataR = undefined
+getReleaseDataR = undefined -- TODO
 
 -- | Process release editing request.
 
@@ -33,4 +33,4 @@ postReleaseDataR
   :: Slug              -- ^ User slug
   -> Slug              -- ^ Release slug
   -> Handler Html
-postReleaseDataR = undefined
+postReleaseDataR = undefined -- TODO

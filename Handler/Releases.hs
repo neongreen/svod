@@ -13,10 +13,13 @@
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.Releases
-  ( getReleasesR )
+  ( getReleasesR
+  , postReleasesR )
 where
 
+import Handler.SubmitRelease (processReleaseSubmission)
 import Helper.Access (userViaSlug)
+import Helper.Json (releaseJson)
 import Import
 import Widget.Release (releaseW)
 import qualified Svod as S
@@ -25,9 +28,8 @@ import qualified Svod as S
 
 getReleasesR :: Slug -> Handler TypedContent
 getReleasesR slug = userViaSlug slug $ \user -> do
-  let User {..} = entityVal user
-      uid       = entityKey user
-  render <- getUrlRender
+  let u@User {..} = entityVal user
+      uid         = entityKey user
   releases  <- runDB (S.getReleasesOfUser uid)
   selectRep $ do
     -- HTML representation
@@ -35,17 +37,12 @@ getReleasesR slug = userViaSlug slug $ \user -> do
       setTitle (toHtml userName >> toHtml (" — дискография" :: Text))
       $(widgetFile "releases")
     -- JSON representation
-    provideRep . return . toJSON . flip fmap (entityVal <$> releases) $
-      \Release {..} -> object
-        [ "title"       .= releaseTitle
-        , "slug"        .= releaseSlug
-        , "genre"       .= releaseGenre
-        , "year"        .= releaseYear
-        , "applied"     .= renderISO8601 releaseApplied
-        , "description" .= releaseDesc
-        , "license"     .= releaseLicense
-        , "size"        .= releaseSize
-        , "downloads"   .= releaseDownloads
-        , "finalized"   .= (renderISO8601 <$> releaseFinalized)
-        , "index"       .= unCatalogueIndex releaseIndex
-        , "url"         .= render (ReleaseR userSlug releaseSlug) ]
+    provideRep $ do
+      render <- getUrlRender
+      return . toJSON $ releaseJson render Nothing u
+        <$> (entityVal <$> releases)
+
+-- | Process submission of a new release.
+
+postReleasesR :: Slug -> Handler TypedContent
+postReleasesR = processReleaseSubmission

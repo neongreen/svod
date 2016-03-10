@@ -9,18 +9,19 @@
 -- -------------------------------------------------------------------------
 -- Registration, authentication, and profile management
 
-/регистрация                                   RegisterR        GET POST
+/регистрация                                   RegisterR        GET
 /подтверждение/#Text                           VerifyR          GET
 /уведомления                                   NotificationsR   GET
 /сменить-пароль                                ChangePasswordR  GET POST
-/опубликовать                                  SubmitReleaseR   GET POST
+/опубликовать                                  SubmitReleaseR   GET
+/поиск                                         SearchReleasesR  GET
 /вход                                          LoginR           GET POST
 /выход                                         LogoutR          GET
 
 -- -------------------------------------------------------------------------
 -- Users
 
-/кто                                           UsersR           GET
+/кто                                           UsersR           GET POST
 /кто/#Slug                                     UserR            GET DELETE
 /кто/#Slug/настройки                           UserProfileR     GET POST
 /кто/#Slug/подтверждён                         UserVerifiedR    PUT DELETE
@@ -33,8 +34,7 @@
 -- -------------------------------------------------------------------------
 -- Releases
 
-/поиск                                         SearchReleasesR  GET
-/кто/#Slug/что                                 ReleasesR        GET
+/кто/#Slug/что                                 ReleasesR        GET POST
 /кто/#Slug/что/#Slug                           ReleaseR         GET DELETE
 /кто/#Slug/что/#Slug/настройки                 ReleaseDataR     GET POST
 /кто/#Slug/что/#Slug/архив                     ReleaseArchiveR  GET

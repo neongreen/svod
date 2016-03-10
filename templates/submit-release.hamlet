@@ -14,7 +14,7 @@
   <a href="@{InfoLicensesR}" target="_blank">статью о лицензировании#
   , чтобы узнать больше и сделать правильный выбор.
 
-<form ##{formId} method="post" role="form" action="@{SubmitReleaseR}"
+<form ##{formId} method="post" role="form" action="@{ReleasesR userSlug}"
       enctype="#{enctype}">
   ^{form}
   <p>

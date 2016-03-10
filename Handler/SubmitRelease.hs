@@ -16,12 +16,13 @@
 
 module Handler.SubmitRelease
   ( getSubmitReleaseR
-  , postSubmitReleaseR )
+  , processReleaseSubmission )
 where
 
 import Data.List.NonEmpty (NonEmpty)
 import Data.Maybe (fromJust)
 import Formatting (sformat, int)
+import Helper.Json (releaseJson)
 import Helper.Path (getFConfig)
 import Helper.Rendering (toInt, toJSONId)
 import Import
@@ -71,13 +72,13 @@ getSubmitReleaseR = do
 
 -- | Process submission.
 
-postSubmitReleaseR :: Handler Html
-postSubmitReleaseR = do
+processReleaseSubmission :: Slug -> Handler TypedContent
+processReleaseSubmission slug = do
   user <- fromJust <$> maybeAuth
-  let uid       = entityKey user
-      User {..} = entityVal user
+  let u@User {..} = entityVal user
+      uid         = entityKey user
   status <- runDB (S.canSubmitAgain uid)
-  unless (status == S.CanSubmit) $
+  unless (status == S.CanSubmit && slug == userSlug) $
     permissionDenied "Вы не можете опубликовать что-либо сейчас."
   ((result, form), enctype) <- runFormPost submitReleaseForm
   case result of
@@ -93,12 +94,20 @@ postSubmitReleaseR = do
       fconfig <- getFConfig
       outcome <- runDB (S.submitRelease fconfig rm srDemo)
       case outcome of
-        Left msg -> do
-          setMsg MsgDanger (toHtml msg)
-          serveSubmitRelease uid form enctype
+        Left msg ->
+          selectRep $ do
+            -- HTML representation
+            provideRep $ do
+              setMsg MsgDanger (toHtml msg)
+              serveSubmitRelease uid form enctype
+            -- JSON representation
+            provideRep . return . object $ ["failed" .= msg]
         Right rid -> do
-          releaseSlug <- releaseSlug . fromJust <$> runDB (get rid)
-          setMsg MsgSuccess [shamlet|
+          r@Release {..} <- fromJust <$> runDB (get rid)
+          selectRep $ do
+            -- HTML representation
+            provideRep $ do
+              setMsg MsgSuccess [shamlet|
 Публикация #
 <strong>
   #{srTitle}
@@ -107,8 +116,19 @@ postSubmitReleaseR = do
 опубликована. В период рассмотрения администрация может посылать вам сообщения,
 чтобы обсудить или поправить что-либо, пожалуйста реагируйте своевременно.
 |]
-          redirect (ReleaseR userSlug releaseSlug)
-    _ -> serveSubmitRelease uid form enctype
+              redirect (ReleaseR userSlug releaseSlug) :: Handler Html
+            -- JSON representation
+            provideRep $ do
+              render <- getUrlRender
+              return (releaseJson render Nothing u r)
+
+    _ ->
+      selectRep $ do
+        -- HTML representation
+        provideRep (serveSubmitRelease uid form enctype)
+        -- JSON representation
+        provideRep . return . object $
+          ["failed" .= ("form parsing failed" :: Text)]
 
 -- | Serve “submit release” page.
 

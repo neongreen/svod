@@ -17,13 +17,10 @@
 
 module Handler.Register
   ( getRegisterR
-  , postRegisterR )
+  , processRegistration )
 where
 
-import Helper.Auth
-  ( checkUserName
-  , checkUserEmail
-  , checkPassStrength )
+import Helper.Auth (checkUserName, checkUserEmail, checkPassStrength)
 import Import
 import Network.Mail.Mime hiding (htmlPart)
 import System.IO.Unsafe (unsafePerformIO)
@@ -70,8 +67,8 @@ getRegisterR = do
 
 -- | Process registration request.
 
-postRegisterR :: Handler TypedContent
-postRegisterR = do
+processRegistration :: Handler TypedContent
+processRegistration = do
   ((result, form), enctype) <- runFormPost registrationForm
   case result of
     FormSuccess RegistrationForm {..} ->

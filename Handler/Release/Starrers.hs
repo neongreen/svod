@@ -19,4 +19,4 @@ where
 import Import
 
 getReleaseStarrersR :: Slug -> Slug -> Handler Html
-getReleaseStarrersR = undefined -- TODO
+getReleaseStarrersR = undefined -- TODO provide better support in core
