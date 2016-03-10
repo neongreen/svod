@@ -18,6 +18,7 @@ module Handler.Release
 where
 
 import Helper.Access (releaseViaSlug)
+import Helper.Auth (checkAuthWith)
 import Helper.Property (changeReleaseProperty)
 import Helper.Rendering (toInt, renderDescription)
 import Import
@@ -35,14 +36,13 @@ getReleaseR
 getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
   timeZone  <- fmap (userTimeZone . entityVal) <$> maybeAuth
   ownerHere <- ynAuth <$> isSelf uslug
-  staffHere <- ynAuth <$> isStaff
   adminHere <- ynAuth <$> isAdmin
   let User    {..} = entityVal user
       Release {..} = entityVal release
       isFinalized  = isJust releaseFinalized
       hasStatus    = not isFinalized || releaseDemo
-  unless (isFinalized || ownerHere || staffHere) $
-    permissionDenied "Эта работа ещё не опубликована."
+  unless isFinalized $
+    checkAuthWith (isSelf uslug <> isStaff)
   render <- getUrlRender
   tracks <- runDB . S.getReleaseTracklist . entityKey $ release
   let totalDur = totalDuration (trackDuration <$> tracks)
@@ -79,4 +79,6 @@ getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
 -- | Delete specified release.
 
 deleteReleaseR :: Slug -> Slug -> Handler TypedContent
-deleteReleaseR = changeReleaseProperty S.deleteRelease (\s _ -> ReleasesR s)
+deleteReleaseR uslug rslug = do
+  checkAuthWith isAdmin
+  changeReleaseProperty S.deleteRelease (\s _ -> ReleasesR s) uslug rslug

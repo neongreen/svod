@@ -11,6 +11,7 @@
 -- the second half. We split the whole thing because of Template Haskell
 -- limitations.
 
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude     #-}
 {-# LANGUAGE TemplateHaskell       #-}
@@ -30,6 +31,7 @@ import Yesod.Auth.Message (AuthMessage (InvalidLogin))
 import Yesod.Core.Types (Logger)
 import Yesod.Default.Util (addStaticContentExternal)
 import Yesod.Form.I18n.Russian (russianFormMessage)
+import qualified Data.Text         as T
 import qualified Svod              as S
 import qualified Yesod.Core.Unsafe as Unsafe
 
@@ -83,7 +85,7 @@ authm LogoutR         = isUser
 
 authm UsersR                 = return Authorized
 authm (UserR _)              = return Authorized
-authm (UserProfileR slug)    = isAdmin *||* isSelf slug
+authm (UserProfileR slug)    = isAdmin <> isSelf slug
 authm (UserVerifiedR _)      = isStaff
 authm (UserBannedR _)        = isStaff
 authm (UserStaffR _)         = isAdmin
@@ -95,7 +97,7 @@ authm (UserFollowerR _ slug) = isSelf slug
 
 authm (ReleasesR _)              = return Authorized
 authm (ReleaseR _ _)             = return Authorized
-authm (ReleaseDataR slug _)      = isAdmin *||* isSelf slug
+authm (ReleaseDataR slug _)      = isAdmin <> isSelf slug
 authm (ReleaseArchiveR _ _)      = isVerified
 authm (ReleaseApprovedR _ _)     = isAdmin
 authm (ReleaseStarrersR _ _)     = isVerified
@@ -158,21 +160,25 @@ checkWho msg f = do
     Nothing -> return AuthenticationRequired
     Just u  -> runDB $ bool (Unauthorized msg) Authorized <$> f u
 
--- | Combine authentication results. If one of arguments returns
--- 'Authorized', the whole thing returns 'Authorized'. Otherwise if at least
--- one check returns 'AuthenticationRequired', we return this given user a
--- change to get through after login. If the both things return
--- 'Unauthorized', we combine the messages.
+instance Semigroup (HandlerT App IO AuthResult) where
+  (<>) = liftM2 ξ
+    -- Combine authentication results. If one of arguments returns
+    -- 'Authorized', the whole thing returns 'Authorized'. Otherwise if at
+    -- least one check returns 'AuthenticationRequired', we return this
+    -- given user a change to get through after login. If the both things
+    -- return 'Unauthorized', we combine the messages unless they are empty.
+    where ξ Authorized _             = Authorized
+          ξ _ Authorized             = Authorized
+          ξ AuthenticationRequired _ = AuthenticationRequired
+          ξ _ AuthenticationRequired = AuthenticationRequired
+          ξ (Unauthorized a) (Unauthorized b)
+            | T.null a  = Unauthorized b
+            | T.null b  = Unauthorized a
+            | otherwise = Unauthorized (a <> " " <> b)
 
-infixr 2 *||*
-(*||*) :: Handler AuthResult -> Handler AuthResult -> Handler AuthResult
-(*||*) = liftM2 ξ
-  where ξ Authorized _             = Authorized
-        ξ _ Authorized             = Authorized
-        ξ AuthenticationRequired _ = AuthenticationRequired
-        ξ _ AuthenticationRequired = AuthenticationRequired
-        ξ (Unauthorized a) (Unauthorized b) =
-          Unauthorized (a <> "\n*ИЛИ*\n" <> b)
+instance Monoid (HandlerT App IO AuthResult) where
+  mempty  = return (Unauthorized T.empty)
+  mappend = (<>)
 
 -- | Build “yes or no” variation of the functions above.
 

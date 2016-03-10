@@ -16,7 +16,8 @@ module Helper.Auth
   ( checkUserName
   , checkUserEmail
   , checkPassStrength
-  , checkPassCorrect )
+  , checkPassCorrect
+  , checkAuthWith )
 where
 
 import Data.Char (isLower, isUpper, isDigit)
@@ -82,3 +83,27 @@ checkPassCorrect muser given =
          return $ if isValidPass given salted
            then Right user
            else msg
+
+-- | Check authentication with given function and throw corresponding
+-- exception in case of unauthenticated user or continue execution
+-- otherwise.
+
+checkAuthWith
+  :: Handler AuthResult -- ^ Auth check to use
+  -> Handler ()
+checkAuthWith authCheck = do
+  aresult <- authCheck
+  case aresult of
+    Authorized -> return ()
+    AuthenticationRequired -> do
+      master <- getYesod
+      case authRoute master of
+          Nothing -> void notAuthenticated
+          Just url ->
+            void . selectRep $ do
+              provideRepType typeHtml $ do
+                setUltDestCurrent
+                void (redirect url)
+              provideRepType typeJson $
+                void notAuthenticated
+    Unauthorized msg -> permissionDenied msg

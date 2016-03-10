@@ -19,6 +19,7 @@ where
 
 import Data.Bool (bool)
 import Helper.Access (userViaSlug)
+import Helper.Auth (checkAuthWith)
 import Helper.Property (changeUserProperty)
 import Helper.Path (getFConfig)
 import Helper.Rendering (renderDescription)
@@ -82,5 +83,6 @@ getUserR slug = userViaSlug slug $ \user -> do
 
 deleteUserR :: Slug -> Handler TypedContent
 deleteUserR slug = do
+  checkAuthWith isAdmin
   fc <- getFConfig
   changeUserProperty (S.deleteUser fc) (const UsersR) slug

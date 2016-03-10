@@ -17,6 +17,7 @@ module Handler.Release.Archive
 where
 
 import Helper.Access (releaseViaSlug)
+import Helper.Auth (checkAuthWith)
 import Helper.Path (getFConfig)
 import Import
 import Path
@@ -34,10 +35,8 @@ getReleaseArchiveR uslug rslug = releaseViaSlug uslug rslug $ \_ release -> do
       Release {..} = entityVal release
       isFinalized  = isJust releaseFinalized
       contentType  = "application/zip"
-  ownerHere <- ynAuth <$> isSelf uslug
-  staffHere <- ynAuth <$> isStaff
-  unless (isFinalized || ownerHere || staffHere) $
-    permissionDenied "Эта работа ещё не опубликована."
+  unless isFinalized $
+    checkAuthWith (isSelf uslug <> isStaff)
   fconfig <- getFConfig
   outcome <- runDB (S.downloadRelease fconfig rid)
   case outcome of
