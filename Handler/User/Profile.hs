@@ -19,7 +19,11 @@ module Handler.User.Profile
   , postUserProfileR )
 where
 
+import Data.Bool (bool)
+import Data.Maybe (fromJust)
 import Helper.Access (userViaSlug)
+import Helper.Auth (checkEmailAddress)
+import Helper.Email (startEmailVerificationCycle)
 import Helper.Form
 import Import
 import Yesod.Form.Bootstrap3
@@ -28,7 +32,8 @@ import qualified Svod as S
 -- | Editable pieces of user profile.
 
 data UserProfileForm = UserProfileForm
-  { upEmailPublic    :: Maybe Bool     -- ^ Whether user's email is public
+  { upEmail          :: Maybe Text     -- ^ Email adderss
+  , upEmailPublic    :: Maybe Bool     -- ^ Whether user's email is public
   , upTimeZoneOffset :: Maybe TimeZoneOffset -- ^ User's time zone
   , upWebsite        :: Maybe Text     -- ^ Website
   , upDesc           :: Maybe Textarea -- ^ Description (“About me”)
@@ -40,8 +45,9 @@ data UserProfileForm = UserProfileForm
 userProfileForm :: User -> Form UserProfileForm
 userProfileForm User {..} =
   renderBootstrap3 BootstrapBasicForm $ UserProfileForm
-    <$> aopt checkBoxField
-      (μ "email" $ "Публичный адрес почты (" <> email <> ")")
+    <$> aopt emailField' (μ' "email" "Почта") (Just . Just $ userEmail)
+    <*> aopt checkBoxField
+      (μ "email_public" $ "Публичный адрес почты (" <> email <> ")")
       (Just . Just $ userEmailPublic)
     <*> aopt (selectFieldList timeZones)
       (μ "time_zone_offset" "Часовой пояс")
@@ -50,7 +56,8 @@ userProfileForm User {..} =
     <*> aopt textareaField
       (μ "description" "Расскажите о себе")
       (Just . Textarea . unDescription <$> userDescription)
-  where email = fromMaybe "<неверный формат>" (emailPretty userEmail)
+  where emailField' = check checkEmailAddress emailField
+        email = fromMaybe "<неверный формат>" (emailPretty userEmail)
         timeZones :: [(Text, TimeZoneOffset)]
         timeZones =
           [ ("Москва (+3)",                             TimeZoneOffset 180)
@@ -75,12 +82,16 @@ getUserProfileR slug = userViaSlug slug $ \user -> do
 
 postUserProfileR :: Slug -> Handler Html
 postUserProfileR slug = userViaSlug slug $ \user -> do
-  ((result, form), enctype) <-
-    runFormPost . userProfileForm . entityVal $ user
+  let u@User {..} = entityVal user
+      uid         = entityKey user
+  ((result, form), enctype) <- runFormPost (userProfileForm u)
   case result of
     FormSuccess UserProfileForm {..} -> do
+      let changedEmail = isJust upEmail && Just userEmail /= upEmail
+      when changedEmail $
+        startEmailVerificationCycle (fromJust upEmail) userName uid
       runDB $ S.editUserProfile
-        Nothing -- FIXME email address must be editable
+        (bool Nothing upEmail changedEmail)
         upEmailPublic
         upTimeZoneOffset
         (Just upWebsite)
@@ -88,10 +99,11 @@ postUserProfileR slug = userViaSlug slug $ \user -> do
         (entityKey user)
       render <- getUrlRender
       let profileUrl = render (UserR slug)
-      setMsg MsgSuccess [shamlet|
+      unless changedEmail $
+        setMsg MsgSuccess [shamlet|
 Профиль пользователя #
 <a href="#{profileUrl}">
-  #{userName $ entityVal user}
+  #{userName}
 \ обновлен успешно.
 |]
     _ -> return ()

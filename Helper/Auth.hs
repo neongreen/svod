@@ -14,7 +14,7 @@
 
 module Helper.Auth
   ( checkUserName
-  , checkUserEmail
+  , checkEmailAddress
   , checkPassStrength
   , checkPassCorrect
   , checkAuthWith )
@@ -42,14 +42,12 @@ checkUserName should name = do
     (False, Nothing) -> Right name
     (False, Just  _) -> Left "Кто-то такой уже есть…"
 
--- | Check if given email address is already in use.
+-- | Custom checking of email address.
 
-checkUserEmail :: Text -> Handler (Either Text Text)
-checkUserEmail email = do
-  muser <- runDB (S.getUserByEmail email)
-  return $ case muser of
-    Nothing -> Right email
-    Just  _ -> Left "Этот адрес уже привязан к другому профилю."
+checkEmailAddress :: Text -> Either Text Text
+checkEmailAddress email = case emailPretty email of
+  Nothing -> Left "Этот адрес имеет неверный формат."
+  Just _  -> Right email
 
 -- | Too weak passwords are simply not allowed.
 

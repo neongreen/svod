@@ -29,7 +29,8 @@ getVerifyR
 getVerifyR verkey = do
   uid <- fromJust <$> maybeAuthId
   key <- fromJust <$> runDB (S.getVerifyKey uid)
-  when (verkey == key) $ do
+  verified <- runDB (S.isVerified uid)
+  when (not verified && verkey == key) $ do
     runDB (S.setVerified True uid)
     setMsg MsgSuccess "Регистрация подтверждена!"
   redirect HomeR
