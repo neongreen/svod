@@ -31,7 +31,7 @@
                 Забанен
       <tr>
         <th>Зарегистрирован
-        <td>#{datePretty timeZone userJoined}
+        <td>#{datePretty timeZoneOffset userJoined}
       $maybe website <- userWebsite
         <tr>
           <th>Сайт
@@ -81,7 +81,7 @@
          title="#{userName}"
          alt="#{userName}">
 
-    $maybe desc <- renderDescription <$> userDesc
+    $maybe desc <- renderDescription <$> userDescription
       #{desc}
     $nothing
       <p>

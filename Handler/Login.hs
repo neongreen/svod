@@ -19,6 +19,7 @@ module Handler.Login
 where
 
 import Helper.Auth (checkUserName, checkPassCorrect)
+import Helper.Form
 import Import
 import Yesod.Form.Bootstrap3
 import qualified Svod as S
@@ -34,8 +35,8 @@ data LoginForm = LoginForm
 
 loginForm :: Form LoginForm
 loginForm = renderBootstrap3 BootstrapBasicForm $ LoginForm
-  <$> areq nameField (withAutofocus $ bfs ("Имя" :: Text)) Nothing
-  <*> areq passwordField (bfs ("Пароль" :: Text)) Nothing
+  <$> areq nameField (μ' "name" "Имя") Nothing
+  <*> areq passwordField (μ "password" "Пароль") Nothing
   where nameField = checkM (checkUserName True) textField
 
 -- | Serve a page with login form.

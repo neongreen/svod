@@ -20,6 +20,7 @@ where
 
 import Data.Maybe (fromJust)
 import Helper.Auth (checkPassCorrect, checkPassStrength)
+import Helper.Form
 import Import
 import Yesod.Auth.Email (saltPass)
 import Yesod.Form.Bootstrap3
@@ -37,9 +38,9 @@ data ChangePasswordForm = ChangePasswordForm
 
 changePasswordForm :: Form ChangePasswordForm
 changePasswordForm = renderBootstrap3 BootstrapBasicForm $ ChangePasswordForm
-  <$> areq oldPassField (withAutofocus $ bfs ("Текущий пароль" :: Text)) Nothing
-  <*> areq newPassField (bfs ("Новый пароль" :: Text)) Nothing
-  <*> areq newPassField (bfs ("Повторите новый пароль" :: Text)) Nothing
+  <$> areq oldPassField (μ' "password" "Текущий пароль") Nothing
+  <*> areq newPassField (μ "new_password" "Новый пароль") Nothing
+  <*> areq newPassField (μ "new_password_again" "Повторите новый пароль") Nothing
   where oldPassField  = checkM passwordMatch' passwordField
         newPassField  = check checkPassStrength passwordField
 

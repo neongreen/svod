@@ -21,6 +21,7 @@ module Handler.Register
 where
 
 import Helper.Auth (checkUserName, checkUserEmail, checkPassStrength)
+import Helper.Form
 import Import
 import Network.Mail.Mime hiding (htmlPart)
 import System.IO.Unsafe (unsafePerformIO)
@@ -48,10 +49,10 @@ data RegistrationForm = RegistrationForm
 
 registrationForm :: Form RegistrationForm
 registrationForm = renderBootstrap3 BootstrapBasicForm $ RegistrationForm
-  <$> areq nameField (withAutofocus $ bfs ("Имя" :: Text)) Nothing
-  <*> areq emailField' (bfs ("Почта" :: Text)) Nothing
-  <*> areq passField (bfs ("Пароль" :: Text)) Nothing
-  <*> areq passField (bfs ("Повторите пароль" :: Text)) Nothing
+  <$> areq nameField (μ' "name" "Имя") Nothing
+  <*> areq emailField' (μ "email" "Почта") Nothing
+  <*> areq passField (μ "password" "Пароль") Nothing
+  <*> areq passField (μ "password_again" "Повторите пароль") Nothing
   where nameField   = checkM (checkUserName False) textField
         emailField' = checkM checkUserEmail emailField
         passField   = check checkPassStrength passwordField

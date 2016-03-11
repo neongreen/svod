@@ -32,7 +32,7 @@ import qualified Svod as S
 
 getUserR :: Slug -> Handler TypedContent
 getUserR slug = userViaSlug slug $ \user -> do
-  timeZone  <- fmap (userTimeZone . entityVal) <$> maybeAuth
+  timeZoneOffset <- fmap (userTimeZoneOffset . entityVal) <$> maybeAuth
   ownerHere <- ynAuth <$> isSelf slug
   staffHere <- ynAuth <$> isStaff
   adminHere <- ynAuth <$> isAdmin

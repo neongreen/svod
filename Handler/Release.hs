@@ -35,7 +35,7 @@ getReleaseR
   -> Slug              -- ^ Release slug
   -> Handler TypedContent
 getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
-  timeZone  <- fmap (userTimeZone . entityVal) <$> maybeAuth
+  timeZoneOffset <- fmap (userTimeZoneOffset . entityVal) <$> maybeAuth
   ownerHere <- ynAuth <$> isSelf uslug
   adminHere <- ynAuth <$> isAdmin
   let u@User    {..} = entityVal user

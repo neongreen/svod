@@ -22,6 +22,7 @@ where
 import Data.List.NonEmpty (NonEmpty)
 import Data.Maybe (fromJust)
 import Formatting (sformat, int)
+import Helper.Form
 import Helper.Json (releaseJson)
 import Helper.Path (getFConfig)
 import Helper.Rendering (toInt, toJSONId)
@@ -52,13 +53,13 @@ submitReleaseForm html = do
   maxy <- liftIO getCurrentYear
   let miny = maxy - 3
       form = SubmitReleaseForm
-        <$> areq textField (withAutofocus $ bfs ("Название" :: Text)) Nothing
-        <*> areq (selectFieldList licenses) (bfs ("Лицензия" :: Text)) Nothing
-        <*> aopt textField (bfs ("Жанр" :: Text)) Nothing
-        <*> areq (yearField miny maxy) (yearSettings miny maxy) (Just maxy)
-        <*> areq tracksField (bfs ("Список записей" :: Text)) Nothing
-        <*> areq checkBoxField (bfs ("Демо" :: Text)) (Just False)
-        <*> areq textareaField (bfs ("Описание" :: Text)) Nothing
+        <$> areq textField (μ' "title" "Название") Nothing
+        <*> areq (selectFieldList licenses) (μ "license" "Лицензия") Nothing
+        <*> aopt textField (μ "genre" "Жанр") Nothing
+        <*> areq (yearField miny maxy) (μL "year" "Год" miny maxy) (Just maxy)
+        <*> areq tracksField (μ "track" "Список записей") Nothing
+        <*> areq checkBoxField (μ "demo" "Демо") (Just False)
+        <*> areq textareaField (μ "description" "Описание") Nothing
   renderBootstrap3 BootstrapBasicForm form html
   where licenses = (licensePretty &&& id) <$> [minBound..maxBound]
 
@@ -171,19 +172,6 @@ yearField miny maxy = check checkYear intField
           | year < miny = Left "Слишком давно."
           | year > maxy = Left "Машина времени?"
           | otherwise   = Right year
-
--- | Generate settings for year field given lower and upper bounds for this
--- value.
-
-yearSettings
-  :: Int               -- ^ Lower bound for year (inclusive)
-  -> Int               -- ^ Upper bound for year (inclusive)
-  -> FieldSettings App
-yearSettings miny maxy =
-  FieldSettings (SomeMessage ("Год" :: Text)) Nothing Nothing Nothing
-    [ ("class", "form-control") -- bootstrap thing
-    , ("min", sformat int miny)
-    , ("max", sformat int maxy) ]
 
 -- | Custom field to collect variable-length list of tracks, or rather
 -- instructions how to create tracks in form of 'S.CreateTrack' data types.

@@ -20,6 +20,7 @@ module Handler.User.Profile
 where
 
 import Helper.Access (userViaSlug)
+import Helper.Form
 import Import
 import Yesod.Form.Bootstrap3
 import qualified Svod as S
@@ -27,8 +28,8 @@ import qualified Svod as S
 -- | Editable pieces of user profile.
 
 data UserProfileForm = UserProfileForm
-  { upEmailPublic    :: Bool           -- ^ Whether user's email is public
-  , upTimeZoneOffset :: TimeZoneOffset -- ^ User's time zone
+  { upEmailPublic    :: Maybe Bool     -- ^ Whether user's email is public
+  , upTimeZoneOffset :: Maybe TimeZoneOffset -- ^ User's time zone
   , upWebsite        :: Maybe Text     -- ^ Website
   , upDesc           :: Maybe Textarea -- ^ Description (“About me”)
   }
@@ -39,16 +40,16 @@ data UserProfileForm = UserProfileForm
 userProfileForm :: User -> Form UserProfileForm
 userProfileForm User {..} =
   renderBootstrap3 BootstrapBasicForm $ UserProfileForm
-    <$> areq checkBoxField
-      (withAutofocus $ bfs
-       ("Публичный адрес почты (" <> email <> ")" :: Text))
-      (Just userEmailPublic)
-    <*> areq (selectFieldList timeZones)
-      (bfs ("Часовой пояс" :: Text)) (Just userTimeZone)
-    <*> aopt urlField (bfs ("Ваш сайт" :: Text))
-      (Just userWebsite)
-    <*> aopt textareaField (bfs ("Расскажите о себе" :: Text))
-      (Just . Textarea . unDescription <$> userDesc)
+    <$> aopt checkBoxField
+      (μ "email" $ "Публичный адрес почты (" <> email <> ")")
+      (Just . Just $ userEmailPublic)
+    <*> aopt (selectFieldList timeZones)
+      (μ "time_zone_offset" "Часовой пояс")
+      (Just . Just $ userTimeZoneOffset)
+    <*> aopt urlField (μ "website" "Ваш сайт") (Just userWebsite)
+    <*> aopt textareaField
+      (μ "description" "Расскажите о себе")
+      (Just . Textarea . unDescription <$> userDescription)
   where email = fromMaybe "<неверный формат>" (emailPretty userEmail)
         timeZones :: [(Text, TimeZoneOffset)]
         timeZones =
@@ -79,10 +80,11 @@ postUserProfileR slug = userViaSlug slug $ \user -> do
   case result of
     FormSuccess UserProfileForm {..} -> do
       runDB $ S.editUserProfile
+        Nothing -- FIXME email address must be editable
         upEmailPublic
         upTimeZoneOffset
-        upWebsite
-        (mkDescription . unTextarea <$> upDesc)
+        (Just upWebsite)
+        (Just . mkDescription . unTextarea <$> upDesc)
         (entityKey user)
       render <- getUrlRender
       let profileUrl = render (UserR slug)

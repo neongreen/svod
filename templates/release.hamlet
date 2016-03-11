@@ -43,8 +43,8 @@
         <td>#{toInt releaseYear}
       <tr>
         <th>Заявка подана
-        <td>#{timePretty timeZone releaseApplied}
-      $maybe finalized <- timePretty timeZone <$> releaseFinalized
+        <td>#{timePretty timeZoneOffset releaseApplied}
+      $maybe finalized <- timePretty timeZoneOffset <$> releaseFinalized
         <tr>
           <th>Заявка удовлетворена
           <td>#{finalized}
@@ -78,7 +78,7 @@
          title="#{releaseTitle}"
          alt="#{releaseTitle}">
 
-    #{renderDescription releaseDesc}
+    #{renderDescription releaseDescription}
 
   <p>
     <div .panel .panel-info>

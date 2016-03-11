@@ -7,5 +7,5 @@
       <a href="@{InfoContentR}">нашим правилам#
       , должно пройти некоторое время прежде чем вы сможете опубликовать ещё
       одну работу. Для вас это будет не ранее #
-      <strong>#{datePretty (Just userTimeZone) next}#
+      <strong>#{datePretty (Just userTimeZoneOffset) next}#
       .

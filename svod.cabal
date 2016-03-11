@@ -127,6 +127,7 @@ library
                     , Handler.Verify
                     , Helper.Access
                     , Helper.Auth
+                    , Helper.Form
                     , Helper.Json
                     , Helper.Property
                     , Helper.Path
