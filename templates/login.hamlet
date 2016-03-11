@@ -1,4 +1,4 @@
-<form method="post" role="form" action="@{LoginR}" enctype="#{enctype}">
+<form method="post" action="@{LoginR}" enctype="#{enctype}">
   ^{form}
   <button .btn .btn-primary type="submit">
     Войти
