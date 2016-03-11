@@ -1,4 +1,4 @@
-<div ##{trackListId}>
+<fieldset ##{trackListId}>
   $forall index <- indicies
     $with thisId <- baseId <> index
       $with (isFirst, nonFirst) <- (index == "1", index /= "1")
