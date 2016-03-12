@@ -121,7 +121,8 @@ processReleaseSubmission slug = do
             -- JSON representation
             provideRep $ do
               render <- getUrlRender
-              return (releaseJson render Nothing u r)
+              stars  <- runDB (S.starCount rid)
+              return (releaseJson render stars u r)
 
     _ ->
       selectRep $ do

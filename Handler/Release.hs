@@ -58,7 +58,7 @@ getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
     provideRep $ do
       render <- getUrlRender
       stars  <- runDB (S.starCount rid)
-      return (releaseJson render (Just stars) u r)
+      return (releaseJson render stars u r)
 
 -- | Delete specified release.
 

@@ -28,11 +28,10 @@ import Numeric.Natural
 
 userJson
   :: (Route App -> Text) -- ^ Route render
-  -> Maybe Natural     -- ^ Number of followers (if provided)
+  -> Natural           -- ^ Number of followers
   -> User              -- ^ The main bulk of data
   -> Value             -- ^ JSON value
-userJson render mfollowers User {..} = object $
-  maybe [] (pure . ("followers" .=)) mfollowers ++
+userJson render followers User {..} = object
   [ "name"             .= userName
   , "slug"             .= userSlug
   , "email"            .= bool Nothing (Just userEmail) userEmailPublic
@@ -43,6 +42,7 @@ userJson render mfollowers User {..} = object $
   , "admin"            .= userAdmin
   , "staff"            .= userStaff
   , "banned"           .= userBanned
+  , "followers"        .= followers
   , "verified"         .= userVerified
   , "url"              .= render (UserR userSlug)
   , "profile_url"      .= render (UserProfileR   userSlug)
@@ -59,12 +59,11 @@ userJson render mfollowers User {..} = object $
 
 releaseJson
   :: (Route App -> Text) -- ^ Route render
-  -> Maybe Natural     -- ^ Number of stars (if provided)
+  -> Natural           -- ^ Number of stars
   -> User              -- ^ Information about author (artist)
   -> Release           -- ^ The main bulk of data
   -> Value
-releaseJson render mstars User {..} Release {..} = object $
-  maybe [] (pure . ("stars" .=)) mstars ++
+releaseJson render stars User {..} Release {..} = object
   [ "artist"       .= userName
   , "title"        .= releaseTitle
   , "slug"         .= releaseSlug
@@ -78,6 +77,7 @@ releaseJson render mstars User {..} Release {..} = object $
   , "finalized"    .= (renderISO8601 <$> releaseFinalized)
   , "demo"         .= releaseDemo
   , "index"        .= unCatalogueIndex releaseIndex
+  , "stars"        .= stars
   , "url"          .= render (ReleaseR userSlug releaseSlug)
   , "license_url"  .= licenseUrl releaseLicense
   , "artist_url"   .= render (UserR userSlug)

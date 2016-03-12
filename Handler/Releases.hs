@@ -39,8 +39,11 @@ getReleasesR slug = userViaSlug slug $ \user -> do
     -- JSON representation
     provideRep $ do
       render <- getUrlRender
-      return . toJSON $ releaseJson render Nothing u
-        <$> (entityVal <$> releases)
+      items  <- forM releases $ \release -> do
+        let (Entity rid r) = release
+        stars <- runDB (S.starCount rid)
+        return (releaseJson render stars u r)
+      return (toJSON items)
 
 -- | Process submission of a new release.
 

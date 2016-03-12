@@ -58,7 +58,7 @@ getUserR slug = userViaSlug slug $ \user -> do
     provideRep $ do
       render    <- getUrlRender
       followers <- runDB (S.followerCount uid)
-      return (userJson render (Just followers) u)
+      return (userJson render followers u)
 
 -- | Delete specified user.
 
