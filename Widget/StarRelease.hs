@@ -13,8 +13,7 @@
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Widget.StarRelease
-  ( starReleaseW
-  , isStarredBy )
+  ( starReleaseW )
 where
 
 import Helper.Access (releaseViaSlug')
@@ -35,7 +34,9 @@ starReleaseW aslug rslug = releaseViaSlug' aslug rslug $ \_ release' -> do
   muser     <- ζ maybeAuth
   buttonId  <- newIdent
   counterId <- newIdent
-  starred   <- isStarredBy rid (entityKey <$> muser)
+  starred   <- case entityKey <$> muser of
+    Nothing  -> return False
+    Just uid -> φ (S.isStarredBy rid uid)
   count'    <- φ (S.starCount rid)
   let count = fromIntegral count' :: Int
   addScript (StaticR js_cookie_js)
@@ -46,14 +47,3 @@ starReleaseW aslug rslug = releaseViaSlug' aslug rslug $ \_ release' -> do
         then $(widgetFile "star-release-logged-in")
         else $(widgetFile "star-release-unverified")
   $(widgetFile "star-release")
-
--- | Check if particular release is starred by given user.
-
-isStarredBy
-  :: ReleaseId         -- ^ Release in question
-  -> Maybe UserId      -- ^ Identity of logged in user (if any)
-  -> WidgetT App IO Bool -- ^ Is this release starred by this user?
-isStarredBy rid muid =
-  case muid of
-    Nothing -> return False
-    Just uid -> φ (S.isStarredBy rid uid)

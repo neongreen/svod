@@ -15,8 +15,7 @@
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Widget.FollowUser
-  ( followUserW
-  , isFollowedBy )
+  ( followUserW )
 where
 
 import Helper.Access (userViaSlug')
@@ -35,7 +34,9 @@ followUserW tslug = userViaSlug' tslug $ \target' -> do
   muser     <- ζ maybeAuth
   buttonId  <- newIdent
   counterId <- newIdent
-  following <- isFollowedBy target (entityKey <$> muser)
+  following <- case entityKey <$> muser of
+    Nothing  -> return False
+    Just uid -> φ (S.isFollower target uid)
   count'    <- φ (S.followerCount target)
   let count = fromIntegral count' :: Int
   addScript (StaticR js_cookie_js)
@@ -46,14 +47,3 @@ followUserW tslug = userViaSlug' tslug $ \target' -> do
         then $(widgetFile "follow-user-logged-in")
         else $(widgetFile "follow-user-unverified")
   $(widgetFile "follow-user")
-
--- | Check if particular user is follower by given user.
-
-isFollowedBy
-  :: UserId            -- ^ Whom to follow
-  -> Maybe UserId      -- ^ Potential follower
-  -> WidgetT App IO Bool -- ^ Does this user follows the first one?
-isFollowedBy target muid =
-  case muid of
-    Nothing -> return False
-    Just uid -> φ (S.isFollower target uid)
