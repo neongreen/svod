@@ -47,7 +47,7 @@ getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
     checkAuthWith (isSelf uslug <> isStaff)
   tracks <- runDB (S.getReleaseTracklist rid)
   let totalDur = totalDuration (trackDuration <$> tracks)
-      placeholder = StaticR $ StaticRoute ["img", "user", "placeholder.jpg"] []
+      placeholder = StaticR $ StaticRoute ["img", "release", "ph_230.jpg"] []
   -- ↑ FIXME In the future we will need to render real cover here.
   selectRep $ do
     -- HTML representation

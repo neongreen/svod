@@ -48,7 +48,7 @@ getUserR slug = userViaSlug slug $ \user -> do
         , not userVerified
         , userBanned && staffHere ]
       email = fromMaybe "-" (emailPretty userEmail)
-      placeholder = StaticR $ StaticRoute ["img", "user", "placeholder.jpg"] []
+      placeholder = StaticR $ StaticRoute ["img", "user", "ph_230.jpg"] []
   selectRep $ do
     -- HTML representation
     provideRep . defaultLayout $ do
