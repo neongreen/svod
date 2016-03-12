@@ -1,0 +1,15 @@
+$if userAdmin
+  <span .label .label-success>
+    Администратор
+$if userStaff
+  <span .label .label-info>
+    Член команды
+$if userAuthor
+  <span .label .label-primary>
+    Автор
+$if not userVerified
+  <span .label .label-warning>
+    Не подтверждён
+$if userBanned && staffHere
+  <span .label .label-danger>
+    Забанен

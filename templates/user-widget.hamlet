@@ -1,0 +1,13 @@
+<div .panel .panel-default>
+  <div .panel-body .compact-widget>
+    <img src="@{placeholder}"
+         .img-responsive .pull-left
+         width="60" height="60"
+         title="#{userName}"
+         alt="#{userName}">
+    <div .compact-widget-desc>
+      <a href="@{UserR userSlug}">
+        #{userName}
+      ^{userStatusLabelsW user Nothing}
+      <div .pull-right>
+        ^{followUserW userSlug}

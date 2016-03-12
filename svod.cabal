@@ -143,6 +143,7 @@ library
                     , Widget.FollowUser
                     , Widget.Release
                     , Widget.StarRelease
+                    , Widget.User
 
   if flag(dev) || flag(library-only)
     cpp-options:      -DDEVELOPMENT

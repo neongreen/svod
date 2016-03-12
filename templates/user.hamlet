@@ -13,22 +13,7 @@
       $if hasStatus
         <tr>
           <th>Статус
-          <td>
-            $if userAdmin
-              <span .label .label-success>
-                Администратор
-            $if userStaff
-              <span .label .label-info>
-                Член команды
-            $if userAuthor
-              <span .label .label-primary>
-                Автор
-            $if not userVerified
-              <span .label .label-warning>
-                Не подтверждён
-            $if userBanned && staffHere
-              <span .label .label-danger>
-                Забанен
+          <td>^{userStatusLabelsW user $ Just userAuthor}
       <tr>
         <th>Зарегистрирован
         <td>#{datePretty timeZoneOffset userJoined}

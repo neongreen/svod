@@ -26,6 +26,7 @@ import Helper.Rendering (renderDescription)
 import Import
 import Widget.DngButton (BtnType (..), dngButtonW)
 import Widget.FollowUser (followUserW)
+import Widget.User (userStatusLabelsW)
 import qualified Svod as S
 
 -- | Get information about particular user in HTML or JSON.
