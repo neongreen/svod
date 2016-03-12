@@ -17,9 +17,10 @@ module Widget.Release
 where
 
 import Data.Maybe (fromJust)
+import Data.Time
 import Helper.Rendering (toInt)
 import Import
-import qualified Svod as S
+import Widget.StarRelease (starReleaseW)
 
 -- | Display most important information about given release.
 
@@ -27,8 +28,18 @@ releaseW
   :: Entity Release
   -> Widget
 releaseW release = do
-  let rid = entityKey release
-      Release {..} = entityVal release
+  let Release {..} = entityVal release
+      toDiffTime = picosecondsToDiffTime . fromIntegral . fromEnum
+      placeholder = StaticR $ StaticRoute ["img", "release", "ph_60.jpg"] []
   User {..} <- fromJust <$> φ (get releaseArtist)
-  stars <- φ (S.starCount rid)
+  new <- case releaseFinalized of
+    Nothing -> return False
+    Just releaseDate -> do
+      now <- liftIO getCurrentTime
+      return $ toDiffTime (diffUTCTime now releaseDate) < noveltyPeriod
   $(widgetFile "release-widget")
+
+-- | For how long a release is considered new?
+
+noveltyPeriod :: DiffTime
+noveltyPeriod = secondsToDiffTime (30 * 24 * 60 * 60) -- 30 days

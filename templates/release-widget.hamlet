@@ -1,11 +1,19 @@
 <div .panel .panel-default>
-  <div .panel-body>
-    <a href="@{UserR userSlug}">
-      #{userName}
-    &mdash;
-    <a href="@{ReleaseR userSlug releaseSlug}">
-      #{releaseTitle}
-      (#{toInt releaseYear})
-    <div .pull-right>
-      <span .glyphicon .glyphicon-star aria-hidden="true">
-      #{toInt stars}
+  <div .panel-body .compact-widget>
+    <img src="@{placeholder}"
+         .img-responsive .pull-left
+         width="60" height="60"
+         title="#{releaseTitle}"
+         alt="#{releaseTitle}">
+    <div .compact-widget-desc>
+      <a href="@{UserR userSlug}">
+        #{userName}
+      &middot;
+      <a href="@{ReleaseR userSlug releaseSlug}">
+        #{releaseTitle}
+        (#{toInt releaseYear})
+      $if new
+        <span .label .label-primary>
+          новинка
+      <div .pull-right>
+        ^{starReleaseW userSlug releaseSlug}
