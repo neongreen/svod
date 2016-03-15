@@ -14,7 +14,7 @@
 
 module Handler.Release.Data
   ( getReleaseDataR
-  , postReleaseDataR )
+  , processReleaseChange )
 where
 
 import Import
@@ -29,8 +29,8 @@ getReleaseDataR = undefined -- TODO
 
 -- | Process release editing request.
 
-postReleaseDataR
+processReleaseChange
   :: Slug              -- ^ User slug
   -> Slug              -- ^ Release slug
-  -> Handler Html
-postReleaseDataR = undefined -- TODO
+  -> Handler TypedContent
+processReleaseChange = undefined -- TODO

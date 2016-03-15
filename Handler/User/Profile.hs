@@ -16,7 +16,7 @@
 
 module Handler.User.Profile
   ( getUserProfileR
-  , postUserProfileR )
+  , processUserChange )
 where
 
 import Data.Bool (bool)
@@ -81,8 +81,8 @@ getUserProfileR slug = userViaSlug slug $ \user -> do
 
 -- | Process submitted form and refresh user's profile.
 
-postUserProfileR :: Slug -> Handler Html
-postUserProfileR slug = userViaSlug slug $ \user -> do
+processUserChange :: Slug -> Handler Html
+processUserChange slug = userViaSlug slug $ \user -> do
   let u@User {..} = entityVal user
       uid         = entityKey user
   ((result, form), enctype) <- runFormPost (userProfileForm u)

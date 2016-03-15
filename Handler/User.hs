@@ -14,9 +14,11 @@
 
 module Handler.User
   ( getUserR
-  , deleteUserR )
+  , deleteUserR
+  , patchUserR )
 where
 
+import Handler.User.Profile (processUserChange)
 import Helper.Access (userViaSlug)
 import Helper.Auth (checkAuthWith)
 import Helper.Json (userJson)
@@ -67,3 +69,8 @@ deleteUserR slug = do
   checkAuthWith isAdmin
   fc <- getFConfig
   changeUserProperty (S.deleteUser fc) (const UsersR) slug
+
+-- | Partially edit user profile.
+
+patchUserR :: Slug -> Handler Html
+patchUserR = processUserChange

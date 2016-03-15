@@ -22,8 +22,8 @@
 -- Users
 
 /кто                                           UsersR           GET POST
-/кто/#Slug                                     UserR            GET DELETE
-/кто/#Slug/настройки                           UserProfileR     GET POST
+/кто/#Slug                                     UserR            GET DELETE PATCH
+/кто/#Slug/настройки                           UserProfileR     GET
 /кто/#Slug/подтверждён                         UserVerifiedR    PUT DELETE
 /кто/#Slug/забанен                             UserBannedR      PUT DELETE
 /кто/#Slug/сотрудник                           UserStaffR       PUT DELETE
@@ -35,8 +35,8 @@
 -- Releases
 
 /кто/#Slug/что                                 ReleasesR        GET POST
-/кто/#Slug/что/#Slug                           ReleaseR         GET DELETE
-/кто/#Slug/что/#Slug/настройки                 ReleaseDataR     GET POST
+/кто/#Slug/что/#Slug                           ReleaseR         GET DELETE PATCH
+/кто/#Slug/что/#Slug/настройки                 ReleaseDataR     GET
 /кто/#Slug/что/#Slug/архив                     ReleaseArchiveR  GET
 /кто/#Slug/что/#Slug/одобрена                  ReleaseApprovedR PUT
 /кто/#Slug/что/#Slug/подписчики                ReleaseStarrersR GET

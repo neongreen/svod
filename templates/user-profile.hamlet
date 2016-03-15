@@ -1,4 +1,4 @@
-<form method="post" action="@{UserProfileR slug}"
+<form method="post" action="@{UserR slug}?_method=PATCH"
       enctype="#{enctype}">
   ^{form}
   <p>
