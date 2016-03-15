@@ -1,6 +1,21 @@
-$if not (null releases)
-  $forall release <- releases
-    ^{releaseW release}
-$else
-  <p>
-    Этот пользователь пока ничего не опубликовал…
+<div .page-header>
+  <h1>#{userName} #
+    ^{followUserW slug}
+
+    <div .btn-group role="group" aria-label="Профиль или дискография">
+      <a .btn .btn-default
+         title="Профиль"
+         href="@{UserR slug}">
+        <span .glyphicon .glyphicon-user aria-hidden="true">
+      <a .btn .btn-default .active
+         title="Дискография"
+         href="@{ReleasesR slug}">
+        <span .glyphicon .glyphicon-cd aria-hidden="true">
+
+<div .content>
+  $if not (null releases)
+    $forall release <- releases
+      ^{releaseW release}
+  $else
+    <p>
+      Этот пользователь пока ничего не опубликовал…

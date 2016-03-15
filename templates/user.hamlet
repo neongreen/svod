@@ -2,6 +2,17 @@
   <h1>#{userName} #
     ^{followUserW slug}
 
+    $if userAuthor
+      <div .btn-group role="group" aria-label="Профиль или дискография">
+        <a .btn .btn-default .active
+           title="Профиль"
+           href="@{UserR slug}">
+          <span .glyphicon .glyphicon-user aria-hidden="true">
+        <a .btn .btn-default
+           title="Дискография"
+           href="@{ReleasesR slug}">
+          <span .glyphicon .glyphicon-cd aria-hidden="true">
+
 <div .content>
   <div .panel .panel-info>
     <div .panel-heading>
@@ -71,9 +82,3 @@
     $nothing
       <p>
         Этот пользователь о себе умалчивает…
-    $if userAuthor
-      <p>
-        См. также: #
-        <a href="@{ReleasesR slug}">
-          дискография этого пользователя#
-        .

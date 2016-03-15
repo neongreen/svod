@@ -21,6 +21,7 @@ import Handler.SubmitRelease (processReleaseSubmission)
 import Helper.Access (userViaSlug)
 import Helper.Json (releaseJson)
 import Import
+import Widget.FollowUser (followUserW)
 import Widget.Release (releaseW)
 import qualified Svod as S
 
@@ -33,8 +34,8 @@ getReleasesR slug = userViaSlug slug $ \user -> do
   releases  <- runDB (S.getReleasesOfUser uid)
   selectRep $ do
     -- HTML representation
-    provideRep . defaultLayout $ do
-      setTitle (toHtml userName >> toHtml (" — дискография" :: Text))
+    provideRep . noHeaderLayout $ do
+      setTitle (toHtml userName)
       $(widgetFile "releases")
     -- JSON representation
     provideRep $ do
