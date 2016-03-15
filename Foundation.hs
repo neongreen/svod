@@ -237,9 +237,9 @@ instance Yesod App where
 
   -- Allow uploads up to 500 megabytes when submitting or editing a release.
 
-  maximumContentLength _ (Just (ReleasesR      _)) = Just 524288000
-  maximumContentLength _ (Just (ReleaseDataR _ _)) = Just 524288000
-  maximumContentLength _ _                         = Just 2097152
+  maximumContentLength _ (Just (ReleaseR  _ _)) = Just 524288000
+  maximumContentLength _ (Just (ReleasesR _  )) = Just 524288000
+  maximumContentLength _ _                      = Just 2097152
 
   -- Store session data on the client in encrypted cookies, default session
   -- idle timeout is 120 minutes.
