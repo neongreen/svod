@@ -51,7 +51,7 @@ getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
   -- ↑ FIXME In the future we will need to render real cover here.
   selectRep $ do
     -- HTML representation
-    provideRep . defaultLayout $ do
+    provideRep . noHeaderLayout $ do
       setTitle (toHtml releaseTitle)
       $(widgetFile "release")
     -- JSON representation

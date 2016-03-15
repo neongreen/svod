@@ -215,15 +215,6 @@ selectTab (UserProfileR slug) =
   bool Nothing (Just ProfileTab) . ynAuth <$> isSelf slug
 selectTab _ = return Nothing
 
--- | Determine whether to format page and insert title automatically. On
--- pages that have custom formatting it's recommended to use divs
--- @.page-header@ and @.content@ anyway.
-
-customFormatting :: Route App -> Bool
-customFormatting (UserR _)      = True
-customFormatting (ReleaseR _ _) = True
-customFormatting _              = False
-
 ----------------------------------------------------------------------------
 -- Some instances
 
@@ -256,30 +247,7 @@ instance Yesod App where
   makeSessionBackend _ =
     Just <$> defaultClientSessionBackend 120 "config/client_session_key.aes"
 
-  defaultLayout widget = do
-    muser     <- fmap entityVal <$> maybeAuth
-    copyright <- appCopyright . appSettings <$> getYesod
-    mroute    <- getCurrentRoute
-    tab       <- maybe (return Nothing) selectTab mroute
-    let registerTab = tab == Just RegisterTab
-        loginTab    = tab == Just LoginTab
-        releasesTab = tab == Just ReleasesTab
-        notificsTab = tab == Just NotificationsTab
-        profileTab  = tab == Just ProfileTab
-    mmsg      <- getMessage
-
-    -- We break up the default layout into two components: default-layout is
-    -- the contents of the body tag, and default-layout-wrapper is the
-    -- entire page. Since the final value passed to 'hamletToRepHtml' cannot
-    -- be a widget, this allows to use normal widget features in
-    -- default-layout.
-
-    pc <- widgetToPageContent $ do
-      addScriptRemote "https://code.jquery.com/jquery-latest.min.js"
-      $(combineStylesheets 'StaticR [css_bootstrap_min_css, css_svod_css])
-      $(combineScripts     'StaticR [js_bootstrap_min_js,   js_svod_js])
-      widget
-    withUrlRenderer $(hamletFile "templates/default-layout.hamlet")
+  defaultLayout = basicLayout True
 
   -- The page to be redirected to when authentication is required.
 
@@ -316,6 +284,44 @@ instance Yesod App where
       || level == LevelError
 
   makeLogger = return . appLogger
+
+-- | Almost the same as 'defaultLayout', but does not insert page header and
+-- content div.
+
+noHeaderLayout :: Widget -> Handler Html
+noHeaderLayout = basicLayout False
+
+-- | Most basic layout that allows to choose whether to generate header or
+-- not.
+
+basicLayout
+  :: Bool              -- ^ Should we generate header automatically?
+  -> Widget            -- ^ Widget to render
+  -> Handler Html
+basicLayout makeHeader widget = do
+  muser     <- fmap entityVal <$> maybeAuth
+  copyright <- appCopyright . appSettings <$> getYesod
+  mroute    <- getCurrentRoute
+  tab       <- maybe (return Nothing) selectTab mroute
+  let registerTab = tab == Just RegisterTab
+      loginTab    = tab == Just LoginTab
+      releasesTab = tab == Just ReleasesTab
+      notificsTab = tab == Just NotificationsTab
+      profileTab  = tab == Just ProfileTab
+  mmsg      <- getMessage
+
+  -- We break up the default layout into two components: default-layout is
+  -- the contents of the body tag, and default-layout-wrapper is the
+  -- entire page. Since the final value passed to 'hamletToRepHtml' cannot
+  -- be a widget, this allows to use normal widget features in
+  -- default-layout.
+
+  pc <- widgetToPageContent $ do
+    addScriptRemote "https://code.jquery.com/jquery-latest.min.js"
+    $(combineStylesheets 'StaticR [css_bootstrap_min_css, css_svod_css])
+    $(combineScripts     'StaticR [js_bootstrap_min_js,   js_svod_js])
+    widget
+  withUrlRenderer $(hamletFile "templates/basic-layout.hamlet")
 
 instance YesodPersist App where
   type YesodPersistBackend App = SqlBackend

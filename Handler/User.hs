@@ -51,7 +51,7 @@ getUserR slug = userViaSlug slug $ \user -> do
       placeholder = StaticR $ StaticRoute ["img", "user", "ph_230.jpg"] []
   selectRep $ do
     -- HTML representation
-    provideRep . defaultLayout $ do
+    provideRep . noHeaderLayout $ do
       setTitle (toHtml userName)
       $(widgetFile "user")
     -- JSON representation

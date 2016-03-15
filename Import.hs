@@ -13,6 +13,6 @@ module Import
   ( module I )
 where
 
-import Foundation          as I
+import Foundation          as I hiding (basicLayout)
 import Import.Message      as I
 import Import.NoFoundation as I

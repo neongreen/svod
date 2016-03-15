@@ -77,13 +77,14 @@
           $maybe msg <- mmsg
             #{msg}
 
-          $if maybe False customFormatting mroute
-            ^{pageBody pc}
-          $else
+          $if makeHeader
             <div .page-header>
               <h1>#{pageTitle pc}
             <div .content>
               ^{pageBody pc}
+          $else
+            ^{pageBody pc}
+
     <footer>
       <div .panel-footer>
         <p .text-center>
