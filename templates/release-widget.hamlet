@@ -14,6 +14,9 @@
         (#{toInt releaseYear})
       $if new
         <span .label .label-primary>
-          новинка
+          Новинка
+      $if isNothing releaseFinalized
+        <span .label .label-warning>
+          Рассматривается
       <div .pull-right>
         ^{starReleaseW userSlug releaseSlug}
