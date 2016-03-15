@@ -45,9 +45,10 @@ checkUserName should name = do
 -- | Custom checking of email address.
 
 checkEmailAddress :: Text -> Either Text Text
-checkEmailAddress email = case emailPretty email of
-  Nothing -> Left "Этот адрес имеет неверный формат."
-  Just _  -> Right email
+checkEmailAddress email =
+  if isValidEmail email
+    then Right email
+    else Left "Этот адрес имеет неверный формат."
 
 -- | Too weak passwords are simply not allowed.
 

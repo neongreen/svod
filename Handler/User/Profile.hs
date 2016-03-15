@@ -45,7 +45,8 @@ data UserProfileForm = UserProfileForm
 userProfileForm :: User -> Form UserProfileForm
 userProfileForm User {..} =
   renderBootstrap3 BootstrapBasicForm $ UserProfileForm
-    <$> aopt emailField' (μ' "email" "Почта") (Just . Just $ userEmail)
+    <$> aopt emailField' (μ' "email" "Почта")
+      (Just . Just . unEmail $ userEmail)
     <*> aopt checkBoxField
       (μ "email_public" $ "Публичный адрес почты (" <> email <> ")")
       (Just . Just $ userEmailPublic)
@@ -57,7 +58,7 @@ userProfileForm User {..} =
       (μ "description" "Расскажите о себе")
       (Just . Textarea . unDescription <$> userDescription)
   where emailField' = check checkEmailAddress emailField
-        email = fromMaybe "<неверный формат>" (emailPretty userEmail)
+        email = emailPretty userEmail
         timeZones :: [(Text, TimeZoneOffset)]
         timeZones =
           [ ("Москва (+3)",                             TimeZoneOffset 180)
@@ -87,11 +88,12 @@ postUserProfileR slug = userViaSlug slug $ \user -> do
   ((result, form), enctype) <- runFormPost (userProfileForm u)
   case result of
     FormSuccess UserProfileForm {..} -> do
-      let changedEmail = isJust upEmail && Just userEmail /= upEmail
+      let newEmail = join (mkEmail <$> upEmail)
+          changedEmail = isJust upEmail && Just userEmail /= newEmail
       when changedEmail $
-        startEmailVerificationCycle (fromJust upEmail) userName uid
+        startEmailVerificationCycle (fromJust newEmail) userName uid
       runDB $ S.editUserProfile
-        (bool Nothing upEmail changedEmail)
+        (bool Nothing newEmail changedEmail)
         upEmailPublic
         upTimeZoneOffset
         (Just upWebsite)

@@ -20,6 +20,7 @@ module Handler.Register
   , processRegistration )
 where
 
+import Data.Maybe (fromJust)
 import Helper.Auth (checkUserName, checkEmailAddress, checkPassStrength)
 import Helper.Email (startEmailVerificationCycle)
 import Helper.Form
@@ -69,10 +70,11 @@ processRegistration = do
       if rfPass0 == rfPass1
       then do
         password <- liftIO (saltPass rfPass0)
-        user     <- runDB (S.addUnverified rfName rfEmail password "")
+        let email = fromJust (mkEmail rfEmail)
+        user     <- runDB (S.addUnverified rfName email password "")
         let uid       = entityKey user
             User {..} = entityVal user
-        startEmailVerificationCycle rfEmail userName uid
+        startEmailVerificationCycle email userName uid
         when (unSlug userSlug == "свод") . runDB $ do
           S.setVerified True uid
           S.setUserStatus AdminUser uid

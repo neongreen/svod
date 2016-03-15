@@ -1,14 +1,9 @@
-resolver: lts-5.5
+resolver: nightly-2016-03-13
 packages:
 - '.'
 - location:
     git: https://github.com/svod-music/svod-core.git
-    commit: 57d684f95112fefc26b13fb819e7719bd0ab1112
-extra-deps:
-- htaglib-1.0.2
-- path-io-1.1.0
-- plan-b-0.2.0
-- zip-0.1.0
+    commit: b50b0ec9791f9450f442b41546eb191c80475c1e
 flags:
   svod:
     library-only: false

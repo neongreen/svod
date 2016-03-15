@@ -40,7 +40,7 @@ import qualified Svod                    as S
 -- See also: "Handler.Verify".
 
 startEmailVerificationCycle
-  :: Text              -- ^ Email address to verify
+  :: Email             -- ^ Email address to verify
   -> Text              -- ^ User name (to mention in email)
   -> UserId            -- ^ Identifier of user
   -> Handler ()
@@ -57,7 +57,7 @@ startEmailVerificationCycle email name uid = do
   setMsg MsgInfo [shamlet|
 Мы выслали вам ссылку для подтверждения регистрации на #
 <strong>
-  #{email}
+  #{unEmail email}
 .
 |]
 #endif
@@ -80,7 +80,7 @@ defaultNonceGen = unsafePerformIO Nonce.new
 
 sendEmail
   :: Text              -- ^ User name
-  -> Text              -- ^ Email address
+  -> Email             -- ^ Email address
   -> Text              -- ^ Verification URL
   -> Handler ()
 sendEmail name email url = do
@@ -101,6 +101,6 @@ sendEmail name email url = do
         , partHeaders  = [] }
   liftIO $ renderSendMail
     (emptyMail $ Address (Just "Проект «Свод»") "noreply")
-    { mailTo      = [Address Nothing email]
+    { mailTo      = [Address Nothing (unEmail email)]
     , mailHeaders = [("Subject", "Подтверждение регистрации")]
     , mailParts   = [[textPart, htmlPart]] }

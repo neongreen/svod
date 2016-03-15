@@ -53,7 +53,7 @@ changeUserProperty action route slug = do
 -- attribute) where modified object (release) can be found.
 
 changeReleaseProperty
-  :: (FConfig -> ReleaseId -> YesodDB App (Either Text a))
+  :: (FConfig -> Maybe Description -> ReleaseId -> YesodDB App (Either Text a))
      -- ^ Action to perform
   -> (Slug -> Slug -> Route App) -- ^ Where to redirect given pair of slugs
   -> Slug              -- ^ Artist slug
@@ -64,7 +64,7 @@ changeReleaseProperty action route aslug rslug = do
   releaseViaSlug aslug rslug $ \_ release -> do
     let rid = entityKey release
     fconfig <- getFConfig
-    outcome <- runDB (action fconfig rid)
+    outcome <- runDB (action fconfig Nothing rid)
     case outcome of
       Left msg -> setMsg MsgDanger (toHtml msg)
       Right _  -> return ()
