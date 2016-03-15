@@ -50,11 +50,13 @@ import Network.Wai.Middleware.RequestLogger
   , destination
   , mkRequestLogger
   , outputFormat )
-import Path (fromRelDir)
+import Path
+import Path.IO
 import System.Log.FastLogger
   ( defaultBufSize
   , newStdoutLoggerSet
   , toLogStr )
+import qualified Svod.LTS as LTS
 
 import Handler.ChangePassword
 import Handler.Favicon
@@ -94,6 +96,8 @@ mkYesodDispatch "App" resourcesApp
 
 makeFoundation :: AppSettings -> IO App
 makeFoundation appSettings = do
+  wdir <- getCurrentDir
+  LTS.prepareRoot . LTS.mkFConfig $ wdir </> appContentDir appSettings
   appHttpManager <- newManager
   appLogger <- newStdoutLoggerSet defaultBufSize >>= makeYesodLogger
   appStatic <-
