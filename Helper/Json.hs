@@ -16,13 +16,15 @@
 
 module Helper.Json
   ( userJson
-  , releaseJson )
+  , releaseJson
+  , paginatedJson )
 where
 
 import Data.Bool (bool)
 import Helper.Rendering (toInt)
 import Import
 import Numeric.Natural
+import qualified Svod as S
 
 -- | Generate complete JSON representation of 'User'.
 
@@ -85,3 +87,13 @@ releaseJson render stars User {..} Release {..} = object
   , "data_url"     .= render (ReleaseDataR     userSlug releaseSlug)
   , "approved_url" .= render (ReleaseApprovedR userSlug releaseSlug)
   , "starrers_url" .= render (ReleaseStarrersR userSlug releaseSlug) ]
+
+-- | Represent paginated result as JSON value.
+
+paginatedJson :: S.Paginated Value -> Value
+paginatedJson S.Paginated {..} = object
+  [ "items"       .= paginatedItems
+  , "total_items" .= paginatedTotal
+  , "total_pages" .= paginatedPages
+  , "page_size"   .= paginatedSize
+  , "page"        .= paginatedPage ]
