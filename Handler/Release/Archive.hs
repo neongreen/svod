@@ -17,7 +17,7 @@ module Handler.Release.Archive
 where
 
 import Helper.Access (releaseViaSlug)
-import Helper.Auth (checkAuthWith)
+import Helper.Auth
 import Helper.Path (getFConfig)
 import Import
 import Path
@@ -35,8 +35,9 @@ getReleaseArchiveR uslug rslug = releaseViaSlug uslug rslug $ \_ release -> do
       Release {..} = entityVal release
       isFinalized  = isJust releaseFinalized
       contentType  = "application/zip"
-  unless isFinalized $
-    checkAuthWith (isSelf uslug <> isStaff)
+  checkAuthWith $ if isFinalized
+    then isVerified
+    else isSelf uslug <> isStaff
   fconfig <- getFConfig
   outcome <- runDB (S.downloadRelease fconfig rid)
   case outcome of

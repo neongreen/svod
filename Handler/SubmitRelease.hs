@@ -22,6 +22,7 @@ where
 import Data.List.NonEmpty (NonEmpty)
 import Data.Maybe (fromJust)
 import Formatting (sformat, int)
+import Helper.Auth
 import Helper.Form
 import Helper.Json (releaseJson)
 import Helper.Path (getFConfig)
@@ -67,6 +68,7 @@ submitReleaseForm html = do
 
 getSubmitReleaseR :: Handler Html
 getSubmitReleaseR = do
+  checkAuthWith isVerified
   (form, enctype) <- generateFormPost submitReleaseForm
   uid <- fromJust <$> maybeAuthId
   serveSubmitRelease uid form enctype
@@ -78,6 +80,7 @@ processReleaseSubmission slug = do
   user <- fromJust <$> maybeAuth
   let u@User {..} = entityVal user
       uid         = entityKey user
+  checkAuthWith isVerified
   status <- runDB (S.canSubmitAgain uid)
   unless (status == S.CanSubmit && slug == userSlug) $
     permissionDenied "Вы не можете опубликовать что-либо сейчас."

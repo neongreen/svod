@@ -16,17 +16,17 @@ module Handler.Verify
 where
 
 import Data.Maybe (fromJust)
+import Helper.Auth
 import Import
 import qualified Svod as S
 
--- | Email verification. Note that this code relies on the fact that
--- authorization system won't let non-logged in users here. See "Foundation"
--- module.
+-- | Email verification.
 
 getVerifyR
   :: Text              -- ^ Verification key
   -> Handler Html
 getVerifyR verkey = do
+  checkAuthWith isUser
   uid <- fromJust <$> maybeAuthId
   key <- fromJust <$> runDB (S.getVerifyKey uid)
   verified <- runDB (S.isVerified uid)

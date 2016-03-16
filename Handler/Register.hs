@@ -21,7 +21,7 @@ module Handler.Register
 where
 
 import Data.Maybe (fromJust)
-import Helper.Auth (checkUserName, checkEmailAddress, checkPassStrength)
+import Helper.Auth
 import Helper.Email (startEmailVerificationCycle)
 import Helper.Form
 import Import

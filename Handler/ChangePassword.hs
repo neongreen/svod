@@ -19,7 +19,7 @@ module Handler.ChangePassword
 where
 
 import Data.Maybe (fromJust)
-import Helper.Auth (checkPassCorrect, checkPassStrength)
+import Helper.Auth
 import Helper.Form
 import Import
 import Yesod.Auth.Email (saltPass)
@@ -48,6 +48,7 @@ changePasswordForm = renderBootstrap3 BootstrapBasicForm $ ChangePasswordForm
 
 getChangePasswordR :: Handler Html
 getChangePasswordR = do
+  checkAuthWith isUser
   (form, enctype) <- generateFormPost changePasswordForm
   serveChangePassword form enctype
 
@@ -55,6 +56,7 @@ getChangePasswordR = do
 
 postChangePasswordR :: Handler Html
 postChangePasswordR = do
+  checkAuthWith isUser
   ((result, form), enctype) <- runFormPost changePasswordForm
   case result of
     FormSuccess ChangePasswordForm {..} ->

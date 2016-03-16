@@ -22,7 +22,7 @@ where
 import Data.Bool (bool)
 import Data.Maybe (fromJust)
 import Helper.Access (userViaSlug)
-import Helper.Auth (checkEmailAddress)
+import Helper.Auth
 import Helper.Email (startEmailVerificationCycle)
 import Helper.Form
 import Import
@@ -76,6 +76,7 @@ userProfileForm User {..} =
 
 getUserProfileR :: Slug -> Handler Html
 getUserProfileR slug = userViaSlug slug $ \user -> do
+  checkAuthWith (isAdmin <> isSelf slug)
   (form, enctype) <- generateFormPost . userProfileForm . entityVal $ user
   serveUserProfile slug form enctype
 
@@ -85,6 +86,7 @@ processUserChange :: Slug -> Handler Html
 processUserChange slug = userViaSlug slug $ \user -> do
   let u@User {..} = entityVal user
       uid         = entityKey user
+  checkAuthWith (isAdmin <> isSelf slug)
   ((result, form), enctype) <- runFormPost (userProfileForm u)
   case result of
     FormSuccess UserProfileForm {..} -> do

@@ -19,6 +19,7 @@ module Handler.Release.Starred
 where
 
 import Helper.Access (userViaSlug, releaseViaSlug)
+import Helper.Auth
 import Helper.Rendering (toInt)
 import Import
 import qualified Svod as S
@@ -51,6 +52,7 @@ starGeneric
   -> Handler TypedContent
 starGeneric action aslug rslug uslug = do
   checkCsrfParamNamed defaultCsrfParamName
+  checkAuthWith (isSelf uslug)
   releaseViaSlug aslug rslug $ \_ release' ->
     userViaSlug uslug $ \starrer' -> do
       let release = entityKey release'

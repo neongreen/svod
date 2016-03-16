@@ -16,6 +16,7 @@ module Handler.User.Banned
   , deleteUserBannedR )
 where
 
+import Helper.Auth
 import Helper.Property (changeUserProperty)
 import Import
 import qualified Svod as S
@@ -26,7 +27,9 @@ import qualified Svod as S
 -- CSRF-protection token in order to succeed.
 
 putUserBannedR :: Slug -> Handler TypedContent
-putUserBannedR = changeUserProperty (S.setBanned True) UserR
+putUserBannedR slug = do
+  checkAuthWith isStaff
+  changeUserProperty (S.setBanned True) UserR slug
 
 -- | Unban a user.
 --
@@ -34,4 +37,6 @@ putUserBannedR = changeUserProperty (S.setBanned True) UserR
 -- CSRF-protection token in order to succeed.
 
 deleteUserBannedR :: Slug -> Handler TypedContent
-deleteUserBannedR = changeUserProperty (S.setBanned False) UserR
+deleteUserBannedR slug = do
+  checkAuthWith isStaff
+  changeUserProperty (S.setBanned False) UserR slug

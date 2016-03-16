@@ -16,6 +16,7 @@ module Handler.User.Follower
   , deleteUserFollowerR )
 where
 
+import Helper.Auth
 import Helper.Access (userViaSlug)
 import Helper.Rendering (toInt)
 import Import
@@ -48,6 +49,7 @@ followGeneric
   -> Handler TypedContent
 followGeneric action targetSlug followerSlug = do
   checkCsrfParamNamed defaultCsrfParamName
+  checkAuthWith (isSelf followerSlug)
   userViaSlug targetSlug $ \target' ->
     userViaSlug followerSlug $ \follower' -> do
       let target   = entityKey target'

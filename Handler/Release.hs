@@ -20,7 +20,7 @@ where
 
 import Handler.Release.Data (processReleaseChange)
 import Helper.Access (releaseViaSlug)
-import Helper.Auth (checkAuthWith)
+import Helper.Auth
 import Helper.Json (releaseJson)
 import Helper.Property (changeReleaseProperty)
 import Helper.Rendering (toInt, renderDescription)

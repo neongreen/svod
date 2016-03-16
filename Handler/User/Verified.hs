@@ -16,6 +16,7 @@ module Handler.User.Verified
   , deleteUserVerifiedR )
 where
 
+import Helper.Auth
 import Helper.Property (changeUserProperty)
 import Import
 import qualified Svod as S
@@ -26,7 +27,9 @@ import qualified Svod as S
 -- CSRF-protection token in order to succeed.
 
 putUserVerifiedR :: Slug -> Handler TypedContent
-putUserVerifiedR = changeUserProperty (S.setVerified True) UserR
+putUserVerifiedR slug = do
+  checkAuthWith isStaff
+  changeUserProperty (S.setVerified True) UserR slug
 
 -- | Unverify user.
 --
@@ -34,4 +37,6 @@ putUserVerifiedR = changeUserProperty (S.setVerified True) UserR
 -- CSRF-protection token in order to succeed.
 
 deleteUserVerifiedR :: Slug -> Handler TypedContent
-deleteUserVerifiedR = changeUserProperty (S.setVerified False) UserR
+deleteUserVerifiedR slug = do
+  checkAuthWith isStaff
+  changeUserProperty (S.setVerified False) UserR slug

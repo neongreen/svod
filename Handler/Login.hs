@@ -18,7 +18,7 @@ module Handler.Login
   , postLoginR )
 where
 
-import Helper.Auth (checkUserName, checkPassCorrect)
+import Helper.Auth
 import Helper.Form
 import Import
 import Yesod.Form.Bootstrap3

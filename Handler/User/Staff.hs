@@ -16,6 +16,7 @@ module Handler.User.Staff
   , deleteUserStaffR )
 where
 
+import Helper.Auth
 import Helper.Property (changeUserProperty)
 import Import
 import qualified Svod as S
@@ -26,7 +27,9 @@ import qualified Svod as S
 -- CSRF-protection token in order to succeed.
 
 putUserStaffR :: Slug -> Handler TypedContent
-putUserStaffR = changeUserProperty (S.setUserStatus StaffUser) UserR
+putUserStaffR slug = do
+  checkAuthWith isAdmin
+  changeUserProperty (S.setUserStatus StaffUser) UserR slug
 
 -- | Make user normal user again.
 --
@@ -34,4 +37,6 @@ putUserStaffR = changeUserProperty (S.setUserStatus StaffUser) UserR
 -- CSRF-protection token in order to succeed.
 
 deleteUserStaffR :: Slug -> Handler TypedContent
-deleteUserStaffR = changeUserProperty (S.setUserStatus NormalUser) UserR
+deleteUserStaffR slug = do
+  checkAuthWith isAdmin
+  changeUserProperty (S.setUserStatus NormalUser) UserR slug

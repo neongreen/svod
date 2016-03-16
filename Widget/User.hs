@@ -17,6 +17,7 @@ module Widget.User
   , userStatusLabelsW )
 where
 
+import Helper.Auth
 import Import
 import Widget.FollowUser (followUserW)
 import qualified Svod as S

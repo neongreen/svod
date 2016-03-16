@@ -16,6 +16,7 @@ module Handler.User.Admin
   , deleteUserAdminR )
 where
 
+import Helper.Auth
 import Helper.Property (changeUserProperty)
 import Import
 import qualified Svod as S
@@ -26,7 +27,9 @@ import qualified Svod as S
 -- CSRF-protection token in order to succeed.
 
 putUserAdminR :: Slug -> Handler TypedContent
-putUserAdminR = changeUserProperty (S.setUserStatus AdminUser) UserR
+putUserAdminR slug = do
+  checkAuthWith isAdmin
+  changeUserProperty (S.setUserStatus AdminUser) UserR slug
 
 -- | Remove admin privileges of a specific user.
 --
@@ -34,4 +37,6 @@ putUserAdminR = changeUserProperty (S.setUserStatus AdminUser) UserR
 -- CSRF-protection token in order to succeed.
 
 deleteUserAdminR :: Slug -> Handler TypedContent
-deleteUserAdminR = changeUserProperty (S.setUserStatus NormalUser) UserR
+deleteUserAdminR slug = do
+  checkAuthWith isAdmin
+  changeUserProperty (S.setUserStatus NormalUser) UserR slug

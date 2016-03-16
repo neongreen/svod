@@ -17,14 +17,22 @@ module Helper.Auth
   , checkEmailAddress
   , checkPassStrength
   , checkPassCorrect
-  , checkAuthWith )
+  , checkAuthWith
+  , isUser
+  , isVerified
+  , isBanned
+  , isStaff
+  , isAdmin
+  , isSelf
+  , ynAuth )
 where
 
+import Data.Bool (bool)
 import Data.Char (isLower, isUpper, isDigit)
 import Import
 import Yesod.Auth.Email (isValidPass)
 import qualified Data.Text as T
-import qualified Svod as S
+import qualified Svod      as S
 
 -- | Check if user with given user name exists (or doesn't exist).
 --
@@ -106,3 +114,54 @@ checkAuthWith authCheck = do
               provideRepType typeJson $
                 void notAuthenticated
     Unauthorized msg -> permissionDenied msg
+
+-- | Select logged-in users (possibly with unverified emails).
+
+isUser :: Handler AuthResult
+isUser = checkWho "Да ну!" (const $ return True)
+
+-- | Select only logged-in users with verified emails.
+
+isVerified :: Handler AuthResult
+isVerified = checkWho "Сначала нужно подтвердить адрес почты." S.isVerified
+
+-- | Select banned users.
+
+isBanned :: Handler AuthResult
+isBanned = checkWho "Необходимо быть забанненным пользователем." S.isBanned
+
+-- | Select staff members (always includes admins).
+
+isStaff :: Handler AuthResult
+isStaff = checkWho "Только персонал Свода имеет доступ." S.isStaff
+
+-- | Select only admins.
+
+isAdmin :: Handler AuthResult
+isAdmin = checkWho "Лишь администратор имеет доступ." S.isAdmin
+
+-- | Finally some pages may be accessed only by their owners.
+
+isSelf :: Slug -> Handler AuthResult
+isSelf slug =
+  checkWho "Только владелец профиля имеет доступ." $ \uid -> do
+    self <- S.getUserBySlug slug
+    return $ (entityKey <$> self) == Just uid
+
+-- | Generalized check of user identity.
+
+checkWho
+  :: Text              -- ^ Message if user doesn't satisfy the predicate
+  -> (UserId -> YesodDB App Bool) -- ^ Predicate
+  -> Handler AuthResult -- ^ Verdict
+checkWho msg f = do
+  muid <- maybeAuthId
+  case muid of
+    Nothing -> return AuthenticationRequired
+    Just u  -> runDB $ bool (Unauthorized msg) Authorized <$> f u
+
+-- | Build “yes or no” variation of the functions above.
+
+ynAuth :: AuthResult -> Bool
+ynAuth Authorized = True
+ynAuth _          = False

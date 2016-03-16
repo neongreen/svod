@@ -20,7 +20,6 @@
 
 module Foundation where
 
-import Data.Bool (bool)
 import Database.Persist.Sql (ConnectionPool, runSqlPool)
 import Handler.Error (svodErrorHandler)
 import Import.NoFoundation
@@ -48,144 +47,7 @@ data App = App
   , appLogger      :: Logger         -- ^ Logger settings
   }
 
-----------------------------------------------------------------------------
--- Define routes, see also 'mkYesodDispatch' in "Application".
-
 mkYesodData "App" $(parseRoutesFile "config/routes")
-
--- | Authorization map. We keep it here for readability. The alternative
--- with route attributes is not type-safe and would require some additional
--- pains to get it truly right. We don't use “catch-all” pattern at the end
--- of this list to force us explicitly select authorization policy for every
--- route, most importantly we don't want to make new routes accessible by
--- default.
---
--- See also: file @config/routes@.
-
-authm :: Route App -> Handler AuthResult
-
--- General
-
-authm HomeR       = return Authorized
-authm FaviconR    = return Authorized
-authm RobotsR     = return Authorized
-authm (StaticR _) = return Authorized
-
--- Registration, authentication, and profile management
-
-authm RegisterR       = return Authorized
-authm (VerifyR _)     = isUser
-authm NotificationsR  = isUser
-authm ChangePasswordR = isUser
-authm SubmitReleaseR  = isVerified
-authm LoginR          = return Authorized
-authm LogoutR         = isUser
-
--- Users
-
-authm UsersR                 = return Authorized
-authm (UserR _)              = return Authorized
-authm (UserProfileR slug)    = isAdmin <> isSelf slug
-authm (UserVerifiedR _)      = isStaff
-authm (UserBannedR _)        = isStaff
-authm (UserStaffR _)         = isAdmin
-authm (UserAdminR _)         = isAdmin
-authm (UserFollowersR _)     = isVerified
-authm (UserFollowerR _ slug) = isSelf slug
-
--- Releases
-
-authm SearchReleasesR            = return Authorized
-authm (ReleasesR _)              = return Authorized
-authm (ReleaseR _ _)             = return Authorized
-authm (ReleaseDataR slug _)      = isAdmin <> isSelf slug
-authm (ReleaseArchiveR _ _)      = isVerified
-authm (ReleaseApprovedR _ _)     = isAdmin
-authm (ReleaseStarrersR _ _)     = isVerified
-authm (ReleaseStarredR _ _ slug) = isSelf slug
-
--- Info articles
-
-authm InfoCodecsR      = return Authorized
-authm InfoContactR     = return Authorized
-authm InfoTourR        = return Authorized
-authm InfoLicensesR    = return Authorized
-authm InfoAboutR       = return Authorized
-authm InfoSupportSvodR = return Authorized
-authm InfoEulaR        = return Authorized
-authm InfoContentR     = return Authorized
-authm InfoMarkdownR    = return Authorized
-
--- | Select logged-in users (possibly with unverified emails).
-
-isUser :: Handler AuthResult
-isUser = checkWho "Да ну!" (const $ return True)
-
--- | Select only logged-in users with verified emails.
-
-isVerified :: Handler AuthResult
-isVerified = checkWho "Сначала нужно подтвердить адрес почты." S.isVerified
-
--- | Select banned users.
-
-isBanned :: Handler AuthResult
-isBanned = checkWho "Необходимо быть забанненным пользователем." S.isBanned
-
--- | Select staff members (always includes admins).
-
-isStaff :: Handler AuthResult
-isStaff = checkWho "Только персонал Свода имеет доступ." S.isStaff
-
--- | Select only admins.
-
-isAdmin :: Handler AuthResult
-isAdmin = checkWho "Лишь администратор имеет доступ." S.isAdmin
-
--- | Finally some pages may be accessed only by their owners.
-
-isSelf :: Slug -> Handler AuthResult
-isSelf slug =
-  checkWho "Только владелец профиля имеет доступ." $ \uid -> do
-    self <- S.getUserBySlug slug
-    return $ (entityKey <$> self) == Just uid
-
--- | Generalized check of user identity.
-
-checkWho
-  :: Text              -- ^ Message if user doesn't satisfy the predicate
-  -> (UserId -> YesodDB App Bool) -- ^ Predicate
-  -> Handler AuthResult -- ^ Verdict
-checkWho msg f = do
-  muid <- maybeAuthId
-  case muid of
-    Nothing -> return AuthenticationRequired
-    Just u  -> runDB $ bool (Unauthorized msg) Authorized <$> f u
-
-instance Semigroup (HandlerT App IO AuthResult) where
-  (<>) = liftM2 ξ
-    -- Combine authentication results. If one of arguments returns
-    -- 'Authorized', the whole thing returns 'Authorized'. Otherwise if at
-    -- least one check returns 'AuthenticationRequired', we return this
-    -- given user a change to get through after login. If the both things
-    -- return 'Unauthorized', we combine the messages unless they are empty.
-    where ξ Authorized _             = Authorized
-          ξ _ Authorized             = Authorized
-          ξ AuthenticationRequired _ = AuthenticationRequired
-          ξ _ AuthenticationRequired = AuthenticationRequired
-          ξ (Unauthorized a) (Unauthorized b)
-            | T.null a  = Unauthorized b
-            | T.null b  = Unauthorized a
-            | otherwise = Unauthorized (a <> " " <> b)
-
-instance Monoid (HandlerT App IO AuthResult) where
-  mempty  = return (Unauthorized T.empty)
-  mappend = (<>)
-
--- | Build “yes or no” variation of the functions above.
-
-ynAuth :: AuthResult -> Bool
-ynAuth Authorized = True
-ynAuth _          = False
 
 ----------------------------------------------------------------------------
 -- Tab selection
@@ -204,16 +66,14 @@ data MenuTab
 -- which of them to highlight for every route.
 
 selectTab :: Route App -> Handler (Maybe MenuTab)
-selectTab RegisterR       = return (Just RegisterTab)
-selectTab LoginR          = return (Just LoginTab)
-selectTab SearchReleasesR = return (Just ReleasesTab)
-selectTab NotificationsR  = return (Just NotificationsTab)
-selectTab ChangePasswordR = return (Just ProfileTab)
-selectTab (UserR slug) =
-  bool Nothing (Just ProfileTab) . ynAuth <$> isSelf slug
-selectTab (UserProfileR slug) =
-  bool Nothing (Just ProfileTab) . ynAuth <$> isSelf slug
-selectTab _ = return Nothing
+selectTab RegisterR        = return (Just RegisterTab)
+selectTab LoginR           = return (Just LoginTab)
+selectTab SearchReleasesR  = return (Just ReleasesTab)
+selectTab NotificationsR   = return (Just NotificationsTab)
+selectTab ChangePasswordR  = return (Just ProfileTab)
+selectTab (UserR _)        = return (Just ProfileTab)
+selectTab (UserProfileR _) = return (Just ProfileTab)
+selectTab _                = return Nothing
 
 ----------------------------------------------------------------------------
 -- Some instances
@@ -253,10 +113,6 @@ instance Yesod App where
 
   authRoute = const (Just LoginR)
 
-  -- See 'authm' above.
-
-  isAuthorized route _ = authm route
-
   -- This function creates static content files in the static folder and
   -- names them based on a hash of their content. This allows expiration
   -- dates to be set far in the future without worry of users receiving
@@ -284,6 +140,26 @@ instance Yesod App where
       || level == LevelError
 
   makeLogger = return . appLogger
+
+instance Semigroup (HandlerT App IO AuthResult) where
+  (<>) = liftM2 ξ
+    -- Combine authentication results. If one of arguments returns
+    -- 'Authorized', the whole thing returns 'Authorized'. Otherwise if at
+    -- least one check returns 'AuthenticationRequired', we return this
+    -- given user a change to get through after login. If the both things
+    -- return 'Unauthorized', we combine the messages unless they are empty.
+    where ξ Authorized _             = Authorized
+          ξ _ Authorized             = Authorized
+          ξ AuthenticationRequired _ = AuthenticationRequired
+          ξ _ AuthenticationRequired = AuthenticationRequired
+          ξ (Unauthorized a) (Unauthorized b)
+            | T.null a  = Unauthorized b
+            | T.null b  = Unauthorized a
+            | otherwise = Unauthorized (a <> " " <> b)
+
+instance Monoid (HandlerT App IO AuthResult) where
+  mempty  = return (Unauthorized T.empty)
+  mappend = (<>)
 
 -- | Almost the same as 'defaultLayout', but does not insert page header and
 -- content div.

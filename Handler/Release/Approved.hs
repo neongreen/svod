@@ -15,6 +15,7 @@ module Handler.Release.Approved
   ( putReleaseApprovedR )
 where
 
+import Helper.Auth
 import Helper.Property (changeReleaseProperty)
 import Import
 import qualified Svod as S
@@ -25,4 +26,6 @@ import qualified Svod as S
 -- CSRF-protection token to succeed.
 
 putReleaseApprovedR :: Slug -> Slug -> Handler TypedContent
-putReleaseApprovedR = changeReleaseProperty S.approveRelease ReleaseR
+putReleaseApprovedR uslug rslug = do
+  checkAuthWith isAdmin
+  changeReleaseProperty S.approveRelease ReleaseR uslug rslug

@@ -20,7 +20,7 @@ where
 
 import Handler.User.Profile (processUserChange)
 import Helper.Access (userViaSlug)
-import Helper.Auth (checkAuthWith)
+import Helper.Auth
 import Helper.Json (userJson)
 import Helper.Path (getFConfig)
 import Helper.Property (changeUserProperty)
