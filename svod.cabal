@@ -141,6 +141,7 @@ library
                     , Widget.DngButton
                     , Widget.DownloadRelease
                     , Widget.FollowUser
+                    , Widget.Pagination
                     , Widget.Release
                     , Widget.StarRelease
                     , Widget.User
