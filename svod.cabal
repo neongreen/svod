@@ -143,6 +143,7 @@ library
                     , Widget.FollowUser
                     , Widget.Pagination
                     , Widget.Release
+                    , Widget.Search
                     , Widget.StarRelease
                     , Widget.User
 
