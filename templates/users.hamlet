@@ -1,0 +1,10 @@
+<div .content>
+  ^{searchW}
+  $if S.paginatedNull paginated
+    <p>
+      Ничего не найдено.
+  $else
+    $forall item <- S.paginatedItems paginated
+      ^{userW item}
+
+  ^{paginationW UsersR paginated}

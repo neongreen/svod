@@ -11,6 +11,7 @@
 -- mini-language from "Svod.Search.User".
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.Users
   ( getUsersR
@@ -18,12 +19,33 @@ module Handler.Users
 where
 
 import Handler.Register (processRegistration)
+import Helper.Json (userJson, paginatedJson)
 import Import
+import Widget.Pagination (lookupPagination, paginationW)
+import Widget.Search (searchW)
+import Widget.User (userW)
+import qualified Svod as S
 
 -- | Serve paginated list of users.
 
 getUsersR :: Handler TypedContent
-getUsersR = undefined -- TODO Also in JSON
+getUsersR = do
+  params    <- lookupPagination
+  paginated <- runDB (S.userQuery params [] []) -- FIXME
+  selectRep $ do
+    -- HTML representation
+    provideRep . noHeaderLayout $ do
+      setTitle "Пользователи"
+      $(widgetFile "users")
+    -- JSON representation
+    provideRep $ do
+      render <- getUrlRender
+      items  <- forM (S.paginatedItems paginated) $ \user -> do
+        let uid = entityKey user
+            val = entityVal user
+        followers <- runDB (S.followerCount uid)
+        return (userJson render followers val)
+      return (paginatedJson $ paginated { S.paginatedItems = items })
 
 -- | Process registration and add new user.
 
