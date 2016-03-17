@@ -92,15 +92,14 @@
           $else
             ^{pageBody pc}
 
-    <footer>
-      <div .panel-footer>
-        <p .text-center>
-          <a href="@{InfoAboutR}">О проекте
-          &middot;
-          <a href="@{InfoEulaR}">Пользовательское соглашение
-          &middot;
-          <a href="@{InfoContactR}">Контактная информация
-          &middot;
-          <a href="@{InfoSupportSvodR}">Поддержать «Свод»
-        <p .text-center>
-          #{copyright}
+    <footer .footer>
+      <p .text-center>
+        <a href="@{InfoAboutR}">О проекте
+        &middot;
+        <a href="@{InfoEulaR}">Пользовательское соглашение
+        &middot;
+        <a href="@{InfoContactR}">Контактная информация
+        &middot;
+        <a href="@{InfoSupportSvodR}">Поддержать «Свод»
+      <p .text-center>
+        #{copyright}
