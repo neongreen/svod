@@ -1,6 +1,11 @@
-<a ##{buttonId}
-   .btn .btn-default :following:.active
-   href="javascript:void(0)"
-   title="Стать подписчиком">
-  <strong ##{counterId}>#{count}
-  <span .glyphicon .glyphicon-eye-open aria-hidden="true">
+<div .btn-group role="group">
+  <a ##{counterId}
+     .btn .btn-default
+     href="@{UserFollowersR tslug}"
+     title="Подписчики этого пользователя">
+    #{count}
+  <a ##{buttonId}
+     .btn .btn-default :following:.active
+     href="javascript:void(0)"
+     title="Стать подписчиком">
+    <span .glyphicon .glyphicon-eye-open aria-hidden="true">

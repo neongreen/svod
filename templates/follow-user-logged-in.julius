@@ -10,7 +10,7 @@ $(#{toJSONId buttonId}).click(function() {
         url:    '@{UserFollowerR tslug userSlug}',
         data:   {#{toJSON defaultCsrfParamName}: xsrfToken},
         success: function (response) {
-            var count = obj.find(#{toJSONId counterId});
+            var count = $(#{toJSONId counterId});
             count.html(response.count);
             if (response.active) obj.addClass('active');
         }
