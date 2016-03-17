@@ -40,9 +40,8 @@ getPendingReleasesR = do
     provideRep $ do
       render <- getUrlRender
       items  <- forM (S.paginatedItems paginated) $ \release -> do
-        let rid = entityKey release
-            val@Release {..} = entityVal release
-        artist   <- fromJust <$> runDB (get releaseArtist)
+        let (Entity rid r@Release {..}) = release
+        u        <- fromJust <$> runDB (get releaseArtist)
         starrers <- runDB (S.starCount rid)
-        return (releaseJson render starrers artist val)
+        return (releaseJson render starrers u r)
       return (paginatedJson $ paginated { S.paginatedItems = items })

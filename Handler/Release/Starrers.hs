@@ -41,8 +41,7 @@ getReleaseStarrersR uslug rslug = releaseViaSlug uslug rslug $ \_ release -> do
     provideRep $ do
       render <- getUrlRender
       items  <- forM (S.paginatedItems paginated) $ \user -> do
-        let uid = entityKey user
-            val = entityVal user
+        let (Entity uid u) = user
         followers <- runDB (S.followerCount uid)
-        return (userJson render followers val)
+        return (userJson render followers u)
       return (paginatedJson $ paginated { S.paginatedItems = items })
