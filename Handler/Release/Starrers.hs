@@ -11,12 +11,38 @@
 -- URL).
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.Release.Starrers
   ( getReleaseStarrersR )
 where
 
+import Helper.Access (releaseViaSlug)
+import Helper.Json (userJson, paginatedJson)
 import Import
+import Widget.Pagination (lookupPagination, paginationW)
+import Widget.User (userW)
+import qualified Svod as S
 
-getReleaseStarrersR :: Slug -> Slug -> Handler Html
-getReleaseStarrersR = undefined -- TODO provide better support in core
+-- | Serve list of users who have starred particular release.
+
+getReleaseStarrersR :: Slug -> Slug -> Handler TypedContent
+getReleaseStarrersR uslug rslug = releaseViaSlug uslug rslug $ \_ release -> do
+  let rid = entityKey release
+      Release {..} = entityVal release
+  params    <- lookupPagination
+  paginated <- runDB (S.starredByPaginated params rid)
+  selectRep $ do
+    -- HTML representation
+    provideRep . defaultLayout $ do
+      setTitle (toHtml $ releaseTitle <> " (подписчики)")
+      $(widgetFile "release-starrers")
+    -- JSON representation
+    provideRep $ do
+      render <- getUrlRender
+      items  <- forM (S.paginatedItems paginated) $ \user -> do
+        let uid = entityKey user
+            val = entityVal user
+        followers <- runDB (S.followerCount uid)
+        return (userJson render followers val)
+      return (paginatedJson $ paginated { S.paginatedItems = items })

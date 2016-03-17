@@ -1,6 +1,11 @@
-<a ##{buttonId}
-   .btn .btn-default :starred:.active
-   href="javascript:void(0)"
-   title="Мне нравится!">
-  <strong ##{counterId}>#{count}
-  <span .glyphicon .glyphicon-star aria-hidden="true">
+<div .btn-group role="group">
+  <a ##{counterId}
+     .btn .btn-default
+     href="@{ReleaseStarrersR aslug rslug}"
+     title="Кто отметил эту публикацию?">
+    #{count}
+  <a ##{buttonId}
+     .btn .btn-default :starred:.active
+     href="javascript:void(0)"
+     title="Мне нравится!">
+    <span .glyphicon .glyphicon-star aria-hidden="true">
