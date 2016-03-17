@@ -22,7 +22,8 @@
                 Демо
       <tr>
         <th>Автор
-        <td><a href="@{UserR uslug}">#{userName}
+        <td>
+          <a href="@{UserR uslug}">#{userName}
       $if isFinalized
         <tr>
           <th>Номер по каталогу
