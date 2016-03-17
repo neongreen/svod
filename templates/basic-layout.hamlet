@@ -58,6 +58,9 @@
                         Висящие публикации
                   $if userVerified user
                     <li>
+                      <a href="@{UserStarsR slug}">
+                        Отмеченные публикации
+                    <li>
                       <a href="@{SubmitReleaseR}">
                         Опубликовать
                     <li .divider role="separator">

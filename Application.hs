@@ -84,6 +84,7 @@ import Handler.User.Follower
 import Handler.User.Followers
 import Handler.User.Profile
 import Handler.User.Staff
+import Handler.User.Stars
 import Handler.User.Verified
 import Handler.Users
 import Handler.Verify

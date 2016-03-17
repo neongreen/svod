@@ -31,6 +31,7 @@
 /кто/#Slug/администратор                       UserAdminR       PUT DELETE
 /кто/#Slug/подписчики                          UserFollowersR   GET
 /кто/#Slug/подписчики/#Slug                    UserFollowerR    PUT DELETE
+/кто/#Slug/отмеченные-публикации               UserStarsR       GET
 
 -- -------------------------------------------------------------------------
 -- Releases
@@ -40,8 +41,8 @@
 /кто/#Slug/что/#Slug/настройки                 ReleaseDataR     GET
 /кто/#Slug/что/#Slug/архив                     ReleaseArchiveR  GET
 /кто/#Slug/что/#Slug/одобрена                  ReleaseApprovedR PUT
-/кто/#Slug/что/#Slug/подписчики                ReleaseStarrersR GET
-/кто/#Slug/что/#Slug/подписчики/#Slug          ReleaseStarredR  PUT DELETE
+/кто/#Slug/что/#Slug/отметили                  ReleaseStarrersR GET
+/кто/#Slug/что/#Slug/отметили/#Slug            ReleaseStarredR  PUT DELETE
 
 -- -------------------------------------------------------------------------
 -- Info articles

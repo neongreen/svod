@@ -1,0 +1,48 @@
+-- |
+-- Module      :  Handler.User.Stars
+-- Copyright   :  © 2016 Mark Karpov
+-- License     :  BSD 3 clause
+--
+-- Maintainer  :  Mark Karpov <markkarpov@openmailbox.org>
+-- Stability   :  experimental
+-- Portability :  portable
+--
+-- Serve list of releases user starred.
+
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE TemplateHaskell   #-}
+
+module Handler.User.Stars
+  ( getUserStarsR )
+where
+
+import Data.Maybe (fromJust)
+import Helper.Access (userViaSlug)
+import Helper.Json (releaseJson, paginatedJson)
+import Import
+import Widget.Pagination (lookupPagination, paginationW)
+import Widget.Release (releaseW)
+import qualified Svod as S
+
+-- | Serve list of releases user starred.
+
+getUserStarsR :: Slug -> Handler TypedContent
+getUserStarsR slug = userViaSlug slug $ \user -> do
+  let uid = entityKey user
+  params    <- lookupPagination
+  paginated <- runDB (S.starredPaginated params uid)
+  selectRep $ do
+    -- HTML representation
+    provideRep . defaultLayout $ do
+      setTitle "Отмеченные публикации"
+      $(widgetFile "user-stars")
+    -- JSON representation
+    provideRep $ do
+      render <- getUrlRender
+      items  <- forM (S.paginatedItems paginated) $ \release -> do
+        let rid = entityKey release
+            val@Release {..} = entityVal release
+        artist <- fromJust <$> runDB (get releaseArtist)
+        starrers <- runDB (S.starCount rid)
+        return (releaseJson render starrers artist val)
+      return (paginatedJson $ paginated { S.paginatedItems = items })

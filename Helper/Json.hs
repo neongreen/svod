@@ -53,6 +53,7 @@ userJson render followers User {..} = object
   , "staff_url"        .= render (UserStaffR     userSlug)
   , "admin_url"        .= render (UserAdminR     userSlug)
   , "followers_url"    .= render (UserFollowersR userSlug)
+  , "stars_url"        .= render (UserStarsR     userSlug)
   , "releases_url"     .= render (ReleasesR      userSlug) ]
   where userAdmin = userStatus == AdminUser
         userStaff = userAdmin || userStatus == StaffUser

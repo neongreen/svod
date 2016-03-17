@@ -35,7 +35,7 @@ getReleaseStarrersR uslug rslug = releaseViaSlug uslug rslug $ \_ release -> do
   selectRep $ do
     -- HTML representation
     provideRep . defaultLayout $ do
-      setTitle (toHtml $ releaseTitle <> " (подписчики)")
+      setTitle (toHtml $ releaseTitle <> " (кто отметил)")
       $(widgetFile "release-starrers")
     -- JSON representation
     provideRep $ do

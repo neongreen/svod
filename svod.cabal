@@ -123,6 +123,7 @@ library
                     , Handler.User.Followers
                     , Handler.User.Profile
                     , Handler.User.Staff
+                    , Handler.User.Stars
                     , Handler.User.Verified
                     , Handler.Users
                     , Handler.Verify
