@@ -67,7 +67,7 @@ getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
 deleteReleaseR :: Slug -> Slug -> Handler TypedContent
 deleteReleaseR uslug rslug = do
   checkAuthWith isAdmin
-  changeReleaseProperty S.deleteRelease (\s _ -> ReleasesR s) uslug rslug
+  changeReleaseProperty S.deleteRelease (\_ _ -> PendingReleasesR) uslug rslug
 
 -- | Partially edit release.
 

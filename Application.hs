@@ -65,6 +65,7 @@ import Handler.Info
 import Handler.Login
 import Handler.Logout
 import Handler.Notifications
+import Handler.PendingReleases
 import Handler.Register
 import Handler.Release
 import Handler.Release.Approved

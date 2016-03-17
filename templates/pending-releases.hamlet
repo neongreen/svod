@@ -1,0 +1,8 @@
+$if S.paginatedNull paginated
+  <p>
+    Очередь пуста.
+$else
+  $forall item <- S.paginatedItems paginated
+    ^{releaseW item}
+
+^{paginationW PendingReleasesR paginated}

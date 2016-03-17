@@ -104,6 +104,7 @@ library
                     , Handler.Login
                     , Handler.Logout
                     , Handler.Notifications
+                    , Handler.PendingReleases
                     , Handler.Register
                     , Handler.Release
                     , Handler.Release.Approved

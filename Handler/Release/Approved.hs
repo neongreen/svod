@@ -28,4 +28,4 @@ import qualified Svod as S
 putReleaseApprovedR :: Slug -> Slug -> Handler TypedContent
 putReleaseApprovedR uslug rslug = do
   checkAuthWith isAdmin
-  changeReleaseProperty S.approveRelease ReleaseR uslug rslug
+  changeReleaseProperty S.approveRelease (\_ _ -> PendingReleasesR) uslug rslug

@@ -15,6 +15,7 @@
 /сменить-пароль                                ChangePasswordR  GET POST
 /опубликовать                                  SubmitReleaseR   GET
 /поиск                                         SearchReleasesR  GET
+/висящие                                       PendingReleasesR GET
 /вход                                          LoginR           GET POST
 /выход                                         LogoutR          GET
 

@@ -52,6 +52,10 @@
                     <a href="@{ChangePasswordR}">
                       Сменить пароль
                   <li .divider role="separator">
+                  $if userStatus user /= NormalUser
+                    <li>
+                      <a href="@{PendingReleasesR}">
+                        Висящие публикации
                   $if userVerified user
                     <li>
                       <a href="@{SubmitReleaseR}">
