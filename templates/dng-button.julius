@@ -5,7 +5,9 @@ $(#{toJSONId buttonId}).click(function() {
         $.ajax({
             method: #{toJSON method},
             url:    '@{route}',
-            data:   {#{toJSON defaultCsrfParamName}: xsrfToken},
+            data:   {#{toJSON defaultCsrfParamName}: xsrfToken,
+                     'message': #{toJSON $ isJust mtext} ?
+                       $(#{toJSONId $ fromMaybe "" $ mtext}).val() : null},
             success: function (response) {
                 window.location.href = response.url;
             }

@@ -41,9 +41,10 @@ dngButtonW
   :: BtnType           -- ^ Control appearance of generated button
   -> Text              -- ^ Button title
   -> Text              -- ^ HTTP method to use
+  -> Maybe Text        -- ^ Optional identifier of text area with message
   -> Route App         -- ^ Route
   -> Widget            -- ^ Button widget
-dngButtonW btnType title method route = do
+dngButtonW btnType title method mtext route = do
   buttonId  <- newIdent
   addScript (StaticR js_cookie_js)
   $(widgetFile "dng-button")

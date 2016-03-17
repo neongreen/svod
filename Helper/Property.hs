@@ -20,6 +20,7 @@ import Helper.Access (userViaSlug, releaseViaSlug)
 import Helper.Path (getFConfig)
 import Import
 import Svod.LTS (FConfig)
+import qualified Data.Text as T
 
 -- | Generalized action that mutates some property of users' account and
 -- redirects to specified route.
@@ -63,8 +64,10 @@ changeReleaseProperty action route aslug rslug = do
   checkCsrfParamNamed defaultCsrfParamName
   releaseViaSlug aslug rslug $ \_ release -> do
     let rid = entityKey release
+        g x = if T.null x then Nothing else Just (mkDescription x)
     fconfig <- getFConfig
-    outcome <- runDB (action fconfig Nothing rid)
+    message <- (>>= g) <$> lookupPostParam "message"
+    outcome <- runDB (action fconfig message rid)
     case outcome of
       Left msg -> setMsg MsgDanger (toHtml msg)
       Right _  -> return ()

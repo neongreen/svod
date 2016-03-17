@@ -55,6 +55,7 @@ getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
     -- HTML representation
     provideRep . noHeaderLayout $ do
       setTitle (toHtml releaseTitle)
+      adminTextAreaId <- newIdent
       $(widgetFile "release")
     -- JSON representation
     provideRep $ do

@@ -60,9 +60,13 @@
       <div .panel-heading>
         <h3 .panel-title>Административные действия
       <div .panel-body>
+        <div .form-group>
+          <label for="#{adminTextAreaId}">
+            Комментарий
+          <textarea ##{adminTextAreaId} .form-control>
         $if not isFinalized
-          ^{dngButtonW BtnSuccess "Одобрить" "PUT" $ ReleaseApprovedR uslug rslug}
-        ^{dngButtonW BtnDanger "Удалить" "DELETE" $ ReleaseR uslug rslug}
+          ^{dngButtonW BtnSuccess "Одобрить" "PUT" (Just adminTextAreaId) (ReleaseApprovedR uslug rslug)}
+        ^{dngButtonW BtnDanger "Удалить" "DELETE" (Just adminTextAreaId) (ReleaseR uslug rslug)}
 
   <h2>Описание #
     $if (not isFinalized && ownerHere) || adminHere
