@@ -3,5 +3,5 @@
   <button .btn .btn-primary type="submit">
     Готово
   <em>Нажимая эту кнопку, вы принимаете условия #
-    <a href="@{InfoEulaR}">пользовательского соглашения#
+    <a href="@{InfoEulaR}" target="_blank">пользовательского соглашения#
     .

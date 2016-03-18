@@ -2,7 +2,7 @@
   <form method="get" action="#">
     <div .input-group>
       <input type="text" .form-control placeholder="Найти…" autofocus>
-      <span .input-group-btn>
-        <a href="#" .btn .btn-default title="Помошь">
+      <div .input-group-btn>
+        <a href="#" target="_blank" .btn .btn-default title="Помошь">
           <span .glyphicon .glyphicon-question-sign>
         <button .btn .btn-default type="submit">Поехали!
