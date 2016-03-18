@@ -12,6 +12,7 @@
 /регистрация                                   RegisterR        GET
 /подтверждение/#Text                           VerifyR          GET
 /уведомления                                   NotificationsR   GET
+/уведомления/#NotificationId                   NotificationSeenR PUT
 /сменить-пароль                                ChangePasswordR  GET POST
 /опубликовать                                  SubmitReleaseR   GET
 /поиск                                         SearchReleasesR  GET

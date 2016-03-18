@@ -103,6 +103,7 @@ library
                     , Handler.Info
                     , Handler.Login
                     , Handler.Logout
+                    , Handler.NotificationSeen
                     , Handler.Notifications
                     , Handler.PendingReleases
                     , Handler.Register
@@ -143,6 +144,7 @@ library
                     , Widget.DngButton
                     , Widget.DownloadRelease
                     , Widget.FollowUser
+                    , Widget.Notification
                     , Widget.Pagination
                     , Widget.Release
                     , Widget.Search

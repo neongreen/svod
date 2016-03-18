@@ -1,0 +1,17 @@
+$(#{toJSONId buttonId}).click(function() {
+    var button = $(this);
+    var panel  = $(#{toJSONId panelId});
+    var xsrfToken =
+        Cookies.get(#{toJSON $ TE.decodeUtf8 $ defaultCsrfCookieName});
+    $.ajax({
+        method: 'PUT',
+        url:    '@{NotificationSeenR nid}',
+        data:   {#{toJSON defaultCsrfParamName}: xsrfToken},
+        success: function (response) {
+            panel.removeClass('panel-info');
+            panel.addClass('panel-default');
+            button.remove();
+        }
+    });
+
+});

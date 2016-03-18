@@ -16,7 +16,7 @@
           <a .navbar-brand href="@{HomeR}" title="Свод">
             СВОД
         <ul .nav .navbar-nav .navbar-right>
-          $maybe user <- muser
+          $maybe user <- entityVal <$> muser
             $with slug <- userSlug user
               <li>
                 <a .menu-item :releasesTab:.menu-mark
@@ -25,6 +25,7 @@
                   <span .glyphicon .glyphicon-search aria-hidden="true">
               <li>
                 <a .menu-item :notificsTab:.menu-mark
+                   :unseenNoti:.unseen-notification
                    href="@{NotificationsR}"
                    title="Уведомления">
                   <span .glyphicon .glyphicon-bell aria-hidden="true">

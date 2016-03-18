@@ -64,6 +64,7 @@ import Handler.Home
 import Handler.Info
 import Handler.Login
 import Handler.Logout
+import Handler.NotificationSeen
 import Handler.Notifications
 import Handler.PendingReleases
 import Handler.Register

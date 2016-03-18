@@ -1,0 +1,8 @@
+$if S.paginatedNull paginated
+  <p>
+    Вы пока не получили никаких уведомлений.
+$else
+  $forall (seen, item) <- S.paginatedItems paginated
+    ^{notificationW seen item}
+
+^{paginationW NotificationsR paginated}

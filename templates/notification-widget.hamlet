@@ -1,0 +1,63 @@
+<div .panel :seen:.panel-default :unseen:.panel-info ##{panelId}>
+  <div .panel-heading>
+    <h3 .panel-title>
+      $case notificationType
+        $of NotiSubmitted
+          Новая заявка
+        $of NotiApproved
+          Публикация одобрена
+        $of NotiRejected
+          Публикация отвергнута
+        $of NotiDeleted
+          Публикация удалена
+        $of NotiReleased
+          Новая публикация
+        $of NotiReviewed
+          Новая рецензия
+      \ (#{timePretty timeZoneOffset notificationDate}) #
+      $if unseen
+        <a href="javascript:void(0)" ##{buttonId}
+           title="Отметить как прочитанное">✓
+  <div .panel-body>
+    $case notificationType
+      $of NotiSubmitted
+        Поступила новая заявка: #
+        <a href="@{releaseR}">#{notificationRelease}#
+        .
+
+      $of NotiApproved
+        Ваша работа #
+        <a href="@{releaseR}">#{notificationRelease}#
+
+        \ одобрена!
+
+      $of NotiRejected
+        Ваша работа #
+        <a href="@{releaseR}">#{notificationRelease}#
+
+        \ отвергнута. Это не значит, что музыка плохая. В таком субъективном
+        деле как искусство можно иметь мнения, а не вердикты. Вероятно, ваша
+        работа просто не вписывается в наш проект. Удачи в вашей музыкальной
+        карьере!
+
+      $of NotiDeleted
+        Работа #
+        <a href="@{releaseR}">#{notificationRelease}#
+
+        \ была удалена. Причиной этого может являться желание автора или
+        судебное решение.
+
+      $of NotiReleased
+        <a href="@{artistR}">#{notificationArtist}#
+        \ опубликовал #
+        <a href="@{releaseR}">#{notificationRelease}#
+        \.
+
+      $of NotiReviewed
+        Добавлена новая рецензия к #
+        <a href="@{releaseR}">#{notificationRelease}#
+        .
+
+  $maybe desc <- notificationDescription
+    <div .panel-footer>
+      #{renderDescription desc}

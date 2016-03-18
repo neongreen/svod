@@ -175,7 +175,7 @@ basicLayout
   -> Widget            -- ^ Widget to render
   -> Handler Html
 basicLayout makeHeader widget = do
-  muser     <- fmap entityVal <$> maybeAuth
+  muser     <- maybeAuth
   copyright <- appCopyright . appSettings <$> getYesod
   mroute    <- getCurrentRoute
   tab       <- maybe (return Nothing) selectTab mroute
@@ -184,6 +184,9 @@ basicLayout makeHeader widget = do
       releasesTab = tab == Just ReleasesTab
       notificsTab = tab == Just NotificationsTab
       profileTab  = tab == Just ProfileTab
+  unseenNoti <- case entityKey <$> muser of
+    Nothing -> return False
+    Just uid -> runDB (S.hasUnseenNotifications uid)
   mmsg      <- getMessage
 
   -- We break up the default layout into two components: default-layout is

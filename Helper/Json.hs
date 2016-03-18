@@ -17,6 +17,7 @@
 module Helper.Json
   ( userJson
   , releaseJson
+  , notificationJson
   , paginatedJson )
 where
 
@@ -88,6 +89,24 @@ releaseJson render stars User {..} Release {..} = object
   , "data_url"     .= render (ReleaseDataR     userSlug releaseSlug)
   , "approved_url" .= render (ReleaseApprovedR userSlug releaseSlug)
   , "starrers_url" .= render (ReleaseStarrersR userSlug releaseSlug) ]
+
+-- | Generate complete JSON representation of 'Notification'.
+
+notificationJson
+  :: (Route App -> Text) -- ^ Route render
+  -> Entity Notification -- ^ Actual 'Notification' object
+  -> Value
+notificationJson render (Entity nid Notification {..}) = object
+  [ "type"        .= show notificationType
+  , "mark_as_seen_url" .= render (NotificationSeenR nid)
+  , "artist_url"  .= (render . UserR <$> muserSlug)
+  , "release_url" .= (render <$> (ReleaseR <$> muserSlug <*> mreleaseSlug))
+  , "description" .= notificationDescription
+  , "date"        .= renderISO8601 notificationDate ]
+  where
+    muserSlug, mreleaseSlug :: Maybe Slug
+    muserSlug = mkSlug notificationArtist
+    mreleaseSlug = mkSlug notificationRelease
 
 -- | Represent paginated result as JSON value.
 
