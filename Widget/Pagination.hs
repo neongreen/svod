@@ -72,9 +72,9 @@ mkPageLink route params' n' = (route, (pageNumParam, n) : params)
 -- | Name of “page size” query string parameter.
 
 pageSizeParam :: Text
-pageSizeParam = "pagesize"
+pageSizeParam = "на_стр"
 
 -- | Name of “page number” query string parameter.
 
 pageNumParam :: Text
-pageNumParam = "page"
+pageNumParam = "стр"
