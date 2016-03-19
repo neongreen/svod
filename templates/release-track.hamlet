@@ -56,3 +56,19 @@ $maybe desc <- renderDescription <$> trackDescription
 $nothing
   <p>
     Автор не предоставил текста песни или подробного описания.
+
+$if ownerHere || staffHere
+  <a .btn .btn-default href="javascript:void(0)" ##{togglerId}
+     title="Панель редактирования">
+    <span .glyphicon .glyphicon-pencil>
+
+  <form method="post" action="@{ReleaseTrackR uslug rslug tslug}?_method=PUT"
+        enctype="#{enctype}" ##{formId} style="display: none;">
+    ^{form}
+    <p>
+      <span .glyphicon .glyphicon-arrow-up aria-hidden="true">
+      В этом поле можно использовать #
+      <a href="@{InfoMarkdownR}" target="_blank">специальный язык разметки#
+      .
+    <button .btn .btn-primary type="submit">
+      Изменить

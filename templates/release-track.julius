@@ -1,0 +1,6 @@
+$(#{toJSONId togglerId}).click(function() {
+    var form = $(#{toJSONId formId});
+    form.toggle();
+    $("textarea").height($("textarea")[0].scrollHeight);
+    $(this).toggleClass("active");
+});
