@@ -2,36 +2,53 @@ $if S.paginatedHasOtherPages p
   <nav .pull-left>
     <ul .pagination>
       <li :noPrev:.disabled>
-        <a href="@?{toPage $ paginatedPage - 1}"
-           title="Предыдущая страница"
-           aria-label="Предыдущая страница">
-          <span aria-hidden="true">&laquo;
+        $if noPrev
+          <span aria-hidden="true">
+            <span .glyphicon .glyphicon-chevron-left>
+        $else
+          <a href="@?{toPage $ paginatedPage - 1}"
+             title="Предыдущая страница"
+             aria-label="Предыдущая страница">
+            <span aria-hidden="true">
+              <span .glyphicon .glyphicon-chevron-left>
       $if firstSpec
         <li>
           <a href="@?{toPage 1}" aria-hidden="true"
              title="Перейти к странице 1">
-            <span aria-hidden="true">1
+            <span aria-hidden="true">
+              <strong>
+                1
       $if backwardEllip
         <li .disabled>
-          <a href="@?{toPage 0}" aria-hidden="true">
-            <span aria-hidden="true">&hellip;
+          <span aria-hidden="true">
+            <strong>
+              &hellip;
       $forall page <- pageRange
         $with activePage <- page == paginatedPage
           <li :activePage:.active>
             <a href="@?{toPage page}" aria-label="#{toInt page}"
                title="Перейти к странице #{toInt page}">
-              #{toInt page}
+              <strong>
+                #{toInt page}
       $if forwardEllip
         <li .disabled>
-          <a href="@?{toPage 0}" aria-hidden="true">
-            <span aria-hidden="true">&hellip;
+          <span aria-hidden="true">
+            <strong>
+              &hellip;
       $if lastSpec
         <li>
           <a href="@?{toPage paginatedPages}" aria-hidden="true"
              title="Перейти к странице #{toInt paginatedPages}">
-            <span aria-hidden="true">#{toInt paginatedPages}
+            <span aria-hidden="true">
+              <strong>
+                #{toInt paginatedPages}
       <li :noNext:.disabled>
-        <a href="@?{toPage $ paginatedPage + 1}"
-           title="Следующая страница"
-           aria-label="Следующая страница">
-          <spen aria-hidden="true">&raquo;
+        $if noNext
+          <span aria-hidden="true">
+            <span .glyphicon .glyphicon-chevron-right>
+        $else
+          <a href="@?{toPage $ paginatedPage + 1}"
+             title="Следующая страница"
+             aria-label="Следующая страница">
+            <span aria-hidden="true">
+              <span .glyphicon .glyphicon-chevron-right>
