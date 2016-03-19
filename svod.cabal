@@ -114,6 +114,7 @@ library
                     , Handler.Release.Starred
                     , Handler.Release.Starrers
                     , Handler.Release.Track
+                    , Handler.Release.Tracks
                     , Handler.Releases
                     , Handler.Robots
                     , Handler.SearchReleases

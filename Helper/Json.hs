@@ -87,6 +87,7 @@ releaseJson render stars User {..} Release {..} = object
   , "license_url"  .= licenseUrl releaseLicense
   , "artist_url"   .= render (UserR userSlug)
   , "archive_url"  .= render (ReleaseArchiveR  userSlug releaseSlug)
+  , "tracks_url"   .= render (ReleaseTracksR   userSlug releaseSlug)
   , "data_url"     .= render (ReleaseDataR     userSlug releaseSlug)
   , "approved_url" .= render (ReleaseApprovedR userSlug releaseSlug)
   , "starrers_url" .= render (ReleaseStarrersR userSlug releaseSlug) ]
