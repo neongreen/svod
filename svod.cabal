@@ -113,6 +113,7 @@ library
                     , Handler.Release.Data
                     , Handler.Release.Starred
                     , Handler.Release.Starrers
+                    , Handler.Release.Track
                     , Handler.Releases
                     , Handler.Robots
                     , Handler.SearchReleases

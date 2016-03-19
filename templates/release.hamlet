@@ -101,7 +101,9 @@
         $forall track <- tracks
           <tr>
             <td>#{toInt $ trackNumber track}
-            <td>#{trackTitle track}
+            <td>
+              <a href="@{ReleaseTrackR uslug rslug $ S.getTrackSlug track}">
+                #{trackTitle track}
             <td>#{durationPretty $ trackDuration track}
         <tr>
           <td>Σ

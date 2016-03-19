@@ -17,6 +17,7 @@
 module Helper.Json
   ( userJson
   , releaseJson
+  , trackJson
   , notificationJson
   , paginatedJson )
 where
@@ -89,6 +90,29 @@ releaseJson render stars User {..} Release {..} = object
   , "data_url"     .= render (ReleaseDataR     userSlug releaseSlug)
   , "approved_url" .= render (ReleaseApprovedR userSlug releaseSlug)
   , "starrers_url" .= render (ReleaseStarrersR userSlug releaseSlug) ]
+
+-- | Generate JSON representation of track.
+
+trackJson
+  :: (Route App -> Text) -- ^ Route render
+  -> User              -- ^ User, author of release
+  -> Release           -- ^ Parent release of track
+  -> Track             -- ^ Track description
+  -> Value
+trackJson render User {..} Release {..} track@Track {..} = object
+  [ "number"        .= toInt trackNumber
+  , "title"         .= trackTitle
+  , "slug"          .= trackSlug
+  , "description"   .= trackDescription
+  , "duration"      .= unDuration trackDuration
+  , "sample_rate"   .= toInt trackSampleRate
+  , "bit_rate"      .= toInt trackBitRate
+  , "sample_format" .= trackSampleRate
+  , "channels"      .= toInt trackChannels
+  , "url"           .= render (ReleaseTrackR userSlug releaseSlug trackSlug)
+  , "artist_url"    .= render (UserR userSlug)
+  , "release_url"   .= render (ReleaseR userSlug releaseSlug) ]
+  where trackSlug = S.getTrackSlug track
 
 -- | Generate complete JSON representation of 'Notification'.
 

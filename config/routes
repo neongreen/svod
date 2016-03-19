@@ -39,6 +39,7 @@
 
 /кто/#Slug/что                                 ReleasesR        GET POST
 /кто/#Slug/что/#Slug                           ReleaseR         GET DELETE PATCH
+/кто/#Slug/что/#Slug/записи/#Slug              ReleaseTrackR    GET
 /кто/#Slug/что/#Slug/настройки                 ReleaseDataR     GET
 /кто/#Slug/что/#Slug/архив                     ReleaseArchiveR  GET
 /кто/#Slug/что/#Slug/одобрена                  ReleaseApprovedR PUT

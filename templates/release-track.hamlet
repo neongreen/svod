@@ -1,0 +1,58 @@
+<div .form-group>
+  <div .btn-group role="group" aria-label="Предыдущие записи">
+    <a .btn .btn-default
+       title="Первая запись"
+       href="@{ReleaseTrackR uslug rslug firstSlug}">
+      <span .glyphicon .glyphicon-fast-backward aria-hidden="true">
+    <a .btn .btn-default
+       title="Предыдущая запись"
+       href="@{ReleaseTrackR uslug rslug prevSlug}">
+      <span .glyphicon .glyphicon-step-backward aria-hidden="true">
+
+  <a .btn .btn-default
+     title="Перейти к публикации"
+     href="@{ReleaseR uslug rslug}">
+    <span .glyphicon .glyphicon-cd aria-hidden="true">
+  <a .btn .btn-default
+     title="Перейти к страничке автора"
+     href="@{UserR uslug}">
+    <span .glyphicon .glyphicon-user aria-hidden="true">
+
+  <div .btn-group role="group" aria-label="Следующие записи">
+    <a .btn .btn-default
+       title="Следующая запись"
+       href="@{ReleaseTrackR uslug rslug nextSlug}">
+      <span .glyphicon .glyphicon-step-forward aria-hidden="true">
+    <a .btn .btn-default
+       title="Последняя запись"
+       href="@{ReleaseTrackR uslug rslug lastSlug}">
+      <span .glyphicon .glyphicon-fast-forward aria-hidden="true">
+
+<div .progress>
+  <div .progress-bar .progress-bar-info style="width: #{posStart}%;">
+  <div .progress-bar style="width: #{posLength}%;">
+    #{toInt trackNumber}
+  <div .progress-bar .progress-bar-info style="width: #{posRest}%;">
+
+<div .panel .panel-info>
+  <div .panel-heading>
+    <h3 .panel-title>Технические характеристики
+  <table .table>
+    <tr>
+      <th>Длительность
+      <th>ЧД, Гц
+      <th>Битрейт
+      <th>Формат сэмпла
+      <th>Каналы
+    <tr>
+      <td>#{durationPretty trackDuration}
+      <td>#{toInt trackSampleRate}
+      <td>#{toInt trackBitRate}
+      <td>#{trackSampleFormat}
+      <td>#{toInt trackChannels}
+
+$maybe desc <- renderDescription <$> trackDescription
+  #{desc}
+$nothing
+  <p>
+    Автор не предоставил текста песни или подробного описания.
