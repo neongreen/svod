@@ -2,3 +2,7 @@ $(#{toJSONId buttonId}).popover({
     trigger: 'hover',
     content: 'Войдите или зарегистрируйтесь чтобы отмечать публикации.'
 });
+
+$(#{toJSONId buttonId}).click(function(event) {
+    window.location.href = '@{LoginR}';
+});

@@ -5,4 +5,5 @@ $(#{toJSONId buttonId}).popover({
 
 $(#{toJSONId buttonId}).click(function(event) {
     event.preventDefault();
+    window.location.href = '@{LoginR}';
 });
