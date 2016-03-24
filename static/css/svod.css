@@ -79,6 +79,9 @@ body {
         color: #fff;
         text-shadow: 0px 0px 8px #fff;
     }
+    100% {
+        color: #3090ef;
+    }
 }
 
 .unseen-notification {
