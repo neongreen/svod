@@ -29,12 +29,12 @@ import qualified Svod as S
 getNotificationsR :: Handler TypedContent
 getNotificationsR = do
   checkAuthWith isUser
-  uid       <- fromJust <$> maybeAuthId
+  (Entity uid User {..}) <- fromJust <$> maybeAuth
   params    <- lookupPagination
   paginated <- runDB (S.getUserNotifications params uid)
   selectRep $ do
     -- HTML representation
-    provideRep . defaultLayout $ do
+    provideRep . noHeaderLayout $ do
       setTitle "Уведомления"
       $(widgetFile "notifications")
     provideRep $ do

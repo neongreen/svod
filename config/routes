@@ -30,6 +30,7 @@
 /кто/#Slug/забанен                             UserBannedR      PUT DELETE
 /кто/#Slug/сотрудник                           UserStaffR       PUT DELETE
 /кто/#Slug/администратор                       UserAdminR       PUT DELETE
+/кто/#Slug/подписки                            UserFollowingR   GET
 /кто/#Slug/подписчики                          UserFollowersR   GET
 /кто/#Slug/подписчики/#Slug                    UserFollowerR    PUT DELETE
 /кто/#Slug/отмеченные-публикации               UserStarsR       GET

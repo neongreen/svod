@@ -85,6 +85,7 @@ import Handler.User.Admin
 import Handler.User.Banned
 import Handler.User.Follower
 import Handler.User.Followers
+import Handler.User.Following
 import Handler.User.Profile
 import Handler.User.Staff
 import Handler.User.Stars

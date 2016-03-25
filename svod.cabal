@@ -124,6 +124,7 @@ library
                     , Handler.User.Banned
                     , Handler.User.Follower
                     , Handler.User.Followers
+                    , Handler.User.Following
                     , Handler.User.Profile
                     , Handler.User.Staff
                     , Handler.User.Stars

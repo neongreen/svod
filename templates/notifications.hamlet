@@ -1,8 +1,17 @@
-$if S.paginatedNull paginated
-  <p>
-    Вы пока не получили никаких уведомлений.
-$else
-  $forall (seen, item) <- S.paginatedItems paginated
-    ^{notificationW seen item}
+<div .page-header>
+  <h1>Уведомления #
+    <a .btn .btn-default
+       title="Управление подписками"
+       href="@{UserFollowingR userSlug}">
+      <span .glyphicon .glyphicon-cog aria-hidden="true">
 
-^{paginationW NotificationsR paginated}
+<div .content>
+
+  $if S.paginatedNull paginated
+    <p>
+      Вы пока не получили никаких уведомлений.
+  $else
+    $forall (seen, item) <- S.paginatedItems paginated
+      ^{notificationW seen item}
+
+  ^{paginationW NotificationsR paginated}
