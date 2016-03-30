@@ -1,23 +1,28 @@
 <fieldset ##{trackListId}>
-  $forall index <- indicies
+  $forall (index, meat) <- items
     $with thisId <- baseId <> index
-      $with (isFirst, nonFirst) <- (index == "1", index /= "1")
-        $with isRequired <- isFirst && required
-          <div .row ##{thisId} :nonFirst:.invisible-field>
+      $with isDisabled <- not ((==) index "1" || isJust meat)
+        $with isRequired <- (==) index "1" || required
+          <div .row ##{thisId} :isDisabled:.invisible-field>
             <div .col-lg-6>
               <div .input-group>
                 <span .input-group-addon ##{thisId <> "-aria"}>#{index}
                 <input type="text" name="#{name}" *{attrs}
-                       :isRequired:required :nonFirst:disabled
+                       :isRequired:required :isDisabled:disabled
+                       value="#{maybe "" fst meat}"
                        aria-describedby="#{thisId <> "-aria"}">
             <div .col-lg-6>
               <input type="file" name="#{name}" accept="audio/flac"
-                     :isRequired:required :nonFirst:disabled>
+                     value="#{maybe "" (fileName . snd) meat}"
+                     :isRequired:required :isDisabled:disabled>
 
 <div .pad-around>
   <a ##{addTrackId} .btn .btn-default href="javascript:void(0)"
      title="Добавить запись">
     <span .glyphicon .glyphicon-plus>
-  <a ##{remTrackId} .btn .btn-default .disabled href="javascript:void(0)"
-     title="Убрать запись">
-    <span .glyphicon .glyphicon-minus>
+  $with isDisabled <- length (filter (isJust . snd) items) < 2
+    <a ##{remTrackId} .btn .btn-default
+       :isDisabled:.disabled
+       href="javascript:void(0)"
+       title="Убрать запись">
+      <span .glyphicon .glyphicon-minus>

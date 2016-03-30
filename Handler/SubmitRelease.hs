@@ -42,7 +42,7 @@ data SubmitReleaseForm = SubmitReleaseForm
   , srLicense :: License               -- ^ License of the work
   , srGenre   :: Maybe Text            -- ^ Genre (if any)
   , srYear    :: Int                   -- ^ Year of publication
-  , srTracks  :: NonEmpty S.CreateFile -- ^ Tracks to create
+  , srTracks  :: NonEmpty (Text, FileInfo) -- ^ Tracks to create
   , srDemo    :: Bool                  -- ^ Is this a demo?
   , srDesc    :: Textarea              -- ^ Description of the release
   }
@@ -87,14 +87,16 @@ processReleaseSubmission slug = do
   ((result, form), enctype) <- runFormPost submitReleaseForm
   case result of
     FormSuccess SubmitReleaseForm {..} -> do
-      let rm = S.ReleaseMeta
+      let toCreateFile (t, f) =
+            S.CreateFile (H.mkTitle t) (fileMove f . fromAbsFile)
+          rm = S.ReleaseMeta
             { rmArtist  = uid
             , rmAlbum   = H.mkAlbum srTitle
             , rmGenre   = H.mkGenre <$> srGenre
             , rmYear    = fromJust (H.mkYear srYear)
             , rmDesc    = mkDescription (unTextarea srDesc)
             , rmLicense = srLicense
-            , rmTracks  = srTracks }
+            , rmTracks  = toCreateFile <$> srTracks }
       fconfig <- getFConfig
       outcome <- runDB (S.submitRelease fconfig rm srDemo)
       case outcome of
@@ -183,21 +185,22 @@ yearField miny maxy = check checkYear intField
 -- Every field /must/ provide name of track and actual audio file in FLAC
 -- format.
 
-tracksField :: Field Handler (NonEmpty S.CreateFile)
+tracksField :: Field Handler (NonEmpty (Text, FileInfo))
 tracksField = Field parse view Multipart
   where parse titles' files' =
           return . either (Left . SomeMessage) (Right . Just) $ do
             titles <- mapM checkTitle titles'
             files  <- mapM checkUploadedFile files'
-            let toCreateFile t f =
-                  S.CreateFile (H.mkTitle t) (fileMove f . fromAbsFile)
-            return . NE.fromList $ zipWith toCreateFile titles files
-        view ident name attrs _ required =
+            return . NE.fromList $ zip titles files
+        view ident name attrs given required =
           let baseId      = ident  <> "-"
               addTrackId  = baseId <> "add-track"
               remTrackId  = baseId <> "rem-track"
               trackListId = baseId <> "tracklist"
-              indicies    = sformat int <$> [1..S.maxTrackNumber]
+              nums        = sformat int <$> [1..S.maxTrackNumber]
+              items       = zip nums $ case given of
+                Left _ -> repeat Nothing
+                Right xs -> NE.toList (Just <$> xs) ++ repeat Nothing
           in $(widgetFile "tracks-field")
 
 -- | Check single title. TODO Add additional checks here.
