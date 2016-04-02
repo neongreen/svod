@@ -31,7 +31,7 @@ $(#{toJSONId remTrackId}).click(function() {
         $(#{toJSONId addTrackId}).removeClass('disabled');
 });
 
-$('input[type=file]').change(function() {
+$('input[type=file][name=' + #{toJSON name} + ']').change(function() {
     var file = $(this);
     var row = file.parents().eq(1);
     var title_input = row.find('input[type=text]');
