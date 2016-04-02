@@ -188,17 +188,10 @@ basicLayout makeHeader widget = do
     Nothing -> return False
     Just uid -> runDB (S.hasUnseenNotifications uid)
   mmsg      <- getMessage
-
-  -- We break up the default layout into two components: default-layout is
-  -- the contents of the body tag, and default-layout-wrapper is the
-  -- entire page. Since the final value passed to 'hamletToRepHtml' cannot
-  -- be a widget, this allows to use normal widget features in
-  -- default-layout.
-
-  pc <- widgetToPageContent $ do
+  pc        <- widgetToPageContent $ do
     addScriptRemote "https://code.jquery.com/jquery-latest.min.js"
     $(combineStylesheets 'StaticR [css_bootstrap_min_css, css_svod_css])
-    $(combineScripts     'StaticR [js_bootstrap_min_js,   js_svod_js])
+    addScript (StaticR js_bootstrap_min_js)
     widget
   withUrlRenderer $(hamletFile "templates/basic-layout.hamlet")
 
