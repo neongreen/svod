@@ -30,3 +30,15 @@ $(#{toJSONId remTrackId}).click(function() {
     if (index < #{toJSON $ toInt S.maxTrackNumber})
         $(#{toJSONId addTrackId}).removeClass('disabled');
 });
+
+$('input[type=file]').change(function() {
+    var file = $(this);
+    var row = file.parents().eq(1);
+    var title_input = row.find('input[type=text]');
+    var title = file.val();
+    title = title.substring(0, title.lastIndexOf('.flac'));
+    var i = title.indexOf(' ');
+    if (/^\d+$/.test(title.substring(0, i)))
+        title = title.substring(i + 1);
+    title_input.val(title);
+});
