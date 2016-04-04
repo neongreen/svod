@@ -3,7 +3,7 @@ packages:
 - '.'
 - location:
     git: https://github.com/svod-music/svod-core.git
-    commit: f10e4c0d16bb6896d1d12e59574785461370f3f4
+    commit: 0be16b040c8ec32474968fc016217fe0e7763042
 flags:
   svod:
     library-only: false

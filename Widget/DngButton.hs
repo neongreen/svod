@@ -35,7 +35,9 @@ data BtnType
   | BtnDanger
   | BtnLink
 
--- | Generate button to execute a dangerous action.
+-- | Generate button to execute a dangerous action. If identifier of text
+-- area is supplied (fourth argument), then add @\"message\"@ parameter with
+-- that text added.
 
 dngButtonW
   :: BtnType           -- ^ Control appearance of generated button
