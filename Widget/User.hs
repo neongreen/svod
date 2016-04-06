@@ -27,7 +27,6 @@ import qualified Svod as S
 userW :: Entity User -> Widget
 userW user = do
   let User {..}   = entityVal user
-      placeholder = StaticR $ StaticRoute ["img", "user", "ph_60.jpg"] []
   $(widgetFile "user-widget")
 
 -- | Generate collection of labels describing a user.

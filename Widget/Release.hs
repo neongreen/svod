@@ -30,7 +30,6 @@ releaseW
 releaseW release = do
   let Release {..} = entityVal release
       toDiffTime = picosecondsToDiffTime . fromIntegral . fromEnum
-      placeholder = StaticR $ StaticRoute ["img", "release", "ph_60.jpg"] []
   User {..} <- fromJust <$> φ (get releaseArtist)
   new <- case releaseFinalized of
     Nothing -> return False

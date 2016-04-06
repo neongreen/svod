@@ -1,6 +1,6 @@
 <div .panel .panel-default>
   <div .panel-body .compact-widget>
-    <img src="@{placeholder}"
+    <img src="https://placehold.it/60x60"
          .img-responsive .pull-left
          width="60" height="60"
          title="#{releaseTitle}"

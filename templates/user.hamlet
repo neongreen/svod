@@ -71,7 +71,7 @@
         <span .glyphicon .glyphicon-pencil aria-hidden="true">
 
   <div .clearfix>
-    <img src="@{placeholder}"
+    <img src="https://placehold.it/230x230"
          .img-responsive .img-rounded .pull-left
          width="230" height="230"
          title="#{userName}"
