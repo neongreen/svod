@@ -110,7 +110,7 @@ library
                     , Handler.Release
                     , Handler.Release.Approved
                     , Handler.Release.Archive
-                    , Handler.Release.Data
+                    , Handler.Release.Edit
                     , Handler.Release.Starred
                     , Handler.Release.Starrers
                     , Handler.Release.Track

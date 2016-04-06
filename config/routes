@@ -39,10 +39,10 @@
 -- Releases
 
 /кто/#Slug/что                                 ReleasesR        GET POST
-/кто/#Slug/что/#Slug                           ReleaseR         GET DELETE PATCH
+/кто/#Slug/что/#Slug                           ReleaseR         GET DELETE PUT
 /кто/#Slug/что/#Slug/записи                    ReleaseTracksR   GET
 /кто/#Slug/что/#Slug/записи/#Slug              ReleaseTrackR    GET PUT
-/кто/#Slug/что/#Slug/настройки                 ReleaseDataR     GET
+/кто/#Slug/что/#Slug/редактировать             ReleaseEditR     GET
 /кто/#Slug/что/#Slug/архив                     ReleaseArchiveR  GET
 /кто/#Slug/что/#Slug/одобрена                  ReleaseApprovedR PUT
 /кто/#Slug/что/#Slug/отметили                  ReleaseStarrersR GET

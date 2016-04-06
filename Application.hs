@@ -71,7 +71,7 @@ import Handler.Register
 import Handler.Release
 import Handler.Release.Approved
 import Handler.Release.Archive
-import Handler.Release.Data
+import Handler.Release.Edit
 import Handler.Release.Starred
 import Handler.Release.Starrers
 import Handler.Release.Track

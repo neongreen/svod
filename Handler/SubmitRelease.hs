@@ -21,19 +21,16 @@ where
 
 import Data.List.NonEmpty (NonEmpty)
 import Data.Maybe (fromJust)
-import Formatting (sformat, int)
 import Helper.Auth
 import Helper.Form
 import Helper.Json (releaseJson)
 import Helper.Path (getFConfig)
-import Helper.Rendering (toInt, toJSONId)
+import Helper.Rendering (toJSONId)
 import Import
 import Path
 import Yesod.Form.Bootstrap3
-import qualified Data.List.NonEmpty as NE
-import qualified Data.Text          as T
-import qualified Sound.HTagLib      as H
-import qualified Svod               as S
+import qualified Sound.HTagLib as H
+import qualified Svod          as S
 
 -- | Information user must submit to upload something.
 
@@ -55,14 +52,13 @@ submitReleaseForm html = do
   let miny = maxy - 3
       form = SubmitReleaseForm
         <$> areq textField (μ' "title" "Название") Nothing
-        <*> areq (selectFieldList licenses) (μ "license" "Лицензия") Nothing
+        <*> areq licenseField (μ "license" "Лицензия") Nothing
         <*> aopt textField (μ "genre" "Жанр") Nothing
         <*> areq (yearField miny maxy) (μL "year" "Год" miny maxy) (Just maxy)
         <*> areq tracksField (μ "track" "Список записей") Nothing
         <*> areq checkBoxField (μ "demo" "Демо") (Just False)
         <*> areq textareaField (μ "description" "Описание") Nothing
   renderBootstrap3 BootstrapBasicForm form html
-  where licenses = (licensePretty &&& id) <$> [minBound..maxBound]
 
 -- | Serve page with “submit release” form.
 
@@ -96,9 +92,10 @@ processReleaseSubmission slug = do
             , rmYear    = fromJust (H.mkYear srYear)
             , rmDesc    = mkDescription (unTextarea srDesc)
             , rmLicense = srLicense
+            , rmDemo    = srDemo
             , rmTracks  = toCreateFile <$> srTracks }
       fconfig <- getFConfig
-      outcome <- runDB (S.submitRelease fconfig rm srDemo)
+      outcome <- runDB (S.submitRelease fconfig rm)
       case outcome of
         Left msg ->
           selectRep $ do
@@ -159,63 +156,3 @@ serveSubmitRelease uid form enctype = defaultLayout $ do
       $(widgetFile "submit-release-already")
     S.CannotSubmitYet next ->
       $(widgetFile "submit-release-next")
-
--- | Get current year.
-
-getCurrentYear :: IO Int
-getCurrentYear = do
-  (year, _, _) <- toGregorian . utctDay <$> getCurrentTime
-  return (fromIntegral year)
-
--- | Generate year field given lower and upper bounds for this value.
-
-yearField
-  :: Int               -- ^ Lower bound for year (inclusive)
-  -> Int               -- ^ Upper bound for year (inclusive)
-  -> Field Handler Int
-yearField miny maxy = check checkYear intField
-  where checkYear :: Int -> Either Text Int
-        checkYear year
-          | year < miny = Left "Слишком давно."
-          | year > maxy = Left "Машина времени?"
-          | otherwise   = Right year
-
--- | Custom field to collect variable-length list of tracks, or rather
--- instructions how to create tracks in form of 'S.CreateTrack' data types.
---
--- Every field /must/ provide name of track and actual audio file in FLAC
--- format.
-
-tracksField :: Field Handler (NonEmpty (Text, FileInfo))
-tracksField = Field parse view Multipart
-  where parse titles' files' =
-          return . either (Left . SomeMessage) (Right . Just) $ do
-            titles <- mapM checkTitle titles'
-            files  <- mapM checkUploadedFile files'
-            return . NE.fromList $ zip titles files
-        view ident name attrs given required =
-          let baseId      = ident  <> "-"
-              addTrackId  = baseId <> "add-track"
-              remTrackId  = baseId <> "rem-track"
-              trackListId = baseId <> "tracklist"
-              nums        = sformat int <$> [1..S.maxTrackNumber]
-              items       = zip nums $ case given of
-                Left _ -> repeat Nothing
-                Right xs -> NE.toList (Just <$> xs) ++ repeat Nothing
-          in $(widgetFile "tracks-field")
-
--- | Check single title. TODO Add additional checks here.
-
-checkTitle :: Text -> Either Text Text
-checkTitle title =
-  if T.null title
-  then Left "Название не может быть пустым."
-  else Right title
-
--- | Check single uploaded file.
-
-checkUploadedFile :: FileInfo -> Either Text FileInfo
-checkUploadedFile info =
-  if fileContentType info == "audio/flac"
-  then Right info
-  else Left "Неверный формат, только FLAC является приемлемым форматом."

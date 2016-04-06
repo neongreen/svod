@@ -1,0 +1,19 @@
+<p>
+  Эта форма позволяет редактировать публикацию. Заметьте, что сейчас вы не
+  можете изменить имя автора или название публикации. Вы также должны
+  прикрепить все аудио файлы даже если вы не планируете их менять. В
+  настоящее время редактирование означает скорее замену целиком. В будущем
+  это скорее всего изменится.
+
+<form ##{formId} method="post" action="@{ReleaseR uslug rslug}?_method=PUT"
+      enctype="#{enctype}">
+  ^{form}
+  <p>
+    <span .glyphicon .glyphicon-arrow-up aria-hidden="true">
+    В этом поле можно использовать #
+    <a href="@{InfoMarkdownR}" target="_blank">специальный язык разметки#
+    .
+
+  <button ##{buttonId} .btn .btn-primary type="submit"
+          data-loading-text="Работает…">
+    Готово

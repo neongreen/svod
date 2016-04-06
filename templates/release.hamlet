@@ -73,7 +73,7 @@
     $if (not isFinalized && ownerHere) || adminHere
       <a .btn .btn-default
          title="Редактировать публикацию"
-         href="@{ReleaseDataR uslug rslug}">
+         href="@{ReleaseEditR uslug rslug}">
         <span .glyphicon .glyphicon-pencil aria-hidden="true">
 
   <div .clearfix>

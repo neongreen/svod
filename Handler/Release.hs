@@ -15,10 +15,10 @@
 module Handler.Release
   ( getReleaseR
   , deleteReleaseR
-  , patchReleaseR )
+  , putReleaseR )
 where
 
-import Handler.Release.Data (processReleaseChange)
+import Handler.Release.Edit (processReleaseChange)
 import Helper.Access (releaseViaSlug)
 import Helper.Auth
 import Helper.Json (releaseJson)
@@ -70,7 +70,7 @@ deleteReleaseR uslug rslug = do
   checkAuthWith isAdmin
   changeReleaseProperty S.deleteRelease (\_ _ -> PendingReleasesR) uslug rslug
 
--- | Partially edit release.
+-- | Edit release (this mostly just replaces existing release).
 
-patchReleaseR :: Slug -> Slug -> Handler TypedContent
-patchReleaseR = processReleaseChange
+putReleaseR :: Slug -> Slug -> Handler TypedContent
+putReleaseR = processReleaseChange
