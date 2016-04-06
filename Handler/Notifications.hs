@@ -39,5 +39,4 @@ getNotificationsR = do
       $(widgetFile "notifications")
     provideRep $ do
       render <- getUrlRender
-      let items = notificationJson render . snd <$> S.paginatedItems paginated
-      return (paginatedJson paginated { S.paginatedItems = items })
+      return . paginatedJson $ notificationJson render . snd <$> paginated

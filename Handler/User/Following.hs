@@ -39,8 +39,7 @@ getUserFollowingR slug = userViaSlug slug $ \user -> do
     -- JSON representation
     provideRep $ do
       render <- getUrlRender
-      items  <- forM (S.paginatedItems paginated) $ \user' -> do
+      fmap paginatedJson . forM paginated $ \user' -> do
         let (Entity uid' u) = user'
         followers <- runDB (S.followingCount uid')
         return (userJson render followers u)
-      return (paginatedJson $ paginated { S.paginatedItems = items })

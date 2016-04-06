@@ -6,7 +6,7 @@ $if S.paginatedHasOtherPages p
           <span aria-hidden="true">
             <span .glyphicon .glyphicon-chevron-left>
         $else
-          <a href="@?{toPage $ paginatedPage - 1}"
+          <a href="@?{toPage $ S.paginatedPageIndex p - 1}"
              title="Предыдущая страница"
              aria-label="Предыдущая страница">
             <span aria-hidden="true">
@@ -24,7 +24,7 @@ $if S.paginatedHasOtherPages p
             <strong>
               &hellip;
       $forall page <- pageRange
-        $with activePage <- page == paginatedPage
+        $with activePage <- page == S.paginatedPageIndex p
           <li :activePage:.active>
             <a href="@?{toPage page}" aria-label="#{toInt page}"
                title="Перейти к странице #{toInt page}">
@@ -37,17 +37,17 @@ $if S.paginatedHasOtherPages p
               &hellip;
       $if lastSpec
         <li>
-          <a href="@?{toPage paginatedPages}" aria-hidden="true"
-             title="Перейти к странице #{toInt paginatedPages}">
+          <a href="@?{toPage $ S.paginatedPagesTotal p}" aria-hidden="true"
+             title="Перейти к странице #{toInt $ S.paginatedPagesTotal p}">
             <span aria-hidden="true">
               <strong>
-                #{toInt paginatedPages}
+                #{toInt $ S.paginatedPagesTotal p}
       <li :noNext:.disabled>
         $if noNext
           <span aria-hidden="true">
             <span .glyphicon .glyphicon-chevron-right>
         $else
-          <a href="@?{toPage $ paginatedPage + 1}"
+          <a href="@?{toPage $ S.paginatedPageIndex p + 1}"
              title="Следующая страница"
              aria-label="Следующая страница">
             <span aria-hidden="true">

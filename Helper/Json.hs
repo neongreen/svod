@@ -135,9 +135,9 @@ notificationJson render (Entity nid Notification {..}) = object
 -- | Represent paginated result as JSON value.
 
 paginatedJson :: S.Paginated Value -> Value
-paginatedJson S.Paginated {..} = object
-  [ "items"       .= paginatedItems
-  , "total_items" .= paginatedTotal
-  , "total_pages" .= paginatedPages
-  , "page_size"   .= paginatedSize
-  , "page"        .= paginatedPage ]
+paginatedJson p = object
+  [ "items"       .= S.paginatedItems      p
+  , "total_items" .= S.paginatedItemsTotal p
+  , "total_pages" .= S.paginatedPagesTotal p
+  , "page_size"   .= S.paginatedPageSize   p
+  , "page"        .= S.paginatedPageIndex  p ]

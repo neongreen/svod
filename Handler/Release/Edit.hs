@@ -27,6 +27,7 @@ import Helper.Auth
 import Helper.Form
 import Helper.Json (releaseJson)
 import Helper.Path (getFConfig)
+import Helper.Rendering (toJSONId)
 import Import
 import Path
 import Yesod.Core.Types (FileInfo (..))

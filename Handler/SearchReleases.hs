@@ -38,9 +38,8 @@ getSearchReleasesR = do
     -- JSON representation
     provideRep $ do
       render <- getUrlRender
-      items  <- forM (S.paginatedItems paginated) $ \release -> do
+      fmap paginatedJson . forM paginated $ \release -> do
         let (Entity rid r@Release {..}) = release
         stars <- runDB (S.starCount rid)
         u     <- fromJust <$> runDB (get releaseArtist)
         return (releaseJson render stars u r)
-      return (paginatedJson $ paginated { S.paginatedItems = items })

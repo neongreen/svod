@@ -43,14 +43,14 @@ lookupPagination = do
 -- | Display pagination widget.
 
 paginationW :: Route App -> S.Paginated a -> Widget
-paginationW route p@S.Paginated {..} = do
+paginationW route p = do
   params <- reqGetParams <$> φ getRequest
   let reach         = 2
       noPrev        = not (S.paginatedHasPrev p)
       noNext        = not (S.paginatedHasNext p)
       pageRange     = S.paginatedPageRange p reach
       firstSpec     = 1 `notElem` pageRange
-      lastSpec      = paginatedPages `notElem` pageRange
+      lastSpec      = S.paginatedPagesTotal p `notElem` pageRange
       backwardEllip = S.paginatedBackwardEllip p reach
       forwardEllip  = S.paginatedForwardEllip p reach
       toPage        = mkPageLink route params

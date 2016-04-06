@@ -39,9 +39,8 @@ getUserStarsR slug = userViaSlug slug $ \user -> do
     -- JSON representation
     provideRep $ do
       render <- getUrlRender
-      items  <- forM (S.paginatedItems paginated) $ \release -> do
+      fmap paginatedJson . forM paginated $ \release -> do
         let (Entity rid r@Release {..}) = release
         u        <- fromJust <$> runDB (get releaseArtist)
         starrers <- runDB (S.starCount rid)
         return (releaseJson render starrers u r)
-      return (paginatedJson $ paginated { S.paginatedItems = items })
