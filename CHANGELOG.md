@@ -1,3 +1,3 @@
-## svod 0.1.0
+## Svod 0.1.0
 
 * Initial release.
