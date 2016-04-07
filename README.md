@@ -10,7 +10,7 @@
 * [Learn more about the Svod project](#learn-more-about-the-svod-project)
 * [Svod packages](#svod-packages)
 * [Documentation](#documentation)
-* [Running Svod web app locally](#runnig-svod-web-app-locally)
+* [Running Svod web app locally](#running-svod-web-app-locally)
 * [Deploying](#deploying)
 * [Contribution](#contribution)
 * [License](#license)
@@ -52,7 +52,7 @@ acting as a filter for enormous amount of often amateur content. The filter
 is opinionated, but there is no way to avoid this from my point of view.
 
 For artists, the service provides free web storage for their works and
-certain popularity boost. This is the first level of Svod — artist
+certain popularity boost. This is the first level of “Svod — artist”
 relationship. When artist's music achieves certain degree of success as
 measured by our team, we can talk about the second level that provides
 profit for Svod and for artist as well if he/she wishes to participate on
@@ -84,7 +84,7 @@ The Svod web app uses the following packages/resources:
 
 * [Svod core (database and file management abstracted from web)](https://github.com/svod-music/svod-core)
 * [Search query mini-language](https://github.com/svod-music/svod-search-query)
-* [Linter that prevents some suspicious content](https://github.com/svod-music/svod-lint)
+* [Linter that prevents suspicious content](https://github.com/svod-music/svod-lint)
 * [Database population app for development purposes](https://github.com/svod-music/svod-devel)
 * [Twitter intergration](https://github.com/svod-music/twitter-integration)
 * [Logo](https://github.com/svod-music/svod-logo)
@@ -92,7 +92,15 @@ The Svod web app uses the following packages/resources:
 ## Documentation
 
 All components are fully documented, but you will need to generate Haddock
-documentation yourself locally.
+documentation yourself locally. To generate the docs, run the following from
+the root of the repo:
+
+```
+$ stack haddock
+```
+
+If you do not have Stack installed, see the following section that tells how
+to setup all the stuff from scratch.
 
 ## Running Svod web app locally
 
@@ -135,9 +143,102 @@ $ sudo -i -u postgres
 
 Now you should have user named `svod` and a database with the same name.
 
-Now we need to clone the repo and build the application.
+It's time to build the application, but first it's necessary to install some
+tools, most importantly GHC (Haskell compiler) and Stack (building tool).
+They should be available from your distro's repositories, Arch Linux users
+can execute:
 
-TODO Finish this section
+```
+# pacman -S ghc haskell-stack
+$ ghc --version
+The Glorious Glasgow Haskell Compilation System, version 7.10.3
+$ stack --version
+Version 1.0.5, Git revision 9a6f7c965692c437bbe34a67921b0d7d23a95d0c x86_64
+```
+
+Visit
+[Stack's site](http://docs.haskellstack.org/en/stable/install_and_upgrade/)
+to learn more about installation procedure on other platforms. One thing to
+note is that you should add `~/.local/bin/` directory to your `PATH` in
+order to use programs compiled by Stack from anywhere, add something like
+this to your `.bashrc` file:
+
+```
+export PATH=$HOME/.local/bin:$PATH
+```
+
+Clone the repo and build it (I assume you have Git):
+
+```
+$ git clone https://github.com/svod-music/svod.git
+$ cd svod
+$ stack build # here you can take a beer…
+```
+
+To actually run the application you will need some files that are stored in
+other repos, so run `perpare.py` from root of the cloned repo (I assume you
+have Python 3):
+
+```
+$ python prepare.py
+```
+
+This just makes sure everything is ready to run. Now you can actually start
+the application locally:
+
+```
+$ stack exec yesod devel
+```
+
+Go to `localhost:3000` in your favorite browser and you should see the main
+page. If something does not work, do not hesitate to ask for help in our
+Gitter chat (TODO create that chat).
+
+It's often desirable to have some content in the database, so let's populate
+it. The most important thing is to register admin account. Primary admin
+account always has `"свод"` user name, so you can just register it via UI or
+with a simple utility called `svod-devel`:
+
+```
+$ git clone https://github.com/svod-music/svod-devel.git
+$ cd svod-devel
+$ stack build --copy-bins
+$ cp -v .svod-devel.ymal ~/
+```
+
+Now edit the `~/.svod-devel.yaml` file. If you use non-standard user name
+and database name, edit `database` object. `local-svod-root` directory is an
+important things to specify now. Go to directory with the web application
+repo and inside it you will find directory named `user-content` (it's
+created when server is run for the first time, you can also create it
+manually). `local-svod-root` should point to this directory, so if my web
+app is in `/home/mark/projects/programs/svod/`, I would write:
+
+```
+local-svod-root: '/home/mark/projects/programs/svod/user-content/'
+```
+
+To populate the database we actually need FLAC files, put around 100
+different files (most importantly of different length) under one directory
+and specify it in the `.svod-devel.yaml` file, for example:
+
+```
+flac-source: '/home/mark/Downloads/flac-factory/'
+```
+
+*Please note that not all this functionality is implemented in `svod-devel`
+ right now, I will remove this warning when it's done (should be pretty
+ soon).*
+
+Now run:
+
+```
+$ stack-devel make-admin # if you haven't created one yet
+$ stack-devel populate # generate 100 users and 50 releases
+```
+
+Now you are done. You can play with the system and start developing your own
+features.
 
 ## Deploying
 
