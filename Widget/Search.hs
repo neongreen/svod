@@ -21,4 +21,5 @@ import Import
 -- | Search widget. This is a fake placeholder for now.
 
 searchW :: Widget
+-- TODO SQUERY Provide real search functionality.
 searchW = $(widgetFile "search-widget")

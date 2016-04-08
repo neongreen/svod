@@ -50,6 +50,7 @@ submitReleaseForm :: Form SubmitReleaseForm
 submitReleaseForm html = do
   maxy <- liftIO getCurrentYear
   let miny = maxy - 3
+      -- TODO LINT Every textual field should be checked for abuse.
       form = SubmitReleaseForm
         <$> areq textField (μ' "title" "Название") Nothing
         <*> areq licenseField (μ "license" "Лицензия") Nothing
@@ -107,12 +108,14 @@ processReleaseSubmission slug = do
             provideRep . return . object $ ["failed" .= msg]
         Right rid -> do
           r@Release {..} <- fromJust <$> runDB (get rid)
+          render <- getUrlRender
+          -- TODO TWITTER Post a tweet about new release.
           selectRep $ do
             -- HTML representation
             provideRep $ do
               setMsg MsgSuccess [shamlet|
 Публикация #
-<strong>
+<a href="#{render $ ReleaseR userSlug releaseSlug}">
   #{srTitle}
 \ теперь ожидает рассмотрения. Пожалуйста будьте терпеливы, вы будете уведомлены
 о принятом решении. Вы можете редактировать вашу работу пока она не
@@ -123,7 +126,6 @@ processReleaseSubmission slug = do
               redirect (ReleaseR userSlug releaseSlug) :: Handler Html
             -- JSON representation
             provideRep $ do
-              render <- getUrlRender
               stars  <- runDB (S.starCount rid)
               return (releaseJson render stars u r)
 

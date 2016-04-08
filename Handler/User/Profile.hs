@@ -31,6 +31,8 @@ import qualified Svod as S
 
 -- | Editable pieces of user profile.
 
+-- TODO AVATARS Allow to change user's avatar.
+
 data UserProfileForm = UserProfileForm
   { upEmail          :: Maybe Text     -- ^ Email adderss
   , upEmailPublic    :: Maybe Bool     -- ^ Whether user's email is public
@@ -102,11 +104,10 @@ processUserChange slug = userViaSlug slug $ \user -> do
         (Just . mkDescription . unTextarea <$> upDesc)
         (entityKey user)
       render <- getUrlRender
-      let profileUrl = render (UserR slug)
       unless changedEmail $
         setMsg MsgSuccess [shamlet|
 Профиль пользователя #
-<a href="#{profileUrl}">
+<a href="#{render $ UserR slug}">
   #{userName}
 \ обновлен успешно.
 |]

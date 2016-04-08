@@ -36,6 +36,7 @@ releaseW release = do
     Just releaseDate -> do
       now <- liftIO getCurrentTime
       return $ toDiffTime (diffUTCTime now releaseDate) < noveltyPeriod
+  -- TODO COVERS Display real cover here.
   $(widgetFile "release-widget")
 
 -- | For how long a release is considered new?

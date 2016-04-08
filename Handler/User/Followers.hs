@@ -33,8 +33,9 @@ getUserFollowersR slug = userViaSlug slug $ \user -> do
   paginated <- runDB (S.followersPaginated params uid)
   selectRep $ do
     -- HTML representation
-    provideRep . defaultLayout $ do
-      setTitle (toHtml $ userName <> " (подписчики)")
+    provideRep . noHeaderLayout $ do
+      let title = toHtml (userName <> " (подписчики)")
+      setTitle title
       $(widgetFile "user-followers")
     -- JSON representation
     provideRep $ do

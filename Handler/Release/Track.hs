@@ -52,6 +52,7 @@ getReleaseTrackR = serveReleaseTrack (generateFormPost . trackDescriptionForm)
 putReleaseTrackR :: Slug -> Slug -> Slug -> Handler TypedContent
 putReleaseTrackR uslug rslug tslug =
   releaseViaSlug uslug rslug $ \_ release -> do
+    -- TODO LINT Check text here too.
     checkAuthWith (isStaff <> isSelf uslug)
     let rid = entityKey release
     tracks <- runDB (S.getReleaseTracklist rid)

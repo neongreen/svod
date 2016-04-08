@@ -26,7 +26,7 @@ import Yesod.Auth.Email (saltPass)
 import Yesod.Form.Bootstrap3
 import qualified Svod as S
 
--- | Information user need to provide in order to change his\/her password.
+-- | Information user needs to provide in order to change his\/her password.
 
 data ChangePasswordForm = ChangePasswordForm
   { cpOldPass  :: Text -- ^ Old password

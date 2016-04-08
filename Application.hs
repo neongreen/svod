@@ -131,7 +131,7 @@ makeFoundation appSettings = do
   -- Return the foundation
   return (mkFoundation pool)
 
--- | Convert our foundation to a WAI Application by calling @toWaiAppPlain@
+-- | Convert our foundation to a WAI Application by calling 'toWaiAppPlain'
 -- and applying some additional middlewares.
 
 makeApplication :: App -> IO Application
@@ -139,7 +139,7 @@ makeApplication foundation = do
   logWare <- makeLogWare foundation
   -- Create the WAI application and apply middlewares
   appPlain <- toWaiAppPlain foundation
-  return $ logWare $ defaultMiddlewaresNoLogging appPlain
+  return . logWare . defaultMiddlewaresNoLogging $ appPlain
 
 makeLogWare :: App -> IO Middleware
 makeLogWare foundation =
@@ -174,10 +174,10 @@ warpSettings foundation =
 
 getApplicationDev :: IO (Settings, Application)
 getApplicationDev = do
-  settings <- getAppSettings
+  settings   <- getAppSettings
   foundation <- makeFoundation settings
-  wsettings <- getDevSettings $ warpSettings foundation
-  app <- makeApplication foundation
+  wsettings  <- getDevSettings (warpSettings foundation)
+  app        <- makeApplication foundation
   return (wsettings, app)
 
 getAppSettings :: IO AppSettings

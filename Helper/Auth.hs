@@ -7,8 +7,7 @@
 -- Stability   :  experimental
 -- Portability :  portable
 --
--- Helpers for authentication handlers. API weakness made me introduce state
--- for advanced form validation, see more about this in "Foundation".
+-- Helpers for authentication handlers.
 
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -36,7 +35,7 @@ import qualified Svod      as S
 
 -- | Check if user with given user name exists (or doesn't exist).
 --
--- TODO We must also check user names so they are appropriate.
+-- TODO LINT We must also check user names so they are appropriate.
 
 checkUserName
   :: Bool              -- ^ Desired result: should user exist?

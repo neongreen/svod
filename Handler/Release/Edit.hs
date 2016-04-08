@@ -37,6 +37,8 @@ import qualified Svod          as S
 
 -- | Data that should be provided in order to edit a release.
 
+-- TODO COVERS Allow to change release cover.
+
 data EditReleaseForm = EditReleaseForm
   { erLicense :: License    -- ^ License of the work
   , erGenre   :: Maybe Text -- ^ Genre (if any)
@@ -52,6 +54,7 @@ editReleaseForm :: Release -> NonEmpty Track -> Form EditReleaseForm
 editReleaseForm Release {..} tracks html = do
   maxy <- liftIO getCurrentYear
   let miny = maxy - 3
+      -- TODO LINT Every textual field should be checked for abuse.
       form = EditReleaseForm
         <$> areq licenseField (μ "license" "Лицензия") (Just releaseLicense)
         <*> aopt textField (μ "genre" "Жанр") (Just releaseGenre)

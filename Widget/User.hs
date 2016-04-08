@@ -26,7 +26,8 @@ import qualified Svod as S
 
 userW :: Entity User -> Widget
 userW user = do
-  let User {..}   = entityVal user
+  let User {..} = entityVal user
+  -- TODO AVATARS Display real avatar here.
   $(widgetFile "user-widget")
 
 -- | Generate collection of labels describing a user.

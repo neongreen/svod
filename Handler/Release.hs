@@ -50,6 +50,7 @@ getReleaseR uslug rslug = releaseViaSlug uslug rslug $ \user release -> do
   tracks <- runDB (S.getReleaseTracklist rid)
   let totalDur = totalDuration (trackDuration <$> tracks)
   selectRep $ do
+    -- TODO COVERS Show real covers instead of placeholders.
     -- HTML representation
     provideRep . noHeaderLayout $ do
       setTitle (toHtml releaseTitle)

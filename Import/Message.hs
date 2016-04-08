@@ -7,7 +7,7 @@
 -- Stability   :  experimental
 -- Portability :  portable
 --
--- Replacement for the original 'setMessage' mechanism,slightly boosted
+-- Replacement for the original 'setMessage' mechanism, slightly boosted
 -- variation of it.
 
 {-# LANGUAGE NoImplicitPrelude #-}
@@ -21,8 +21,8 @@ where
 import ClassyPrelude.Yesod
 import Text.Hamlet (shamletFile)
 
--- | Type of message. At the end of the day it affects which class to assign
--- to rendered message.
+-- | Type of message. At the end of the day it specifies which class to
+-- assign to rendered message.
 
 data MsgType
   = MsgSuccess         -- ^ For success messages
@@ -31,9 +31,8 @@ data MsgType
   | MsgDanger          -- ^ Error and the like
     deriving (Eq, Show, Enum, Bounded)
 
--- | Boosted 'setMessage'. This one takes 'MsgType', then format string as
--- for 'sformat' function, then collection of arguments. Its contents is
--- plain markdown.
+-- | Boosted 'setMessage'. This one takes 'MsgType' and 'Html' contents to
+-- show in message (usually generated with something like 'shamlet').
 
 setMsg :: MonadHandler m
   => MsgType           -- ^ Message type

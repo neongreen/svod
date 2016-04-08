@@ -51,6 +51,7 @@ getUserR slug = userViaSlug slug $ \user -> do
         , not userVerified
         , userBanned && staffHere ]
   selectRep $ do
+    -- TODO AVATARS Show real avatars instead of placeholders.
     -- HTML representation
     provideRep . noHeaderLayout $ do
       setTitle (toHtml userName)

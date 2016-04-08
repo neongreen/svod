@@ -94,6 +94,6 @@ serveRegistration :: ToWidget App a
   -> Enctype           -- ^ Encoding type required by the form
   -> Handler Html      -- ^ Handler
 serveRegistration form enctype = defaultLayout $ do
-  -- TODO Users must fill out CAPTCHA on every attempt.
+  -- TODO CAPTCHA Users must fill out CAPTCHA on every attempt.
   setTitle "Регистрация"
   $(widgetFile "register")

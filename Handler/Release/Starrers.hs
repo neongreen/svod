@@ -34,8 +34,9 @@ getReleaseStarrersR uslug rslug = releaseViaSlug uslug rslug $ \_ release -> do
   paginated <- runDB (S.starredByPaginated params rid)
   selectRep $ do
     -- HTML representation
-    provideRep . defaultLayout $ do
-      setTitle (toHtml $ releaseTitle <> " (кто отметил)")
+    provideRep . noHeaderLayout $ do
+      let title = toHtml (releaseTitle <> " (кто отметил)")
+      setTitle title
       $(widgetFile "release-starrers")
     -- JSON representation
     provideRep $ do

@@ -1,5 +1,5 @@
 <div .alert .alert-dismissible .#{msgTypeToClass msgType}
      role="alert">
-  <button type="button" .close data-dismiss="alert" aria-label="Убрать">
+  <button type="button" .close data-dismiss="alert" aria-label="Закрыть">
     <span aria-hidden="true">&times;
   #{message}

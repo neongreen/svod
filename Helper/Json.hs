@@ -10,7 +10,8 @@
 -- The module helps to generate JSON representation of objects we work with
 -- in this application. The objects typically don't have 'toJSON' and
 -- 'fromJSON' instances, because generation of the representations in often
--- should be more flexible.
+-- involves messing with routes and additional info fetched from database
+-- (e.g. number of stars).
 
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -36,6 +37,7 @@ userJson
   -> User              -- ^ The main bulk of data
   -> Value             -- ^ JSON value
 userJson render followers User {..} = object
+  -- TODO AVATARS Add location of avatar.
   [ "name"             .= userName
   , "slug"             .= userSlug
   , "email"            .= bool Nothing (Just userEmail) userEmailPublic
@@ -69,6 +71,7 @@ releaseJson
   -> Release           -- ^ The main bulk of data
   -> Value
 releaseJson render stars User {..} Release {..} = object
+  -- TODO COVERS Add location of covers.
   [ "artist"       .= userName
   , "title"        .= releaseTitle
   , "slug"         .= releaseSlug

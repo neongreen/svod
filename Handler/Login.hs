@@ -75,6 +75,6 @@ serveLogin :: ToWidget App a
   -> Enctype           -- ^ Encoding type required by the form
   -> Handler Html      -- ^ Handler
 serveLogin form enctype = defaultLayout $ do
-  -- TODO User must fill out CAPTCHA on every attempt.
+  -- TODO CAPTCHA User must fill out CAPTCHA on every attempt.
   setTitle "Вход"
   $(widgetFile "login")

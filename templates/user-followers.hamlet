@@ -1,8 +1,17 @@
-$if S.paginatedNull paginated
-  <p>
-    У этого пользователя пока нет подписчиков.
-$else
-  $forall item <- S.paginatedItems paginated
-    ^{userW item}
+<div .page-header>
+  <h1>#{title} #
+    <a .btn .btn-default
+       title="Перейти к профилю пользователя"
+       href="@{UserR slug}">
+      <span .glyphicon .glyphicon-user aria-hidden="true">
 
-^{paginationW (UserFollowersR slug) paginated}
+<div .content>
+
+  $if S.paginatedNull paginated
+    <p>
+      У этого пользователя пока нет подписчиков.
+  $else
+    $forall item <- S.paginatedItems paginated
+      ^{userW item}
+
+  ^{paginationW (UserFollowersR slug) paginated}

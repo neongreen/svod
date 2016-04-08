@@ -27,7 +27,7 @@ toJSONId :: Text -> Value
 toJSONId text = toJSON ("#" <> text)
 
 -- | Convert more exotic stuff like 'Natural' into plain 'Integer' suitable
--- for direct interpolation into templates.
+-- for direct interpolation in templates.
 
 toInt :: Integral a => a -> Integer
 toInt = fromIntegral
