@@ -1,5 +1,6 @@
 $(#{toJSONId addTrackId}).click(function() {
     if ($(this).hasClass('disabled')) return;
+
     var tracklist = $(#{toJSONId trackListId});
     var index = tracklist.children(":not(.invisible-field)").length + 1;
     var target = $(#{toJSONId baseId} + index);
@@ -10,12 +11,12 @@ $(#{toJSONId addTrackId}).click(function() {
 
     if (index >= #{toJSON $ toInt S.maxTrackNumber})
         $(this).addClass('disabled');
-    if (index > 1)
-        $(#{toJSONId remTrackId}).removeClass('disabled');
+    $(#{toJSONId remTrackId}).removeClass('disabled');
 });
 
 $(#{toJSONId remTrackId}).click(function() {
     if ($(this).hasClass('disabled')) return;
+
     var tracklist = $(#{toJSONId trackListId});
     var index = tracklist.children(":not(.invisible-field)").length;
     var target = $(#{toJSONId baseId} + index);
@@ -23,18 +24,17 @@ $(#{toJSONId remTrackId}).click(function() {
     target.addClass('invisible-field');
     target.find('input').prop('disabled', true);
     target.find('input').prop('required', false);
-    index--;
 
-    if (index <= 1)
+    if (index <= 2)
         $(this).addClass('disabled');
-    if (index < #{toJSON $ toInt S.maxTrackNumber})
-        $(#{toJSONId addTrackId}).removeClass('disabled');
+    $(#{toJSONId addTrackId}).removeClass('disabled');
 });
 
 $('input[type=file][name=' + #{toJSON name} + ']').change(function() {
     var file = $(this);
     var row = file.parents().eq(1);
     var title_input = row.find('input[type=text]');
+
     if (!title_input.val().trim()) {
         var title = file.val();
         title = title.substring(0, title.lastIndexOf('.flac'));

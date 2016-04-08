@@ -78,11 +78,12 @@ yearField
   -> Int               -- ^ Upper bound for year (inclusive)
   -> Field Handler Int
 yearField miny maxy = check checkYear intField
-  where checkYear :: Int -> Either Text Int
-        checkYear year
-          | year < miny = Left "Слишком давно."
-          | year > maxy = Left "Машина времени?"
-          | otherwise   = Right year
+  where
+    checkYear :: Int -> Either Text Int
+    checkYear year
+      | year < miny = Left "Слишком давно."
+      | year > maxy = Left "Машина времени?"
+      | otherwise   = Right year
 
 -- | Custom field to collect variable-length list of tracks, or rather
 -- instructions how to create tracks in form of 'S.CreateTrack' data types.
@@ -92,34 +93,36 @@ yearField miny maxy = check checkYear intField
 
 tracksField :: Field Handler (NonEmpty (Text, FileInfo))
 tracksField = Field parse view Multipart
-  where parse titles' files' =
-          return . either (Left . SomeMessage) (Right . Just) $ do
-            titles <- mapM checkTitle titles'
-            files  <- mapM checkUploadedFile files'
-            return . NE.fromList $ zip titles files
-        view ident name attrs given required =
-          let baseId      = ident  <> "-"
-              addTrackId  = baseId <> "add-track"
-              remTrackId  = baseId <> "rem-track"
-              trackListId = baseId <> "tracklist"
-              nums        = sformat int <$> [1..S.maxTrackNumber]
-              items       = zip nums $ case given of
-                Left _ -> repeat Nothing
-                Right xs -> NE.toList (Just <$> xs) ++ repeat Nothing
-          in $(widgetFile "tracks-field")
+  where
+    parse titles' files' =
+      return . either (Left . SomeMessage) (Right . Just) $ do
+        titles <- mapM checkTitle titles'
+        files  <- mapM checkUploadedFile files'
+        return . NE.fromList $ zip titles files
+    view ident name attrs given required =
+      let baseId      = ident  <> "-"
+          addTrackId  = baseId <> "add-track"
+          remTrackId  = baseId <> "rem-track"
+          trackListId = ident
+          nums        = sformat int <$> [1..S.maxTrackNumber]
+          items       = zip nums $ case given of
+            Left _ -> repeat Nothing
+            Right xs -> NE.toList (Just <$> xs) ++ repeat Nothing
+      in $(widgetFile "tracks-field")
 
--- | Check single title. TODO Add additional checks here.
+-- | Check single title.
 
 checkTitle :: Text -> Either Text Text
 checkTitle title =
+  -- TODO LINT Add additional checks here.
   if T.null title
-  then Left "Название не может быть пустым."
-  else Right title
+    then Left "Название не может быть пустым."
+    else Right title
 
 -- | Check single uploaded file.
 
 checkUploadedFile :: FileInfo -> Either Text FileInfo
 checkUploadedFile info =
   if fileContentType info == "audio/flac"
-  then Right info
-  else Left "Неверный формат, только FLAC является приемлемым форматом."
+    then Right info
+    else Left "Неверный формат, только FLAC является приемлемым форматом."

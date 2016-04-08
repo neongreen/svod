@@ -6,14 +6,14 @@
           <div .row ##{thisId} :isDisabled:.invisible-field>
             <div .col-lg-6>
               <div .input-group>
-                <span .input-group-addon ##{thisId <> "-aria"}>#{index}
+                <span .input-group-addon ##{thisId <> "-aria"}>
+                  #{index}
                 <input type="text" name="#{name}" *{attrs}
                        :isRequired:required :isDisabled:disabled
                        value="#{maybe "" fst meat}"
                        aria-describedby="#{thisId <> "-aria"}">
             <div .col-lg-6>
               <input type="file" name="#{name}" accept="audio/flac"
-                     value="#{maybe "" (fileName . snd) meat}"
                      :isRequired:required :isDisabled:disabled>
 
 <div .pad-around>
