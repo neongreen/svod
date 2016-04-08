@@ -41,9 +41,9 @@ followUserW tslug = userViaSlug' tslug $ \target' -> do
   let count = fromIntegral count' :: Int
   addScript (StaticR js_cookie_js)
   case entityVal <$> muser of
-    Nothing -> $(widgetFile "follow-user-guest")
+    Nothing -> $(widgetFile "follow-user-widget-guest")
     Just User {..} ->
       if userVerified
-        then $(widgetFile "follow-user-logged-in")
-        else $(widgetFile "follow-user-unverified")
-  $(widgetFile "follow-user")
+        then $(widgetFile "follow-user-widget-logged-in")
+        else $(widgetFile "follow-user-widget-unverified")
+  $(widgetFile "follow-user-widget")

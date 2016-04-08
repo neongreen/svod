@@ -29,8 +29,8 @@ downloadReleaseW uslug rslug = do
   muser    <- ζ maybeAuth
   buttonId <- newIdent
   case entityVal <$> muser of
-    Nothing -> $(widgetFile "download-release-guest")
+    Nothing -> $(widgetFile "download-release-widget-guest")
     Just User {..} ->
       unless userVerified
-        $(widgetFile "download-release-unverified")
-  $(widgetFile "download-release")
+        $(widgetFile "download-release-widget-unverified")
+  $(widgetFile "download-release-widget")

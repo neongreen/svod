@@ -44,4 +44,4 @@ userStatusLabelsW user isAuthor = do
     Nothing -> not . null <$> φ (S.getReleasesOfUser uid)
     Just b  -> return b
   staffHere <- ynAuth <$> ζ isStaff
-  $(widgetFile "user-status-labels")
+  $(widgetFile "user-status-labels-widget")

@@ -41,9 +41,9 @@ starReleaseW aslug rslug = releaseViaSlug' aslug rslug $ \_ release' -> do
   let count = fromIntegral count' :: Int
   addScript (StaticR js_cookie_js)
   case entityVal <$> muser of
-    Nothing -> $(widgetFile "star-release-guest")
+    Nothing -> $(widgetFile "star-release-widget-guest")
     Just User {..} ->
       if userVerified
-        then $(widgetFile "star-release-logged-in")
-        else $(widgetFile "star-release-unverified")
-  $(widgetFile "star-release")
+        then $(widgetFile "star-release-widget-logged-in")
+        else $(widgetFile "star-release-widget-unverified")
+  $(widgetFile "star-release-widget")
