@@ -2,6 +2,7 @@
 
 [![License GPL 3](https://img.shields.io/badge/license-GPL_3-green.svg)](http://www.gnu.org/licenses/gpl-3.0.txt)
 [![Build Status](https://travis-ci.org/svod-music/svod.svg?branch=master)](https://travis-ci.org/svod-music/svod)
+[![Gitter](https://badges.gitter.im/svod-music/svod.svg)](https://gitter.im/svod-music/svod?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 *Work in progress. If you have questions about the project, please send me
  an email to markkarpov at opmbx dot org.*
@@ -192,7 +193,7 @@ $ stack exec yesod devel
 
 Go to `localhost:3000` in your favorite browser and you should see the main
 page. If something does not work, do not hesitate to ask for help in our
-Gitter chat (TODO create that chat).
+[Gitter chat](https://gitter.im/svod-music/svod).
 
 It's often desirable to have some content in the database, so let's populate
 it. The most important thing is to register admin account. Primary admin
