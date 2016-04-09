@@ -12,7 +12,6 @@
 * [Svod packages](#svod-packages)
 * [Documentation](#documentation)
 * [Running Svod web app locally](#running-svod-web-app-locally)
-* [Deploying](#deploying)
 * [Contribution](#contribution)
 * [License](#license)
 
@@ -195,10 +194,12 @@ Go to `localhost:3000` in your favorite browser and you should see the main
 page. If something does not work, do not hesitate to ask for help in our
 [Gitter chat](https://gitter.im/svod-music/svod).
 
+I recommended to register admin account now. Do it now via site's UI.
+Remember that primary admin account always has `"свод"` user name, other
+info is up to you.
+
 It's often desirable to have some content in the database, so let's populate
-it. The most important thing is to register admin account. Primary admin
-account always has `"свод"` user name, so you can just register it via UI or
-with a simple utility called `svod-devel`:
+it with help of simple utility called `svod-devel`:
 
 ```
 $ git clone https://github.com/svod-music/svod-devel.git
@@ -227,23 +228,14 @@ and specify it in the `.svod-devel.yaml` file, for example:
 flac-source: '/home/mark/Downloads/flac-factory/'
 ```
 
-*Please note that not all this functionality is implemented in `svod-devel`
- right now, I will remove this warning when it's done (should be pretty
- soon).*
-
 Now run:
 
 ```
-$ stack-devel make-admin # if you haven't created one yet
-$ stack-devel populate # generate 100 users and 50 releases
+$ stack-devel populate # generate 100 users and 50 releases by default
 ```
 
 Now you are done. You can play with the system and start developing your own
 features.
-
-## Deploying
-
-TODO
 
 ## Contribution
 
