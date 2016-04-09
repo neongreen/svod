@@ -21,7 +21,6 @@ module Handler.Info
   , getInfoContactR
   , getInfoLicensesR
   , getInfoAboutR
-  , getInfoSupportSvodR
   , getInfoEulaR
   , getInfoContentR
   , getInfoMarkdownR )
@@ -57,11 +56,6 @@ getInfoLicensesR = renderInfo $(mkRelFile "лицензии.md")
 
 getInfoAboutR :: Handler Html
 getInfoAboutR = renderInfo $(mkRelFile "о-проекте.md")
-
--- | How to support the Svod project.
-
-getInfoSupportSvodR :: Handler Html
-getInfoSupportSvodR = renderInfo $(mkRelFile "поддержать-свод.md")
 
 -- | End-user agreement.
 

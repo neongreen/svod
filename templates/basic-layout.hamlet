@@ -100,7 +100,5 @@
         <a href="@{InfoEulaR}">Пользовательское соглашение
         &middot;
         <a href="@{InfoContactR}">Контактная информация
-        &middot;
-        <a href="@{InfoSupportSvodR}">Поддержать «Свод»
       <p .text-center>
         #{copyright}

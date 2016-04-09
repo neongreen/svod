@@ -55,7 +55,6 @@
 /инфо/контактная-информация                    InfoContactR     GET
 /инфо/лицензии                                 InfoLicensesR    GET
 /инфо/о-проекте                                InfoAboutR       GET
-/инфо/поддержать-свод                          InfoSupportSvodR GET
 /инфо/пользовательское-соглашение              InfoEulaR        GET
 /инфо/содержимое                               InfoContentR     GET
 /инфо/язык-разметки                            InfoMarkdownR    GET
