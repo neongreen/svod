@@ -19,7 +19,6 @@
 module Handler.Info
   ( getInfoCodecsR
   , getInfoContactR
-  , getInfoTourR
   , getInfoLicensesR
   , getInfoAboutR
   , getInfoSupportSvodR
@@ -48,11 +47,6 @@ getInfoCodecsR = renderInfo $(mkRelFile "кодеки.md")
 
 getInfoContactR :: Handler Html
 getInfoContactR = renderInfo $(mkRelFile "контактная-информация.md")
-
--- | Tour (short description of what you can do on the site).
-
-getInfoTourR :: Handler Html
-getInfoTourR = renderInfo $(mkRelFile "краткий-тур.md")
 
 -- | Why licenses are important and how to choose the right one.
 

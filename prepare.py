@@ -35,7 +35,6 @@ EXTERNAL_ASSETS = {
     'https://github.com/svod-music/svod-concepts': {
         'кодеки.md':                      'info/кодеки.md',
         'контактная-информация.md':       'info/контактная-информация.md',
-        'краткий-тур.md':                 'info/краткий-тур.md',
         'лицензии.md':                    'info/лицензии.md',
         'о-проекте.md':                   'info/о-проекте.md',
         'поддержать-свод.md':             'info/поддержать-свод.md',
