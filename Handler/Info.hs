@@ -97,7 +97,8 @@ renderInfo file = do
       html           = MD.markdown (resolvingLinks render) body
   defaultLayout $ do
     setTitle title
-    $(combineScripts 'StaticR [js_anchor_js, js_put_anchors_js])
+    cdnAnchorJs
+    addScript (StaticR js_put_anchors_js)
     toWidget html
 
 -- | Markdown rendering settings that drop headers. We use this to strip

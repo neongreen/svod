@@ -39,7 +39,7 @@ starReleaseW aslug rslug = releaseViaSlug' aslug rslug $ \_ release' -> do
     Just uid -> φ (S.isStarredBy rid uid)
   count'    <- φ (S.starCount rid)
   let count = fromIntegral count' :: Int
-  addScript (StaticR js_cookie_js)
+  cdnCookieJs
   case entityVal <$> muser of
     Nothing -> $(widgetFile "star-release-widget-guest")
     Just User {..} ->

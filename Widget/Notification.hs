@@ -35,5 +35,5 @@ notificationW seen (Entity nid Notification {..}) = do
         (UserR <$> mkSlug notificationArtist)
       releaseR = fromMaybe HomeR
         (ReleaseR <$> mkSlug notificationArtist <*> mkSlug notificationRelease)
-  addScript (StaticR js_cookie_js)
+  cdnCookieJs
   $(widgetFile "notification-widget")

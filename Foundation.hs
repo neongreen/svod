@@ -189,9 +189,9 @@ basicLayout makeHeader widget = do
     Just uid -> runDB (S.hasUnseenNotifications uid)
   mmsg      <- getMessage
   pc        <- widgetToPageContent $ do
-    addScriptRemote "https://code.jquery.com/jquery-latest.min.js"
-    $(combineStylesheets 'StaticR [css_bootstrap_min_css, css_svod_css])
-    addScript (StaticR js_bootstrap_min_js)
+    cdnJQuery
+    cdnBootstrap
+    addStylesheet (StaticR css_svod_css)
     widget
   withUrlRenderer $(hamletFile "templates/basic-layout.hamlet")
 

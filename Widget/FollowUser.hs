@@ -39,7 +39,7 @@ followUserW tslug = userViaSlug' tslug $ \target' -> do
     Just uid -> φ (S.isFollower target uid)
   count'    <- φ (S.followerCount target)
   let count = fromIntegral count' :: Int
-  addScript (StaticR js_cookie_js)
+  cdnCookieJs
   case entityVal <$> muser of
     Nothing -> $(widgetFile "follow-user-widget-guest")
     Just User {..} ->

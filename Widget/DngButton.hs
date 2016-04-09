@@ -48,7 +48,7 @@ dngButtonW
   -> Widget            -- ^ Button widget
 dngButtonW btnType title method mtext route = do
   buttonId  <- newIdent
-  addScript (StaticR js_cookie_js)
+  cdnCookieJs
   $(widgetFile "dng-button-widget")
 
 -- | For internal usage only. Convert 'BtnType' to name of corresponding
