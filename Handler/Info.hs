@@ -65,7 +65,7 @@ getInfoEulaR = renderInfo $(mkRelFile "пользовательское-согл
 -- | An article about our requirements to user-submitted content.
 
 getInfoContentR :: Handler Html
-getInfoContentR = renderInfo $(mkRelFile "содержимое.md")
+getInfoContentR = renderInfo $(mkRelFile "контент.md")
 
 -- | An article explaining how to use Markdown.
 
