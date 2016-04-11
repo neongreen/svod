@@ -228,10 +228,11 @@ and specify it in the `.svod-devel.yaml` file, for example:
 flac-source: '/home/mark/Downloads/flac-factory/'
 ```
 
-Now run:
+Now run (this may take a while):
 
 ```
 $ stack-devel populate # generate 100 users and 50 releases by default
+$ stack-devel socialize -u 1000 -r 500 # generate random followings and stars
 ```
 
 Now you are done. You can play with the system and start developing your own
