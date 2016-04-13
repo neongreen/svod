@@ -170,9 +170,9 @@ executable            svod
   hs-source-dirs:     app
   build-depends:      base, svod
   if flag(dev)
-    ghc-options:      -O2 -Wall -Werror -rtsopts -with-rtsopts=-N
+    ghc-options:      -O2 -Wall -Werror -threaded -rtsopts -with-rtsopts=-N
   else
-    ghc-options:      -O2 -Wall -rtsopts -with-rtsopts=-N
+    ghc-options:      -O2 -Wall -threaded -rtsopts -with-rtsopts=-N
   default-language:   Haskell2010
 
 test-suite test
