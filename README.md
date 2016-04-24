@@ -194,8 +194,8 @@ Go to `localhost:3000` in your favorite browser and you should see the main
 page. If something does not work, do not hesitate to ask for help in our
 [Gitter chat](https://gitter.im/svod-music/svod).
 
-I recommended to register admin account now. Do it now via site's UI.
-Remember that primary admin account always has `"свод"` user name, other
+I recommend to register admin account now. Do it now via the site's UI.
+Remember that primary admin account always has `"Свод"` user name, other
 info is up to you.
 
 It's often desirable to have some content in the database, so let's populate
@@ -210,7 +210,7 @@ $ cp -v .svod-devel.ymal ~/
 
 Now edit the `~/.svod-devel.yaml` file. If you use non-standard user name
 and database name, edit `database` object. `local-svod-root` directory is an
-important things to specify now. Go to directory with the web application
+important thing to specify now. Go to directory with the web application
 repo and inside it you will find directory named `user-content` (it's
 created when server is run for the first time, you can also create it
 manually). `local-svod-root` should point to this directory, so if my web
