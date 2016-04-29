@@ -181,7 +181,7 @@ getApplicationDev = do
   return (wsettings, app)
 
 getAppSettings :: IO AppSettings
-getAppSettings = loadAppSettings [configSettingsYml] [] useEnv
+getAppSettings = loadYamlSettings [configSettingsYml] [] useEnv
 
 -- | @main@ function for use by Yesod devel.
 
@@ -192,7 +192,7 @@ develMain = develMainHelper getApplicationDev
 
 appMain :: IO ()
 appMain = do
-  settings   <- loadAppSettingsArgs [configSettingsYmlValue] useEnv
+  settings   <- loadYamlSettingsArgs [configSettingsYmlValue] useEnv
   foundation <- makeFoundation settings
   app        <- makeApplication foundation
   runSettings (warpSettings foundation) app
