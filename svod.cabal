@@ -180,9 +180,9 @@ test-suite test
   main-is:            Spec.hs
   hs-source-dirs:     test
   if flag(dev)
-    ghc-options:      -O2 -Wall -Werror -rtsopts -with-rtsopts=-N
+    ghc-options:      -O2 -Wall -Werror
   else
-    ghc-options:      -O2 -Wall -rtsopts -with-rtsopts=-N
+    ghc-options:      -O2 -Wall
   build-depends:      base
                     , classy-prelude
                     , classy-prelude-yesod
@@ -200,7 +200,7 @@ test-suite test
                     , yesod-test             >= 1.4.3
   default-extensions: OverloadedStrings
                     , RecordWildCards
-  other-modules:      Handler.CommonSpec
-                    , Handler.HomeSpec
+  other-modules:      Handler.FaviconSpec
+                    , Handler.RobotsSpec
                     , TestImport
   default-language:   Haskell2010

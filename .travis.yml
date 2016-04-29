@@ -18,10 +18,13 @@ before_install:
 - export PATH=$HOME/.local/bin:$PATH
 - travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
 
+before_script:
+- bash setup-db.sh
+
 script:
- - stack $ARGS --no-terminal --install-ghc build c2hs
- # - stack $ARGS --no-terminal test --test-arguments=--threads=2
+ - stack $ARGS --no-terminal --install-ghc test --flag svod:dev
  - stack $ARGS --no-terminal sdist
+ - stack $ARGS --no-terminal haddock --no-haddock-deps
 
 notifications:
   email: false

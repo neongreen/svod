@@ -1,2 +1,9 @@
+# Database settings for testing
+
 database:
-  database: svod_test
+  user:     "svod_test"
+  password: "svod_test"
+  host:     "localhost"
+  port:     5432
+  database: "svod_test"
+  poolsize: 10

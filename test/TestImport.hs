@@ -7,7 +7,7 @@
 -- Stability   :  experimental
 -- Portability :  portable
 --
--- Some boilerplate for testing.
+-- Some helpers for testing.
 
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE QuasiQuotes       #-}
@@ -19,7 +19,7 @@ where
 
 import Application           (makeFoundation, makeLogWare)
 import ClassyPrelude         as X
-import Database.Persist      as X hiding (get)
+import Database.Persist      as X hiding (get, delete, deleteBy)
 import Database.Persist.Sql
   ( SqlPersistM
   , SqlBackend
