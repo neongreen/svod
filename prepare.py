@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #
 # This Python 3 script prepares the directory for running of the
 # application. It creates some directories if they don't exist and also

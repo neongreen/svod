@@ -8,6 +8,7 @@ addons:
     - libgmp-dev
     - libtagc0-dev
     - libsndfile1-dev
+    - python3
 
 env:
 - ARGS=""
@@ -19,6 +20,7 @@ before_install:
 - travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
 
 before_script:
+- python3 prepare.py
 - bash setup-db.sh
 
 script:
