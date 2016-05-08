@@ -10,6 +10,10 @@ addons:
     - libsndfile1-dev
     - python3
 
+cache:
+  directories:
+    - .stack-work
+
 env:
 - ARGS=""
 - ARGS="--resolver nightly"
