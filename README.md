@@ -190,6 +190,13 @@ the application locally:
 $ stack exec yesod devel
 ```
 
+If you're getting error message saying that `yesod` executable cannot be
+found, try this:
+
+```
+$ stack install yesod-bin
+```
+
 Go to `localhost:3000` in your favorite browser and you should see the main
 page. If something does not work, do not hesitate to ask for help in our
 [Gitter chat](https://gitter.im/svod-music/svod).
