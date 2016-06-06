@@ -71,8 +71,8 @@
           $nothing
             <li>
               <a .menu-item :registerTab:.menu-mark href="@{RegisterR}"
-                 title="Загеристрироваться">
-                Загеристрироваться
+                 title="Зарегистрироваться">
+                Зарегистрироваться
             <li>
               <a .menu-item :loginTab:.menu-mark href="@{LoginR}"
                  title="Войти">
