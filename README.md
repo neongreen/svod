@@ -167,24 +167,16 @@ this to your `.bashrc` file:
 export PATH=$HOME/.local/bin:$PATH
 ```
 
-Clone the repo and build it (I assume you have Git):
+Clone the repo and build it (I assume you have Git and Python 3):
 
 ```
 $ git clone https://github.com/svod-music/svod.git
 $ cd svod
+$ python prepare.py # collects some external assets from other repos
 $ stack build # here you can take a beer…
 ```
 
-To actually run the application you will need some files that are stored in
-other repos, so run `perpare.py` from root of the cloned repo (I assume you
-have Python 3):
-
-```
-$ python prepare.py
-```
-
-This just makes sure everything is ready to run. Now you can actually start
-the application locally:
+Now you can actually start the application locally:
 
 ```
 $ stack exec yesod devel
