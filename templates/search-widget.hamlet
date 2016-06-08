@@ -3,6 +3,6 @@
     <div .input-group>
       <input type="text" .form-control placeholder="Найти…" autofocus>
       <div .input-group-btn>
-        <a href="#" target="_blank" .btn .btn-default title="Помошь">
+        <a href="#" target="_blank" .btn .btn-default title="Помощь">
           <span .glyphicon .glyphicon-question-sign>
         <button .btn .btn-default type="submit">Поехали!
