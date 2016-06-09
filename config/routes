@@ -53,8 +53,8 @@
 
 /инфо/кодеки                                   InfoCodecsR      GET
 /инфо/контактная-информация                    InfoContactR     GET
+/инфо/контент                                  InfoContentR     GET
 /инфо/лицензии                                 InfoLicensesR    GET
 /инфо/о-проекте                                InfoAboutR       GET
 /инфо/пользовательское-соглашение              InfoEulaR        GET
-/инфо/контент                                  InfoContentR     GET
 /инфо/язык-разметки                            InfoMarkdownR    GET
