@@ -1,9 +1,9 @@
-resolver: nightly-2016-04-20
+resolver: lts-6.2
 packages:
 - '.'
 - location:
     git: https://github.com/svod-music/svod-core.git
-    commit: 415ea1ce1e0a807d8331c903029e85093a15a5d4
+    commit: a2bf7c71704dabf2df692116989df4369ec89a91
 
 flags:
   svod:
