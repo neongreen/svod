@@ -21,7 +21,6 @@ module Handler.User.Profile
   , processUserChange )
 where
 
-import Data.Bool (bool)
 import Data.Maybe (fromJust)
 import Helper.Access (userViaSlug)
 import Helper.Auth

@@ -25,7 +25,6 @@ module Helper.Json
   , paginatedJson )
 where
 
-import Data.Bool (bool)
 import Helper.Rendering (toInt)
 import Import
 import Numeric.Natural

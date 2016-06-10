@@ -27,7 +27,6 @@ module Helper.Auth
   , ynAuth )
 where
 
-import Data.Bool (bool)
 import Data.Char (isLower, isUpper, isDigit)
 import Import
 import Yesod.Auth.Email (isValidPass)
