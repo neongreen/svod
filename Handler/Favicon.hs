@@ -10,6 +10,7 @@
 -- Serve favicon of the site.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.Favicon

@@ -12,6 +12,7 @@
 -- See also: "Widget.StarRelease".
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Handler.Release.Starred
   ( putReleaseStarredR

@@ -10,6 +10,7 @@
 -- A widget to star releases.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Widget.StarRelease

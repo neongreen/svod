@@ -10,6 +10,7 @@
 -- This widget implements “download release” button.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Widget.DownloadRelease

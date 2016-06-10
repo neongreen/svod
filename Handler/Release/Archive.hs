@@ -11,6 +11,8 @@
 -- and also staging works for staff and authors.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Handler.Release.Archive
   ( getReleaseArchiveR )

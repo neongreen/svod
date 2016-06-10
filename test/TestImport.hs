@@ -10,6 +10,7 @@
 -- Some helpers for testing.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes       #-}
 
 module TestImport

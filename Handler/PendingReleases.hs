@@ -10,6 +10,8 @@
 -- Serve list of pending releases accessible only to admins and staff.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.PendingReleases

@@ -10,6 +10,7 @@
 -- Follow and unfollow users.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Handler.User.Follower
   ( putUserFollowerR

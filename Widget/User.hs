@@ -10,6 +10,7 @@
 -- Widget displaying info about given user compactly.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Widget.User

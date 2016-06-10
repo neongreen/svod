@@ -10,6 +10,7 @@
 -- Email verification.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Handler.Verify
   ( getVerifyR )

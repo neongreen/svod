@@ -10,6 +10,7 @@
 -- Pagination widget and helpers.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Widget.Pagination

@@ -10,6 +10,7 @@
 -- Boilerplate to change properties of objects.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Helper.Property
   ( changeUserProperty

@@ -10,6 +10,7 @@
 -- Customized pages for various error codes and situations.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.Error

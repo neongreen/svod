@@ -11,6 +11,7 @@
 -- mini-language from "Svod.Search.User".
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.Users

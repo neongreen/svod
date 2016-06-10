@@ -10,6 +10,7 @@
 -- Helpers for authentication handlers.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Helper.Auth
   ( checkUserName

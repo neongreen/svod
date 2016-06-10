@@ -92,8 +92,6 @@ library
                     , yesod-core             >= 1.4.6
                     , yesod-form             >= 1.4.5
                     , yesod-static           >= 1.5.0
-  default-extensions: OverloadedStrings
-                    , RecordWildCards
   exposed-modules:    Application
                     , Foundation
                     , Handler.ChangePassword
@@ -198,8 +196,6 @@ test-suite test
                     , yesod
                     , yesod-core
                     , yesod-test             >= 1.4.3
-  default-extensions: OverloadedStrings
-                    , RecordWildCards
   other-modules:      Handler.FaviconSpec
                     , Handler.RobotsSpec
                     , TestImport

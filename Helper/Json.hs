@@ -14,6 +14,8 @@
 -- (e.g. number of stars).
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Helper.Json
   ( userJson

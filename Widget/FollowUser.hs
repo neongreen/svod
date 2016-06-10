@@ -12,6 +12,7 @@
 -- See also: "Handler.FollowUser".
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Widget.FollowUser

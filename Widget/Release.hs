@@ -10,6 +10,7 @@
 -- Widget displaying info about given release compactly.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Widget.Release

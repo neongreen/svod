@@ -10,6 +10,7 @@
 -- Public information about releases (HTML and JSON).
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Handler.Releases

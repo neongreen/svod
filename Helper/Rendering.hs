@@ -11,6 +11,7 @@
 -- non-standard type.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Helper.Rendering
   ( toJSONId
