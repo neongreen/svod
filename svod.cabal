@@ -46,52 +46,55 @@ flag library-only
 library
   hs-source-dirs:     .
                     , app
-  build-depends:      aeson                  >= 0.8
-                    , base                   >= 4.8 && < 5
-                    , blaze-builder          >= 0.3
-                    , blaze-html             >= 0.8
-                    , bytestring             >= 0.9
-                    , classy-prelude         >= 0.10.2
-                    , classy-prelude-conduit >= 0.10.2
-                    , classy-prelude-yesod   >= 0.10.2
-                    , conduit                >= 1.0 && < 2.0
-                    , containers
-                    , data-default
-                    , fast-logger            >= 2.2
+  build-depends:      aeson                  >= 0.11   && < 0.12
+                    , base                   >= 4.8    && < 5.0
+                    , blaze-builder          >= 0.3    && < 0.5
+                    , blaze-html             >= 0.8    && < 0.9
+                    , bytestring             >= 0.9    && < 0.11
+                    , classy-prelude         >= 0.10   && < 0.13
+                    , classy-prelude-conduit >= 0.10   && < 0.13
+                    , classy-prelude-yesod   >= 0.10   && < 0.13
+                    , conduit                >= 1.0    && < 2.0
+                    , containers             >= 0.5    && < 0.6
+                    , data-default           >= 0.5.3  && < 0.8
+                    , fast-logger            >= 2.2    && < 3.0
                     , file-embed
-                    , formatting             >= 6.2
-                    , hjsmin                 >= 0.1
-                    , htaglib                >= 1.0
-                    , http-conduit           >= 2.1
-                    , markdown               >= 0.1
-                    , mime-mail              >= 0.4
-                    , monad-control          >= 1.0
-                    , monad-logger           >= 0.3
-                    , nonce                  >= 1.0
-                    , path                   >= 0.5.3
-                    , path-io                >= 1.1.0
-                    , persistent             >= 2.2
-                    , persistent-postgresql  >= 2.2
-                    , persistent-template    >= 2.1
-                    , safe
-                    , semigroups             >= 0.5
-                    , shakespeare            >= 2.0
+                    , formatting             >= 6.2    && < 7.0
+                    , hjsmin                 >= 0.1    && < 0.3
+                    , htaglib                >= 1.0    && < 2.0
+                    , http-conduit           >= 2.1    && < 2.2
+                    , markdown               >= 0.1    && < 0.2
+                    , mime-mail              >= 0.4    && < 0.5
+                    , monad-control          >= 1.0    && < 1.1
+                    , monad-logger           >= 0.3    && < 0.4
+                    , nonce                  >= 1.0    && < 1.1
+                    , path                   >= 0.5.3  && < 0.6
+                    , path-io                >= 1.1.0  && < 2.0
+                    , persistent             >= 2.2    && < 3.0
+                    , persistent-postgresql  >= 2.2    && < 3.0
+                    , persistent-template    >= 2.1    && < 3.0
+                    , safe                   >= 0.3    && < 0.4
+                    , shakespeare            >= 2.0    && < 2.1
                     , svod-core              >= 0.1.0
-                    , template-haskell       >= 2.0
-                    , text                   >= 1.2
-                    , time
-                    , unordered-containers
-                    , vector                 >= 0.10
-                    , wai                    >= 3.0
-                    , wai-extra              >= 3.0
-                    , wai-logger             >= 2.2
-                    , warp                   >= 3.0
-                    , yaml                   >= 0.8
-                    , yesod                  >= 1.4.2
-                    , yesod-auth             >= 1.4.8
-                    , yesod-core             >= 1.4.6
-                    , yesod-form             >= 1.4.5
-                    , yesod-static           >= 1.5.0
+                    , template-haskell       >= 2.0    && < 2.12
+                    , text                   >= 1.2    && < 1.3
+                    , time                   >= 1.4    && < 1.7
+                    , unordered-containers   >= 0.2.5  && < 0.2.8
+                    , vector                 >= 0.10   && < 0.12
+                    , wai                    >= 3.0    && < 4.0
+                    , wai-extra              >= 3.0    && < 3.1
+                    , wai-logger             >= 2.2    && < 2.3
+                    , warp                   >= 3.0    && < 3.3
+                    , yaml                   >= 0.8    && < 0.9
+                    , yesod                  >= 1.4.2  && < 1.5
+                    , yesod-auth             >= 1.4.8  && < 1.5
+                    , yesod-core             >= 1.4.6  && < 1.5
+                    , yesod-form             >= 1.4.5  && < 1.5
+                    , yesod-static           >= 1.5.0  && < 1.6
+
+  if !impl(ghc >= 8.0)
+    build-depends:    semigroups   == 0.18.*
+
   exposed-modules:    Application
                     , Foundation
                     , Handler.ChangePassword
@@ -181,22 +184,26 @@ test-suite test
     ghc-options:      -O2 -Wall -Werror
   else
     ghc-options:      -O2 -Wall
-  build-depends:      base
-                    , classy-prelude
-                    , classy-prelude-yesod
-                    , hspec                  >= 2.0.0
-                    , monad-logger
-                    , persistent
-                    , persistent-postgresql
-                    , resourcet
-                    , shakespeare
-                    , svod
-                    , svod-core              >= 0.1.0
-                    , transformers
-                    , yesod
-                    , yesod-core
-                    , yesod-test             >= 1.4.3
+  build-depends:      base                   >= 4.8    && < 5.0
+                    , classy-prelude         >= 0.10   && < 0.13
+                    , classy-prelude-yesod   >= 0.10   && < 0.13
+                    , hspec                  >= 2.0    && < 3.0
+                    , monad-logger           >= 0.3    && < 0.4
+                    , persistent             >= 2.2    && < 3.0
+                    , persistent-postgresql  >= 2.2    && < 3.0
+                    , resourcet              >= 1.0    && < 2.0
+                    , shakespeare            >= 2.0    && < 2.1
+                    , svod                   >= 0.1
+                    , svod-core              >= 0.1
+                    , transformers           >= 0.3    && < 0.6
+                    , yesod                  >= 1.4.2  && < 1.5
+                    , yesod-core             >= 1.4.6  && < 1.5
+                    , yesod-test             >= 1.4.3  && < 1.6
   other-modules:      Handler.FaviconSpec
                     , Handler.RobotsSpec
                     , TestImport
   default-language:   Haskell2010
+
+source-repository head
+  type:               git
+  location:           https://github.com/svod-music/svod.git
