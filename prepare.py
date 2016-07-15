@@ -42,6 +42,10 @@ EXTERNAL_ASSETS = {
         'пользовательское-соглашение.md': 'info/пользовательское-соглашение.md',
         'язык-разметки.md':               'info/язык-разметки.md',
     },
+    'https://github.com/svod-music/svod-search' : {
+        'info/поиск-пользователей.md':    'info/поиск-пользователей.md',
+        'info/поиск-публикаций.md':       'info/поиск-публикаций.md',
+    }
 }
 
 # First of all we need to make sure some important directories exist.
