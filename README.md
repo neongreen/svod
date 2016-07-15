@@ -179,14 +179,8 @@ $ stack build # here you can take a beer…
 Now you can actually start the application locally:
 
 ```bash
+$ stack build yesod-bin cabal-install --install-ghc
 $ stack exec yesod devel
-```
-
-If you're getting error message saying that `yesod` executable cannot be
-found, try this:
-
-```bash
-$ stack install yesod-bin
 ```
 
 Go to `localhost:3000` in your favorite browser and you should see the main
