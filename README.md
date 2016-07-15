@@ -95,7 +95,7 @@ All components are fully documented, but you will need to generate Haddock
 documentation yourself locally. To generate the docs, run the following from
 the root of the repo:
 
-```
+```bash
 $ stack haddock
 ```
 
@@ -112,7 +112,7 @@ instructions here are for Unix-like systems, such as Linux.
 First, we need to install PostgreSQL. You should find out how to do this
 from repositories of your distro. Arch Linux users can execute this:
 
-```
+```bash
 # pacman -S postgresql
 ```
 
@@ -133,7 +133,7 @@ database:
 
 To create user `svod` and database `svod` (if you have `sudo`):
 
-```
+```bash
 $ sudo -i -u postgres
 [postgres]$ initdb --locale $LANG -E UTF8 -D '/var/lib/postgres/data'
 [postgres]$ createuser -d svod
@@ -148,7 +148,7 @@ tools, most importantly GHC (Haskell compiler) and Stack (building tool).
 They should be available from your distro's repositories, Arch Linux users
 can execute:
 
-```
+```bash
 # pacman -S ghc haskell-stack
 $ ghc --version
 The Glorious Glasgow Haskell Compilation System, version 7.10.3
@@ -163,13 +163,13 @@ note is that you should add `~/.local/bin/` directory to your `PATH` in
 order to use programs compiled by Stack from anywhere, add something like
 this to your `.bashrc` file:
 
-```
+```bash
 export PATH=$HOME/.local/bin:$PATH
 ```
 
 Clone the repo and build it (I assume you have Git and Python 3):
 
-```
+```bash
 $ git clone https://github.com/svod-music/svod.git
 $ cd svod
 $ python prepare.py # collects some external assets from other repos
@@ -178,14 +178,14 @@ $ stack build # here you can take a beer…
 
 Now you can actually start the application locally:
 
-```
+```bash
 $ stack exec yesod devel
 ```
 
 If you're getting error message saying that `yesod` executable cannot be
 found, try this:
 
-```
+```bash
 $ stack install yesod-bin
 ```
 
@@ -200,7 +200,7 @@ info is up to you.
 It's often desirable to have some content in the database, so let's populate
 it with help of simple utility called `svod-devel`:
 
-```
+```bash
 $ git clone https://github.com/svod-music/svod-devel.git
 $ cd svod-devel
 $ stack build --copy-bins
@@ -215,7 +215,7 @@ created when server is run for the first time, you can also create it
 manually). `local-svod-root` should point to this directory, so if my web
 app is in `/home/mark/projects/programs/svod/`, I would write:
 
-```
+```yaml
 local-svod-root: '/home/mark/projects/programs/svod/user-content/'
 ```
 
@@ -223,13 +223,13 @@ To populate the database we actually need FLAC files, put around 100
 different files (most importantly of different length) under one directory
 and specify it in the `.svod-devel.yaml` file, for example:
 
-```
+```yaml
 flac-source: '/home/mark/Downloads/flac-factory/'
 ```
 
 Now run (this may take a while):
 
-```
+```bash
 $ svod-devel populate -u 100 -r 50 # generate 100 users and 50 releases
 $ svod-devel socialize -u 1000 -r 500 # generate random followings and stars
 ```
