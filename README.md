@@ -83,7 +83,7 @@ and anyone can propose ideas.
 The Svod web app uses the following packages/resources:
 
 * [Svod core (database and file management abstracted from web)](https://github.com/svod-music/svod-core)
-* [Search query mini-language](https://github.com/svod-music/svod-search-query)
+* [Search query mini-language](https://github.com/svod-music/svod-search)
 * [Linter that prevents suspicious content](https://github.com/svod-music/svod-lint)
 * [Database population app for development purposes](https://github.com/svod-music/svod-devel)
 * [Twitter intergration](https://github.com/svod-music/twitter-integration)
