@@ -32,7 +32,7 @@ before_script:
 - bash setup-db.sh
 
 script:
- - stack $ARGS --no-terminal --install-ghc test --flag svod:dev
+ - stack $ARGS --no-terminal --install-ghc build svod --test --flag svod:dev
  - stack $ARGS --no-terminal sdist
  - stack $ARGS --no-terminal haddock --no-haddock-deps
 
