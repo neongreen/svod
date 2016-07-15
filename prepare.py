@@ -60,7 +60,7 @@ for path in MUST_HAVE_DIRS:
 
 for repo, items in EXTERNAL_ASSETS.items():
     with tempfile.TemporaryDirectory(prefix='svod-assets-') as tdir:
-        subprocess.check_call(['git', 'clone', repo, tdir])
+        subprocess.check_call(['git', 'clone', '--depth=1', repo, tdir])
         for src, dst in items.items():
             print('  Copying ‘{}’ to ‘{}’…'.format(src, dst))
             try:
