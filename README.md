@@ -9,7 +9,7 @@
 
 * [Overview](#overview)
 * [Learn more about the Svod project](#learn-more-about-the-svod-project)
-* [Svod packages](#svod-packages)
+* [Svod repositories](#svod-repositories)
 * [Documentation](#documentation)
 * [Running Svod web app locally](#running-svod-web-app-locally)
 * [Contribution](#contribution)
@@ -78,13 +78,12 @@ You can also open pull requests and actually change the information. Please
 think carefully before doing this, but the fact is: we're open to changes
 and anyone can propose ideas.
 
-## Svod packages
+## Svod repositories
 
-The Svod web app uses the following packages/resources:
+The Svod app includes the following components:
 
 * [Svod core (database and file management abstracted from web)](https://github.com/svod-music/svod-core)
 * [Search query mini-language](https://github.com/svod-music/svod-search)
-* [Linter that prevents suspicious content](https://github.com/svod-music/svod-lint)
 * [Database population app for development purposes](https://github.com/svod-music/svod-devel)
 * [Twitter intergration](https://github.com/svod-music/twitter-integration)
 * [Logo](https://github.com/svod-music/svod-logo)
