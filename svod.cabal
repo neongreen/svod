@@ -54,6 +54,7 @@ library
                     , classy-prelude         >= 0.10   && < 0.13
                     , classy-prelude-conduit >= 0.10   && < 0.13
                     , classy-prelude-yesod   >= 0.10   && < 0.13
+                    , cmark                  >= 0.5.2  && < 0.5.4
                     , conduit                >= 1.0    && < 2.0
                     , containers             >= 0.5    && < 0.6
                     , data-default           >= 0.5.3  && < 0.8
@@ -63,7 +64,6 @@ library
                     , hjsmin                 >= 0.1    && < 0.3
                     , htaglib                >= 1.0    && < 2.0
                     , http-conduit           >= 2.1    && < 2.2
-                    , markdown               >= 0.1    && < 0.2
                     , mime-mail              >= 0.4    && < 0.5
                     , monad-control          >= 1.0    && < 1.1
                     , monad-logger           >= 0.3    && < 0.4

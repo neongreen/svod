@@ -19,8 +19,10 @@ module Helper.Rendering
   , renderDescription )
 where
 
+import CMark (CMarkOption)
 import Import
-import qualified Text.Markdown as MD
+import Text.Blaze.Html (preEscapedToHtml)
+import qualified CMark as C
 
 -- | A helper to render identifiers in jQuery as JSON objects.
 
@@ -36,4 +38,9 @@ toInt = fromIntegral
 -- | Render description containing markdown to HTML.
 
 renderDescription :: Description -> Html
-renderDescription = MD.markdown MD.def . fromStrict . unDescription
+renderDescription = preEscapedToHtml . C.commonmarkToHtml cmarkOpts . unDescription
+
+-- | CMark options that are used to control markdown rendering.
+
+cmarkOpts :: [CMarkOption]
+cmarkOpts = [C.optNormalize, C.optSmart, C.optSafe]

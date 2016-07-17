@@ -29,16 +29,16 @@ module Handler.Info
   , getInfoMarkdownR )
 where
 
+import CMark (Node (..), NodeType (..), CMarkOption)
+import Data.List (delete)
 import Helper.Path (getInfoDir)
-import Import
+import Import hiding (delete)
 import Path
+import Text.Blaze.Html (preEscapedToHtml)
 import Text.Read (readMaybe)
-import qualified Data.Text            as T
-import qualified Data.Text.Lazy       as TL
-import qualified Data.Text.Lazy.IO    as TL
-import qualified Text.Markdown        as MD
-import qualified Text.Markdown.Block  as MD
-import qualified Text.Markdown.Inline as MD
+import qualified CMark        as C
+import qualified Data.Text    as T
+import qualified Data.Text.IO as T
 
 -- | Which codecs to use to prepare audio for publication.
 
@@ -90,41 +90,56 @@ getInfoMarkdownR = renderInfo $(mkRelFile "язык-разметки.md")
 renderInfo :: Path Rel File -> Handler Html
 renderInfo file = do
   infoDir <- getInfoDir
-  article <- liftIO . TL.readFile . fromAbsFile $ infoDir </> file
+  article <- liftIO . T.readFile . fromAbsFile $ infoDir </> file
   render  <- getUrlRender
-  let (title', body) = TL.breakOn "\n\n" (TL.strip article)
-      -- ↑ HACK we regard first paragraph as title no matter what.
-      title          = MD.markdown strippingHeaders title'
-      html           = MD.markdown (resolvingLinks render) body
+  let node           = C.commonmarkToNode cmarkOpts article
+      (title, node') = first (fromMaybe "FIXME — no title") (getTitle node)
+      html  = (preEscapedToHtml . C.nodeToHtml cmarkOpts)
+        (resolveInternalLinks render node')
   defaultLayout $ do
-    setTitle title
+    setTitle (preEscapedToHtml title)
     cdnAnchorJs
     addScript (StaticR js_put_anchors_js)
     toWidget html
 
--- | Markdown rendering settings that drop headers. We use this to strip
--- possible header markdown and get title for page as plain text.
+-- | Get title (technically, the first H1 header) of article. Return the
+-- title 'Node' and the document with this node removed.
 
-strippingHeaders :: MD.MarkdownSettings
-strippingHeaders = MD.def { MD.msBlockFilter = (>>= stripHeaders) }
-  where stripHeaders (MD.BlockHeading _ stuff) = [MD.BlockPlainText stuff]
-        stripHeaders block = pure block
+getTitle :: Node -> (Maybe Text, Node)
+getTitle (Node pos DOCUMENT ns) =
+  case find isTopHeader ns of
+    Nothing -> (Nothing, Node pos DOCUMENT ns)
+    Just  n ->
+      let n' =
+            case n of
+              (Node _ (HEADING 1) [Node _ (TEXT txt) []]) -> Just txt
+              _ -> Nothing
+      in (n', Node pos DOCUMENT (delete n ns))
+  where
+    isTopHeader (Node _ (HEADING 1) _) = True
+    isTopHeader _                      = False
+getTitle node = (Nothing, node)
 
--- | Markdown rendering settings that resolve internal site links. Here we
--- try to preserve orthogonality, so changes in @config/route@ don't make us
--- change all the links in articles or anywhere else. Current solution is to
--- use names of route constructors in articles and then construct routes at
--- run-time using those names, then use Yesod's native URL rendering
--- facilities to resolve those links.
+-- | Resolve internal site links. Here we try to preserve orthogonality, so
+-- changes in @config/route@ don't make us change all the links in articles
+-- or anywhere else. Current solution is to use names of route constructors
+-- in articles and then construct routes at run-time using those names, then
+-- use Yesod's native URL rendering facilities to resolve those links.
 
-resolvingLinks
-  :: (Route App -> Text) -- ^ Transform type-safe route into URL
-  -> MD.MarkdownSettings -- ^ Markdown settings
-resolvingLinks render = MD.def { MD.msBlockFilter = (>>= processBlock) }
-  where processBlock (MD.BlockPara stuff) = [MD.BlockPara (f <$> stuff)]
-        processBlock block = pure block
-        f (MD.InlineLink url title content) =
-          case readMaybe (T.unpack url) :: Maybe (Route App) of
-            Nothing    -> MD.InlineLink url title content
-            Just route -> MD.InlineLink (render route) title content
-        f inline = inline
+resolveInternalLinks
+  :: (Route App -> Text) -- ^ The link render
+  -> Node              -- ^ The input
+  -> Node              -- ^ The output
+resolveInternalLinks render (Node pos (LINK url title) ns) =
+  let url' =
+        case readMaybe (T.unpack url) :: Maybe (Route App) of
+          Nothing -> url
+          Just route -> render route
+  in Node pos (LINK url' title) (resolveInternalLinks render <$> ns)
+resolveInternalLinks render (Node pos t ns) =
+  Node pos t (resolveInternalLinks render <$> ns)
+
+-- | CMark options that are used to control markdown rendering.
+
+cmarkOpts :: [CMarkOption]
+cmarkOpts = [C.optNormalize, C.optSmart, C.optSafe]
