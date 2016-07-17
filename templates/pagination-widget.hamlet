@@ -1,4 +1,4 @@
-$if S.paginatedHasOtherPages p
+$if hasOtherPages p
   <nav .pull-left>
     <ul .pagination>
       <li :noPrev:.disabled>
@@ -6,7 +6,7 @@ $if S.paginatedHasOtherPages p
           <span aria-hidden="true">
             <span .glyphicon .glyphicon-chevron-left>
         $else
-          <a href="@?{toPage $ S.paginatedPageIndex p - 1}"
+          <a href="@?{toPage $ pindex - 1}"
              title="Предыдущая страница"
              aria-label="Предыдущая страница">
             <span aria-hidden="true">
@@ -18,36 +18,36 @@ $if S.paginatedHasOtherPages p
             <span aria-hidden="true">
               <strong>
                 1
-      $if backwardEllip
+      $if bellip
         <li .disabled>
           <span aria-hidden="true">
             <strong>
               &hellip;
-      $forall page <- pageRange
-        $with activePage <- page == S.paginatedPageIndex p
+      $forall page <- prange
+        $with activePage <- page == pindex
           <li :activePage:.active>
             <a href="@?{toPage page}" aria-label="#{toInt page}"
                title="Перейти к странице #{toInt page}">
               <strong>
                 #{toInt page}
-      $if forwardEllip
+      $if fellip
         <li .disabled>
           <span aria-hidden="true">
             <strong>
               &hellip;
       $if lastSpec
         <li>
-          <a href="@?{toPage $ S.paginatedPagesTotal p}" aria-hidden="true"
-             title="Перейти к странице #{toInt $ S.paginatedPagesTotal p}">
+          <a href="@?{toPage $ paginatedPagesTotal p}" aria-hidden="true"
+             title="Перейти к странице #{toInt $ paginatedPagesTotal p}">
             <span aria-hidden="true">
               <strong>
-                #{toInt $ S.paginatedPagesTotal p}
+                #{toInt $ paginatedPagesTotal p}
       <li :noNext:.disabled>
         $if noNext
           <span aria-hidden="true">
             <span .glyphicon .glyphicon-chevron-right>
         $else
-          <a href="@?{toPage $ S.paginatedPageIndex p + 1}"
+          <a href="@?{toPage $ pindex + 1}"
              title="Следующая страница"
              aria-label="Следующая страница">
             <span aria-hidden="true">

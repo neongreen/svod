@@ -18,10 +18,12 @@ module Handler.User.Stars
   ( getUserStarsR )
 where
 
+import Data.Foldable (null)
 import Data.Maybe (fromJust)
+import Data.Pagination
 import Helper.Access (userViaSlug)
 import Helper.Json (releaseJson, paginatedJson)
-import Import
+import Import hiding (null)
 import Widget.Pagination (lookupPagination, paginationW)
 import Widget.Release (releaseW)
 import qualified Svod as S

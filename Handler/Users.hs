@@ -19,10 +19,12 @@ module Handler.Users
   , postUsersR )
 where
 
+import Data.Foldable (null)
+import Data.Pagination
 import Handler.Register (processRegistration)
 import Helper.Auth
 import Helper.Json (userJson, paginatedJson)
-import Import
+import Import hiding (null)
 import Svod.Search
 import Widget.Pagination (lookupPagination, paginationW)
 import Widget.Search (searchW, searchWidgetQueryParam)

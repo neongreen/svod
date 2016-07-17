@@ -7,11 +7,11 @@
 
 <div .content>
 
-  $if S.paginatedNull paginated
+  $if null paginated
     <p>
       У этого пользователя пока нет подписчиков.
   $else
-    $forall item <- S.paginatedItems paginated
+    $forall item <- paginatedItems paginated
       ^{userW item}
 
   ^{paginationW (UserFollowersR slug) paginated}

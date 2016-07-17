@@ -18,9 +18,11 @@ module Handler.SearchReleases
   ( getSearchReleasesR )
 where
 
+import Data.Foldable (null)
 import Data.Maybe (fromJust)
+import Data.Pagination
 import Helper.Json (releaseJson, paginatedJson)
-import Import
+import Import hiding (null)
 import Svod.Search
 import Widget.Pagination (lookupPagination, paginationW)
 import Widget.Release (releaseW)

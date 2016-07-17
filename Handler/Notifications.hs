@@ -18,10 +18,12 @@ module Handler.Notifications
   ( getNotificationsR )
 where
 
+import Data.Foldable (null)
 import Data.Maybe (fromJust)
+import Data.Pagination
 import Helper.Auth
 import Helper.Json (notificationJson, paginatedJson)
-import Import
+import Import hiding (null)
 import Widget.Notification (notificationW)
 import Widget.Pagination (lookupPagination, paginationW)
 import qualified Svod as S

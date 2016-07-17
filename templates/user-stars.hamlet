@@ -1,8 +1,8 @@
-$if S.paginatedNull paginated
+$if null paginated
   <p>
     Нет отмеченных публикаций.
 $else
-  $forall item <- S.paginatedItems paginated
+  $forall item <- paginatedItems paginated
     ^{releaseW item}
 
 ^{paginationW PendingReleasesR paginated}

@@ -25,6 +25,7 @@ module Helper.Json
   , paginatedJson )
 where
 
+import Data.Pagination
 import Helper.Rendering (toInt)
 import Import
 import Numeric.Natural
@@ -138,10 +139,10 @@ notificationJson render (Entity nid Notification {..}) = object
 
 -- | Represent paginated result as JSON value.
 
-paginatedJson :: S.Paginated Value -> Value
+paginatedJson :: Paginated Value -> Value
 paginatedJson p = object
-  [ "items"       .= S.paginatedItems      p
-  , "total_items" .= S.paginatedItemsTotal p
-  , "total_pages" .= S.paginatedPagesTotal p
-  , "page_size"   .= S.paginatedPageSize   p
-  , "page"        .= S.paginatedPageIndex  p ]
+  [ "items"       .= paginatedItems p
+  , "total_items" .= paginatedItemsTotal p
+  , "total_pages" .= paginatedPagesTotal p
+  , "page_size"   .= pageSize (paginatedPagination p)
+  , "page"        .= pageIndex (paginatedPagination p) ]

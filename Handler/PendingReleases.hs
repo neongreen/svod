@@ -18,10 +18,12 @@ module Handler.PendingReleases
   ( getPendingReleasesR )
 where
 
+import Data.Foldable (null)
 import Data.Maybe (fromJust)
+import Data.Pagination
 import Helper.Auth
 import Helper.Json (releaseJson, paginatedJson)
-import Import
+import Import hiding (null)
 import Widget.Pagination (lookupPagination, paginationW)
 import Widget.Release (releaseW)
 import qualified Svod as S

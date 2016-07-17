@@ -20,41 +20,45 @@ where
 
 import Data.Foldable (notElem)
 import Data.Maybe (fromJust)
+import Data.Pagination
 import Helper.Rendering (toInt)
 import Import hiding (notElem)
 import Numeric.Natural
 import qualified Data.Text      as T
 import qualified Data.Text.Read as TR
-import qualified Svod           as S
 
 -- | Parse pagination parameters from GET parameters of current
 -- request. Default page number is 1 and default page size is 15.
 
-lookupPagination :: Handler S.Pagination
+lookupPagination :: Handler Pagination
 lookupPagination = do
   let readWithDefault n = maybe n (either (const n) fst . TR.decimal)
       defaultPageSize   = 15
       defaultPageNum    = 1
       defaultPagination =
-        fromJust (S.mkPagination defaultPageSize defaultPageNum)
-  pageSize <- readWithDefault defaultPageSize <$> lookupGetParam pageSizeParam
-  pageNum  <- readWithDefault defaultPageNum <$> lookupGetParam pageNumParam
-  return $ fromMaybe defaultPagination (S.mkPagination pageSize pageNum)
+        fromJust (mkPagination defaultPageSize defaultPageNum)
+  psize   <- readWithDefault defaultPageSize <$> lookupGetParam pageSizeParam
+  pindex  <- readWithDefault defaultPageNum <$> lookupGetParam pageNumParam
+  return $ fromMaybe defaultPagination (mkPagination psize pindex)
 
 -- | Display pagination widget.
 
-paginationW :: Route App -> S.Paginated a -> Widget
+paginationW
+  :: Route App         -- ^ Route of page where the pagination is displayed
+  -> Paginated a       -- ^ The paginated data
+  -> Widget            -- ^ The pagination widget
 paginationW route p = do
   params <- reqGetParams <$> φ getRequest
   let reach         = 2
-      noPrev        = not (S.paginatedHasPrev p)
-      noNext        = not (S.paginatedHasNext p)
-      pageRange     = S.paginatedPageRange p reach
-      firstSpec     = 1 `notElem` pageRange
-      lastSpec      = S.paginatedPagesTotal p `notElem` pageRange
-      backwardEllip = S.paginatedBackwardEllip p reach
-      forwardEllip  = S.paginatedForwardEllip p reach
+      noPrev        = not (hasPrevPage p)
+      noNext        = not (hasNextPage p)
+      prange        = pageRange p reach
+      firstSpec     = 1 `notElem` prange
+      lastSpec      = paginatedPagesTotal p `notElem` prange
+      bellip        = backwardEllip p reach
+      fellip        = forwardEllip p reach
       toPage        = mkPageLink route params
+      pindex        = pageIndex (paginatedPagination p)
   $(widgetFile "pagination-widget")
 
 -- | Create route preserving given query string parameters but with
