@@ -76,6 +76,7 @@ library
                     , safe                   >= 0.3    && < 0.4
                     , shakespeare            >= 2.0    && < 2.1
                     , svod-core              >= 0.1.0
+                    , svod-search            >= 0.1.0
                     , template-haskell       >= 2.0    && < 2.12
                     , text                   >= 1.2    && < 1.3
                     , time                   >= 1.4    && < 1.7

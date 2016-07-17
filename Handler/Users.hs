@@ -20,10 +20,12 @@ module Handler.Users
 where
 
 import Handler.Register (processRegistration)
+import Helper.Auth
 import Helper.Json (userJson, paginatedJson)
 import Import
+import Svod.Search
 import Widget.Pagination (lookupPagination, paginationW)
-import Widget.Search (searchW)
+import Widget.Search (searchW, searchWidgetQueryParam)
 import Widget.User (userW)
 import qualified Svod as S
 
@@ -31,8 +33,20 @@ import qualified Svod as S
 
 getUsersR :: Handler TypedContent
 getUsersR = do
-  params    <- lookupPagination
-  paginated <- runDB (S.userQuery params [] []) -- FIXME
+  -- Check if we've got raw search query from user.
+  searchInput <- lookupGetParam searchWidgetQueryParam
+  case searchInput of
+    Nothing -> return ()
+    Just input ->
+      case parseHumanUserSearch input of
+        Left _ -> return ()
+        Right uqir' ->
+          redirect (UsersR, renderQueryUserSearch uqir')
+  -- Here we process query specified in GET params.
+  pparams    <- lookupPagination
+  uqir       <- lookupSearchParams
+  staffHere  <- ynAuth <$> isStaff
+  paginated <- runDB (S.userQuery pparams (toUserFilters staffHere uqir) [])
   selectRep $ do
     -- HTML representation
     provideRep . noHeaderLayout $ do
@@ -50,3 +64,8 @@ getUsersR = do
 
 postUsersR :: Handler TypedContent
 postUsersR = processRegistration
+
+-- | Parse search parameters from GET parameters of current request.
+
+lookupSearchParams :: Handler Uqir
+lookupSearchParams = parseQueryUserSearch . reqGetParams <$> getRequest

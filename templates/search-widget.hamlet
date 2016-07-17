@@ -1,8 +1,9 @@
 <div .form-group>
-  <form method="get" action="#">
+  <form method="get" action="@{actionRoute}">
     <div .input-group>
-      <input type="text" .form-control placeholder="Найти…" autofocus>
+      <input type="text" name="#{searchWidgetQueryParam}"
+             value="#{input}" .form-control placeholder="Найти…" autofocus>
       <div .input-group-btn>
-        <a href="#" target="_blank" .btn .btn-default title="Помощь">
+        <a href="@{helpRoute}" target="_blank" .btn .btn-default title="Помощь">
           <span .glyphicon .glyphicon-question-sign>
         <button .btn .btn-default type="submit">Поехали!

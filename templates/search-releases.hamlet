@@ -1,5 +1,5 @@
 <div .content>
-  ^{searchW}
+  ^{searchW InfoReleaseSearchR SearchReleasesR (renderHumanReleaseSearch rqir)}
   $if S.paginatedNull paginated
     <p>
       Ничего не найдено.

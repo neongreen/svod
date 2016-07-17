@@ -1,5 +1,5 @@
 <div .content>
-  ^{searchW}
+  ^{searchW InfoUserSearchR UsersR (renderHumanUserSearch uqir)}
   $if S.paginatedNull paginated
     <p>
       Ничего не найдено.

@@ -3,7 +3,13 @@ packages:
 - '.'
 - location:
     git: https://github.com/svod-music/svod-core.git
-    commit: a2bf7c71704dabf2df692116989df4369ec89a91
+    commit: ed34b112f0a24a8dcb150942cbc8c87da831a41c
+- location:
+    git: https://github.com/svod-music/svod-search.git
+    commit: 85c6805ccaf4770cd3eb72ba1a4398449ef7e913
+extra-deps:
+- megaparsec-5.0.0
+- slug-0.1.4
 
 flags:
   svod:

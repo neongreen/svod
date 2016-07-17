@@ -10,16 +10,26 @@
 -- Search bar widget.
 
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Widget.Search
-  ( searchW )
+  ( searchW
+  , searchWidgetQueryParam )
 where
 
 import Import
 
 -- | Search widget. This is a fake placeholder for now.
 
-searchW :: Widget
--- TODO SQUERY Provide real search functionality.
-searchW = $(widgetFile "search-widget")
+searchW
+  :: Route App         -- ^ The route to help article
+  -> Route App         -- ^ “Action” route
+  -> Text              -- ^ Default import
+  -> Widget            -- ^ The search widget
+searchW helpRoute actionRoute input = $(widgetFile "search-widget")
+
+-- | Name of parameters that will contain the raw search query.
+
+searchWidgetQueryParam :: Text
+searchWidgetQueryParam = "ввод"
