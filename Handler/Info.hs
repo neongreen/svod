@@ -22,6 +22,8 @@ module Handler.Info
   , getInfoContactR
   , getInfoLicensesR
   , getInfoAboutR
+  , getInfoUserSearchR
+  , getInfoReleaseSearchR
   , getInfoEulaR
   , getInfoContentR
   , getInfoMarkdownR )
@@ -57,6 +59,16 @@ getInfoLicensesR = renderInfo $(mkRelFile "лицензии.md")
 
 getInfoAboutR :: Handler Html
 getInfoAboutR = renderInfo $(mkRelFile "о-проекте.md")
+
+-- | Instructions how to search users.
+
+getInfoUserSearchR :: Handler Html
+getInfoUserSearchR = renderInfo $(mkRelFile "поиск-пользователей.md")
+
+-- | Instructions how to search releases.
+
+getInfoReleaseSearchR :: Handler Html
+getInfoReleaseSearchR = renderInfo $(mkRelFile "поиск-публикаций.md")
 
 -- | End-user agreement.
 

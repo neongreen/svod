@@ -56,5 +56,7 @@
 /инфо/контент                                  InfoContentR     GET
 /инфо/лицензии                                 InfoLicensesR    GET
 /инфо/о-проекте                                InfoAboutR       GET
+/инфо/поиск-пользователей                      InfoUserSearchR  GET
+/инфо/поиск-публикаций                         InfoReleaseSearchR GET
 /инфо/пользовательское-соглашение              InfoEulaR        GET
 /инфо/язык-разметки                            InfoMarkdownR    GET
