@@ -1,7 +1,7 @@
 -- |
 -- Module      :  Helper.Form
 -- Copyright   :  © 2016 Mark Karpov
--- License     :  BSD 3 clause
+-- License     :  GNU GPL version 3
 --
 -- Maintainer  :  Mark Karpov <markkarpov@openmailbox.org>
 -- Stability   :  experimental
