@@ -31,9 +31,21 @@ category:             Audio, Web, Database
 synopsis:             Web interface of Svod application
 build-type:           Simple
 description:          Web interface of Svod application
-extra-source-files:   AUTHORS.md
+extra-doc-files:      AUTHORS.md
                     , CHANGELOG.md
                     , README.md
+extra-source-files:   prepare.py
+                    , setup-db.sh
+data-files:           config/keter.yml
+                    , config/robots.txt
+                    , config/routes
+                    , config/settings.yml
+                    , config/test-settings.yml
+                    , static/css/*.css
+                    , static/js/*.js
+                    , templates/*.hamlet
+                    , templates/*.julius
+                    , templates/*.txt
 
 flag dev
   description:        Turn on development settings.
