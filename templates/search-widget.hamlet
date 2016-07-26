@@ -1,7 +1,7 @@
 <div .form-group>
   <form method="get" action="@{actionRoute}">
     <div .input-group>
-      <input type="text" name="#{searchWidgetQueryParam}"
+      <input type="search" name="#{searchWidgetQueryParam}"
              value="#{input}" .form-control placeholder="Найти…" autofocus>
       <div .input-group-btn>
         <a href="@{helpRoute}" target="_blank" .btn .btn-default title="Помощь">
