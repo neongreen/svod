@@ -1,16 +1,19 @@
 /* General styling */
 
+@import 'https://fonts.googleapis.com/css?family=Open+Sans';
+
 html {
     position: relative;
     min-height: 100%;
 }
 
 body {
+    font-family: 'Open Sans', sans-serif;
     margin-bottom: 60px;
 }
 
 .content {
-    font-size: 18px;
+    font-size: 16px;
     letter-spacing: 1px;
     margin-bottom: 20px;
     text-align: justify;
